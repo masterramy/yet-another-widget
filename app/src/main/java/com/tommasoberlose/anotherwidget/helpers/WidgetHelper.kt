@@ -10,7 +10,6 @@ import android.os.Looper
 import android.util.Log
 import androidx.core.provider.FontRequest
 import androidx.core.provider.FontsContractCompat
-import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.tommasoberlose.anotherwidget.R
 import com.tommasoberlose.anotherwidget.db.EventRepository
 import com.tommasoberlose.anotherwidget.global.Preferences
@@ -29,8 +28,6 @@ object WidgetHelper {
             val height = getWidgetHeight(widgetId)
             val widthInPx = context.dip(width)
             val heightInPx = context.dip(height)
-            FirebaseCrashlytics.getInstance().setCustomKey("widthInPx", widthInPx)
-            FirebaseCrashlytics.getInstance().setCustomKey("heightInPx", heightInPx)
             return widthInPx to heightInPx
         }
 
