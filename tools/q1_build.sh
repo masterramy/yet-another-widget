@@ -35,6 +35,13 @@ rm -rf app/src/main/java/net/idik/lib/slimadapter
 mkdir -p app/src/main/java/net/idik/lib
 cp -R "$TMP_SLIM/slimadapter/src/main/java/net/idik/lib/slimadapter" app/src/main/java/net/idik/lib/
 
+# The library's package-info.java contains only a JSR-305 default-nullness annotation.
+# It has no runtime behavior and the annotation package is no longer otherwise required,
+# so Q1 strips this metadata-only source instead of adding an obsolete javax.annotation dependency.
+PACKAGE_INFO='app/src/main/java/net/idik/lib/slimadapter/package-info.java'
+test "$(cat "$PACKAGE_INFO")" = $'@javax.annotation.ParametersAreNonnullByDefault\npackage net.idik.lib.slimadapter;'
+rm "$PACKAGE_INFO"
+
 # SlimAdapter's historical callback exposes a raw IViewInjector. Kotlin 2 erases generic view
 # types on that raw receiver; using a star projection fixes only the first fluent call because
 # the self-type becomes unknown again. SlimViewHolder always constructs DefaultViewInjector,
@@ -50,7 +57,7 @@ if s.count(old) != 1:
 p.write_text(s.replace(old, new))
 PY
 grep -F 'IViewInjector<net.idik.lib.slimadapter.viewinjector.DefaultViewInjector> injector' app/src/main/java/net/idik/lib/slimadapter/SlimInjector.java >/dev/null
-echo "SlimAdapter source: $SLIMADAPTER_COMMIT (concrete generic injector bridge applied)"
+echo "SlimAdapter source: $SLIMADAPTER_COMMIT (Q1 metadata/generic bridges applied)"
 
 chmod +x ./gradlew
 ./gradlew --version
