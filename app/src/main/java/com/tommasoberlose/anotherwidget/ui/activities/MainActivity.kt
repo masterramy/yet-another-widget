@@ -11,11 +11,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import com.karumi.dexter.Dexter
-import com.karumi.dexter.MultiplePermissionsReport
-import com.karumi.dexter.PermissionToken
-import com.karumi.dexter.listener.PermissionRequest
-import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.tommasoberlose.anotherwidget.R
 import com.tommasoberlose.anotherwidget.databinding.ActivityMainBinding
 import com.tommasoberlose.anotherwidget.global.Actions
@@ -51,10 +46,6 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         binding = ActivityMainBinding.inflate(layoutInflater)
 
         controlExtras(intent)
-        if (Preferences.showWallpaper) {
-            requirePermission()
-        }
-
         setContentView(binding.root)
     }
 
@@ -109,30 +100,6 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId)
         setResult(Activity.RESULT_OK, resultValue)
         finish()
-    }
-
-    private fun requirePermission() {
-        Dexter.withContext(this)
-            .withPermissions(
-                Manifest.permission.READ_EXTERNAL_STORAGE
-            ).withListener(object : MultiplePermissionsListener {
-                override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
-                    report?.let {
-                        Preferences.showWallpaper = false
-                        Preferences.showWallpaper = report.areAllPermissionsGranted()
-                    }
-                }
-
-                override fun onPermissionRationaleShouldBeShown(
-                    permissions: MutableList<PermissionRequest>?,
-                    token: PermissionToken?
-                ) {
-                    // Remember to invoke this method when the custom rationale is closed
-                    // or just by default if you don't want to use any custom rationale.
-                    token?.cancelPermissionRequest()
-                }
-            })
-            .check()
     }
 
     override fun onResume() {
