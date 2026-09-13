@@ -6,12 +6,44 @@ ACTIVITY="$PACKAGE/.ui.activities.MainActivity"
 APK="$(find app/build/outputs/apk/debug -maxdepth 1 -type f -name '*.apk' | head -n1)"
 
 test -n "$APK"
+rm -rf q1-evidence
 mkdir -p q1-evidence
+
+wait_for_launcher_ready() {
+  echo "== wait for stable Android launcher/SystemUI =="
+  adb wait-for-device
+  local deadline=$((SECONDS + 180))
+  local focus=""
+  while [ "$SECONDS" -lt "$deadline" ]; do
+    local boot
+    boot="$(adb shell getprop sys.boot_completed 2>/dev/null | tr -d '\r' || true)"
+    if [ "$boot" = "1" ]; then
+      adb shell input keyevent KEYCODE_HOME >/dev/null 2>&1 || true
+      sleep 2
+      focus="$(adb shell dumpsys window 2>/dev/null | grep -m1 'mCurrentFocus' || true)"
+      if echo "$focus" | grep -Eqi 'launcher|nexuslauncher'; then
+        adb shell am wait-for-broadcast-idle >/dev/null 2>&1 || true
+        sleep 5
+        focus="$(adb shell dumpsys window 2>/dev/null | grep -m1 'mCurrentFocus' || true)"
+        if echo "$focus" | grep -Eqi 'launcher|nexuslauncher'; then
+          echo "Launcher ready: $focus"
+          return 0
+        fi
+      fi
+    fi
+    sleep 3
+  done
+  echo "Launcher/SystemUI never reached a stable HOME focus" >&2
+  adb shell dumpsys window > q1-evidence/window-not-ready.txt 2>&1 || true
+  adb exec-out screencap -p > q1-evidence/system-not-ready.png 2>/dev/null || true
+  return 1
+}
 
 ui_dump() {
   local name="$1"
-  local remote="/sdcard/${name}.xml"
+  local remote="/data/local/tmp/${name}.xml"
   set +e
+  adb shell rm -f "$remote" >/dev/null 2>&1
   adb shell uiautomator dump "$remote" >"q1-evidence/${name}-uiautomator.txt" 2>&1
   local rc=$?
   adb pull "$remote" "q1-evidence/${name}.xml" >>"q1-evidence/${name}-uiautomator.txt" 2>&1
@@ -74,6 +106,8 @@ print(x,y)
 PY
 }
 
+wait_for_launcher_ready || exit 18
+
 echo "== install =="
 adb install -r "$APK"
 adb shell pm path "$PACKAGE"
@@ -82,11 +116,16 @@ echo "== launch settings shell =="
 adb logcat -c
 adb shell am force-stop "$PACKAGE" || true
 adb shell am start -W -n "$ACTIVITY"
-sleep 3
+sleep 7
+ui_dump main-activity-ui || exit 24
+if ! grep -qi 'Another Widget' q1-evidence/main-activity-ui.xml; then
+  echo "MainActivity did not render the expected app shell" >&2
+  exit 25
+fi
 
 adb shell dumpsys package "$PACKAGE" | grep -E 'MainWidget|MainActivity|versionName|targetSdk' || true
 adb shell dumpsys activity activities | grep -A4 -B2 "$PACKAGE" || true
-adb exec-out screencap -p > q1-evidence/main-activity.png || true
+cp q1-evidence/main-activity-ui.png q1-evidence/main-activity.png
 adb logcat -d > q1-evidence/logcat.txt
 adb shell dumpsys package "$PACKAGE" > q1-evidence/package.txt
 adb shell cmd appwidget help > q1-evidence/appwidget-help.txt 2>&1 || true
@@ -98,8 +137,7 @@ if grep -E -q "FATAL EXCEPTION:.*|Process: ${PACKAGE//./\\.}" q1-evidence/logcat
 fi
 
 echo "== real launcher widget-picker placement =="
-adb shell input keyevent KEYCODE_HOME
-sleep 3
+wait_for_launcher_ready || exit 18
 adb exec-out screencap -p > q1-evidence/launcher-home.png || true
 # Long-press an empty central area of the Pixel/Launcher3 home screen.
 adb shell input swipe 540 1250 540 1250 1600
@@ -145,4 +183,4 @@ if grep -E -q "FATAL EXCEPTION:.*|Process: ${PACKAGE//./\\.}" q1-evidence/logcat
   exit 23
 fi
 
-echo "Q1 API36 build/install/launch/real launcher widget-placement smoke PASS."
+echo "Q1 API36 build/install/visible-shell/real launcher widget-placement smoke PASS."
