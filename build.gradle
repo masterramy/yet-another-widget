@@ -4,7 +4,6 @@ buildscript {
     repositories {
         google()
         mavenCentral()
-        maven { url 'https://repo.spring.io/libs-milestone' }
         maven { url 'https://jitpack.io' }
     }
     dependencies {
@@ -17,9 +16,6 @@ allprojects {
     repositories {
         google()
         mavenCentral()
-        // Legacy Q1 dependencies SlimAdapter/providers-android were originally published here.
-        // Replace them in Q2 rather than adding a third-party JCenter mirror.
-        maven { url 'https://repo.spring.io/libs-milestone' }
         maven { url 'https://jitpack.io' }
     }
 }
