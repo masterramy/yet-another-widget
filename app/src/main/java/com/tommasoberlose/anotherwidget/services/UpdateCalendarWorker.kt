@@ -20,7 +20,6 @@ import com.tommasoberlose.anotherwidget.receivers.UpdatesReceiver
 import com.tommasoberlose.anotherwidget.ui.fragments.MainFragment
 import com.tommasoberlose.anotherwidget.ui.widgets.MainWidget
 import com.tommasoberlose.anotherwidget.utils.checkGrantedPermission
-import me.everything.providers.android.calendar.CalendarProvider
 import org.greenrobot.eventbus.EventBus
 import java.util.Calendar
 
@@ -56,39 +55,60 @@ class UpdateCalendarWorker(context: Context, params: WorkerParameters) : Worker(
                         else -> add(Calendar.HOUR, 6)
                     }
                 }
+                val begin = now.timeInMillis + now.timeZone.getOffset(now.timeInMillis).coerceAtMost(0)
+                val end = limit.timeInMillis + limit.timeZone.getOffset(limit.timeInMillis).coerceAtLeast(0)
                 val filteredCalendars = CalendarHelper.getFilteredCalendarIdList()
                 val events = mutableListOf<Event>()
-                val provider = CalendarProvider(context)
-                provider.getInstances(
-                    now.timeInMillis + now.timeZone.getOffset(now.timeInMillis).coerceAtMost(0),
-                    limit.timeInMillis + limit.timeZone.getOffset(limit.timeInMillis).coerceAtLeast(0)
-                )?.list?.forEach { instance ->
-                    try {
-                        val event = provider.getEvent(instance.eventId) ?: return@forEach
-                        if (event.deleted || filteredCalendars.contains(event.calendarId)) return@forEach
-                        if (event.allDay) {
-                            val start = Calendar.getInstance().apply { timeInMillis = instance.begin }
-                            val end = Calendar.getInstance().apply { timeInMillis = instance.end }
-                            instance.begin -= start.timeZone.getOffset(start.timeInMillis)
-                            instance.end -= end.timeZone.getOffset(end.timeInMillis)
+                val projection = arrayOf(
+                    CalendarContract.Instances._ID,
+                    CalendarContract.Instances.EVENT_ID,
+                    CalendarContract.Instances.TITLE,
+                    CalendarContract.Instances.BEGIN,
+                    CalendarContract.Instances.END,
+                    CalendarContract.Instances.CALENDAR_ID,
+                    CalendarContract.Instances.ALL_DAY,
+                    CalendarContract.Instances.EVENT_LOCATION,
+                    CalendarContract.Instances.SELF_ATTENDEE_STATUS,
+                    CalendarContract.Instances.AVAILABILITY
+                )
+
+                CalendarContract.Instances.query(
+                    context.contentResolver,
+                    projection,
+                    begin,
+                    end
+                )?.use { cursor ->
+                    while (cursor.moveToNext()) {
+                        val calendarId = cursor.getLong(5)
+                        if (filteredCalendars.contains(calendarId)) continue
+
+                        var instanceBegin = cursor.getLong(3)
+                        var instanceEnd = cursor.getLong(4)
+                        val allDay = cursor.getInt(6) != 0
+                        if (allDay) {
+                            val start = Calendar.getInstance().apply { timeInMillis = instanceBegin }
+                            val finish = Calendar.getInstance().apply { timeInMillis = instanceEnd }
+                            instanceBegin -= start.timeZone.getOffset(start.timeInMillis)
+                            instanceEnd -= finish.timeZone.getOffset(finish.timeInMillis)
                         }
-                        if (instance.begin <= limit.timeInMillis && now.timeInMillis < instance.end) {
+
+                        if (instanceBegin <= limit.timeInMillis && now.timeInMillis < instanceEnd) {
                             events += Event(
-                                id = instance.id,
-                                eventID = event.id,
-                                title = event.title ?: "",
-                                startDate = instance.begin,
-                                endDate = instance.end,
-                                calendarID = event.calendarId.toInt(),
-                                allDay = event.allDay,
-                                address = event.eventLocation ?: "",
-                                selfAttendeeStatus = event.selfAttendeeStatus.toInt(),
-                                availability = event.availability
+                                id = cursor.getLong(0),
+                                eventID = cursor.getLong(1),
+                                title = cursor.getString(2) ?: "",
+                                startDate = instanceBegin,
+                                endDate = instanceEnd,
+                                calendarID = calendarId.toInt(),
+                                allDay = allDay,
+                                address = cursor.getString(7) ?: "",
+                                selfAttendeeStatus = cursor.getInt(8),
+                                availability = cursor.getInt(9)
                             )
                         }
-                    } catch (_: Exception) {
                     }
                 }
+
                 val filtered = events.sortEvents().applyFilters()
                 if (filtered.isEmpty()) {
                     repo.resetNextEventData()
