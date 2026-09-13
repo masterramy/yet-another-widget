@@ -1,0 +1,78 @@
+# MANUAL AUTHORIZATION TEMPLATE
+# Copy this file verbatim to .github/workflows/q1.yml on branch q1-feasibility-api36.
+# The workflow itself is intentionally generic; future technical iteration happens in tools/*.sh.
+name: Yet Another Widget Q1
+
+on:
+  push:
+    branches:
+      - q1-feasibility-api36
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+      - name: Install Android 36 SDK
+        shell: bash
+        run: |
+          yes | sdkmanager --licenses >/dev/null || true
+          sdkmanager 'platforms;android-36' 'build-tools;36.0.0' 'platform-tools'
+      - name: Q1 deterministic build
+        shell: bash
+        run: bash tools/q1_build.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: q1-debug-apk
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+
+  emulator-smoke:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+      - name: Install Android 36 SDK
+        shell: bash
+        run: |
+          yes | sdkmanager --licenses >/dev/null || true
+          sdkmanager 'platforms;android-36' 'build-tools;36.0.0' 'platform-tools'
+      - name: Rebuild exact candidate
+        shell: bash
+        run: bash tools/q1_build.sh
+      - name: API 36 emulator smoke
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 36
+          arch: x86_64
+          profile: pixel_6
+          disable-animations: true
+          script: bash tools/q1_emulator_smoke.sh
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: q1-emulator-evidence
+          path: q1-evidence/**
+          if-no-files-found: warn
