@@ -1,14 +1,13 @@
 package com.tommasoberlose.anotherwidget.models
 
 import android.provider.CalendarContract
-import io.realm.RealmObject
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import java.util.Date
 
-/**
- * Created by tommaso on 05/10/17.
- */
-
-open class Event(
+@Entity(tableName = "events")
+data class Event(
+    @PrimaryKey
     var id: Long = 0,
     var eventID: Long = 0,
     var title: String = "",
@@ -19,8 +18,7 @@ open class Event(
     var address: String = "",
     var selfAttendeeStatus: Int = CalendarContract.Attendees.ATTENDEE_STATUS_NONE,
     var availability: Int = CalendarContract.EventsEntity.AVAILABILITY_BUSY
-) : RealmObject() {
-    override fun toString(): String {
-        return "Event:\nEVENT ID: " + eventID + "\nTITLE: " + title + "\nSTART DATE: " + Date(startDate) + "\nEND DATE: " + Date(endDate) + "\nCAL ID: " + calendarID  + "\nADDRESS: " + address
-    }
+) {
+    override fun toString(): String =
+        "Event:\nEVENT ID: $eventID\nTITLE: $title\nSTART DATE: ${Date(startDate)}\nEND DATE: ${Date(endDate)}\nCAL ID: $calendarID\nADDRESS: $address"
 }

@@ -1,35 +1,32 @@
 package com.tommasoberlose.anotherwidget.db
 
 import android.content.Context
-import android.provider.CalendarContract
-import android.util.Log
+import androidx.room.Dao
+import androidx.room.Database
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.Room
+import androidx.room.RoomDatabase
 import com.chibatching.kotpref.bulk
 import com.tommasoberlose.anotherwidget.global.Preferences
 import com.tommasoberlose.anotherwidget.helpers.CalendarHelper.applyFilters
 import com.tommasoberlose.anotherwidget.models.Event
 import com.tommasoberlose.anotherwidget.receivers.UpdatesReceiver
 import com.tommasoberlose.anotherwidget.ui.widgets.MainWidget
-import io.realm.Realm
-import io.realm.RealmResults
-import java.util.*
-import kotlin.Comparator
-import kotlin.collections.ArrayList
+import java.util.Calendar
 
-class EventRepository(val context: Context) {
-    private val realm by lazy { Realm.getDefaultInstance() }
+class EventRepository(private val context: Context) {
+    private val db by lazy { EventDatabase.getDatabase(context.applicationContext) }
 
     fun saveEvents(eventList: List<Event>) {
-        realm.executeTransaction { realm ->
-            realm.where(Event::class.java).findAll().deleteAllFromRealm()
-            realm.copyToRealm(eventList)
+        db.runInTransaction {
+            db.dao().deleteAll()
+            db.dao().insert(eventList)
         }
     }
 
-    fun clearEvents() {
-        realm.executeTransaction { realm ->
-            realm.where(Event::class.java).findAll().deleteAllFromRealm()
-        }
-    }
+    fun clearEvents() = db.dao().deleteAll()
 
     fun resetNextEventData() {
         Preferences.bulk {
@@ -48,7 +45,6 @@ class EventRepository(val context: Context) {
     }
 
     fun getNextEvent(): Event? {
-        val nextEvent = getEventByEventId(Preferences.nextEventId)
         val now = Calendar.getInstance().timeInMillis
         val limit = Calendar.getInstance().apply {
             timeInMillis = now
@@ -64,76 +60,49 @@ class EventRepository(val context: Context) {
                 else -> add(Calendar.HOUR, 6)
             }
         }
-        val event = if (nextEvent != null && nextEvent.endDate > now && nextEvent.startDate < limit.timeInMillis) {
-            nextEvent
+        val next = getEventByEventId(Preferences.nextEventId)
+        return if (next != null && next.endDate > now && next.startDate < limit.timeInMillis) {
+            next
         } else {
             val events = getEvents()
             if (events.isNotEmpty()) {
-                val newNextEvent = events.first()
-                Preferences.nextEventId = newNextEvent.eventID
-                newNextEvent
+                events.first().also(::saveNextEventData)
             } else {
                 resetNextEventData()
                 null
             }
         }
-        return try {
-            realm.copyFromRealm(event!!)
-        } catch (ex: Exception) {
-            event
-        }
     }
 
-    fun getEventByEventId(id: Long): Event? {
-        val event = realm.where(Event::class.java).equalTo("eventID", id).findFirst()
-        return try {
-            realm.copyFromRealm(event!!)
-        } catch (ex: Exception) {
-            event
-        }
-    }
+    fun getEventByEventId(id: Long): Event? = db.dao().findByEventId(id)
+    fun getEventById(id: Long): Event? = db.dao().findById(id)
 
     fun goToNextEvent() {
-        val eventList = getEvents()
-        if (eventList.isNotEmpty()) {
-            val index = eventList.indexOfFirst { it.eventID == Preferences.nextEventId }
-            if (index > -1 && index < eventList.size - 1) {
-                Preferences.nextEventId = eventList[index + 1].eventID
-            } else {
-                Preferences.nextEventId = eventList.first().eventID
-            }
-        } else {
+        val events = getEvents()
+        if (events.isEmpty()) {
             resetNextEventData()
+        } else {
+            val index = events.indexOfFirst { it.eventID == Preferences.nextEventId }
+            saveNextEventData(if (index > -1 && index < events.lastIndex) events[index + 1] else events.first())
         }
         UpdatesReceiver.setUpdates(context)
         MainWidget.updateWidget(context)
     }
 
     fun goToPreviousEvent() {
-        val eventList = getEvents()
-        if (eventList.isNotEmpty()) {
-            val index = eventList.indexOfFirst { it.eventID == Preferences.nextEventId }
-            if (index > 0) {
-                Preferences.nextEventId = eventList[index - 1].eventID
-            } else {
-                Preferences.nextEventId = eventList.last().eventID
-            }
-        } else {
+        val events = getEvents()
+        if (events.isEmpty()) {
             resetNextEventData()
+        } else {
+            val index = events.indexOfFirst { it.eventID == Preferences.nextEventId }
+            saveNextEventData(if (index > 0) events[index - 1] else events.last())
         }
         UpdatesReceiver.setUpdates(context)
         MainWidget.updateWidget(context)
     }
 
-    fun getFutureEvents(): List<Event> {
-        val now = Calendar.getInstance().timeInMillis
-        realm.refresh()
-        return realm
-            .where(Event::class.java)
-            .greaterThan("endDate", now)
-            .findAll()
-            .applyFilters()
-    }
+    fun getFutureEvents(): List<Event> =
+        db.dao().findFuture(Calendar.getInstance().timeInMillis).applyFilters()
 
     private fun getEvents(): List<Event> {
         val now = Calendar.getInstance().timeInMillis
@@ -151,18 +120,50 @@ class EventRepository(val context: Context) {
                 else -> add(Calendar.HOUR, 6)
             }
         }
-        realm.refresh()
-        return realm
-            .where(Event::class.java)
-            .greaterThan("endDate", now)
-            .lessThanOrEqualTo("startDate", limit.timeInMillis)
-            .findAll()
-            .applyFilters()
+        return db.dao().findRange(now, limit.timeInMillis).applyFilters()
     }
 
     fun getEventsCount(): Int = getEvents().size
+    fun close() = Unit
 
-    fun close() {
-        realm.close()
+    @Dao
+    interface EventDao {
+        @Query("SELECT * FROM events WHERE id = :id LIMIT 1")
+        fun findById(id: Long): Event?
+
+        @Query("SELECT * FROM events WHERE eventID = :eventId ORDER BY startDate LIMIT 1")
+        fun findByEventId(eventId: Long): Event?
+
+        @Query("SELECT * FROM events WHERE endDate > :from ORDER BY startDate")
+        fun findFuture(from: Long): List<Event>
+
+        @Query("SELECT * FROM events WHERE endDate > :from AND startDate <= :to ORDER BY startDate")
+        fun findRange(from: Long, to: Long): List<Event>
+
+        @Insert(onConflict = OnConflictStrategy.REPLACE)
+        fun insert(events: List<Event>)
+
+        @Query("DELETE FROM events")
+        fun deleteAll()
+    }
+
+    @Database(entities = [Event::class], version = 1, exportSchema = false)
+    abstract class EventDatabase : RoomDatabase() {
+        abstract fun dao(): EventDao
+
+        companion object {
+            @Volatile private var instance: EventDatabase? = null
+
+            fun getDatabase(context: Context): EventDatabase = instance ?: synchronized(this) {
+                instance ?: Room.databaseBuilder(
+                    context,
+                    EventDatabase::class.java,
+                    "events"
+                )
+                    .allowMainThreadQueries()
+                    .build()
+                    .also { instance = it }
+            }
+        }
     }
 }
