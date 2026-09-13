@@ -7,17 +7,44 @@ import com.tommasoberlose.anotherwidget.global.Preferences
 import com.tommasoberlose.anotherwidget.models.Event
 import com.tommasoberlose.anotherwidget.services.UpdateCalendarWorker
 import com.tommasoberlose.anotherwidget.utils.checkGrantedPermission
-import me.everything.providers.android.calendar.CalendarProvider
 import java.util.Calendar
+
+data class CalendarInfo(
+    val id: Long,
+    val displayName: String,
+    val accountName: String
+)
 
 object CalendarHelper {
     fun updateEventList(context: Context) {
         UpdateCalendarWorker.enqueue(context)
     }
 
-    fun getCalendarList(context: Context): List<me.everything.providers.android.calendar.Calendar> {
+    fun getCalendarList(context: Context): List<CalendarInfo> {
         if (!context.checkGrantedPermission(Manifest.permission.READ_CALENDAR)) return emptyList()
-        return CalendarProvider(context).calendars?.list ?: emptyList()
+
+        val projection = arrayOf(
+            CalendarContract.Calendars._ID,
+            CalendarContract.Calendars.CALENDAR_DISPLAY_NAME,
+            CalendarContract.Calendars.ACCOUNT_NAME
+        )
+        val calendars = mutableListOf<CalendarInfo>()
+        context.contentResolver.query(
+            CalendarContract.Calendars.CONTENT_URI,
+            projection,
+            null,
+            null,
+            null
+        )?.use { cursor ->
+            while (cursor.moveToNext()) {
+                calendars += CalendarInfo(
+                    id = cursor.getLong(0),
+                    displayName = cursor.getString(1) ?: "",
+                    accountName = cursor.getString(2) ?: ""
+                )
+            }
+        }
+        return calendars
     }
 
     fun getFilteredCalendarIdList(): List<Long> =
