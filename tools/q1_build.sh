@@ -59,11 +59,18 @@ PY
 grep -F 'IViewInjector<net.idik.lib.slimadapter.viewinjector.DefaultViewInjector> injector' app/src/main/java/net/idik/lib/slimadapter/SlimInjector.java >/dev/null
 echo "SlimAdapter source: $SLIMADAPTER_COMMIT (Q1 metadata/generic bridges applied)"
 
+# Q1-only renderer compatibility overlay. It is fail-closed and modifies only the two
+# historical widget renderer files in the runner checkout. Q2 absorbs these edits into
+# ordinary source before quiescence/freeze.
+python3 tools/q1_widget_compat.py
+
 chmod +x ./gradlew
 ./gradlew --version
-./gradlew :app:assembleDebug --stacktrace --no-daemon
+./gradlew :app:assembleDebug :app:assembleDebugAndroidTest --stacktrace --no-daemon
 
 APK="$(find app/build/outputs/apk/debug -maxdepth 1 -type f -name '*.apk' | head -n1)"
+TEST_APK="$(find app/build/outputs/apk/androidTest/debug -maxdepth 1 -type f -name '*.apk' | head -n1)"
 test -n "$APK"
-sha256sum "$APK"
-ls -l "$APK"
+test -n "$TEST_APK"
+sha256sum "$APK" "$TEST_APK"
+ls -l "$APK" "$TEST_APK"
