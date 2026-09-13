@@ -6,9 +6,14 @@ import com.chibatching.kotpref.KotprefModel
 import com.tommasoberlose.anotherwidget.helpers.IntentHelper
 import com.tommasoberlose.anotherwidget.helpers.MediaPlayerHelper
 import com.tommasoberlose.anotherwidget.utils.isMetric
+import java.util.Locale
 
 object Preferences : KotprefModel() {
     override val commitAllPropertiesByDefault: Boolean = true
+
+    private fun usesMetric(): Boolean =
+        ConfigurationCompat.getLocales(context.resources.configuration)[0]?.isMetric()
+            ?: Locale.getDefault().isMetric()
 
     var darkThemePreference by intPref(default = MODE_NIGHT_FOLLOW_SYSTEM)
 
@@ -17,8 +22,8 @@ object Preferences : KotprefModel() {
     var showWeather by booleanPref(key = "PREF_SHOW_WEATHER", default = false)
     var weatherIcon by stringPref(key = "PREF_WEATHER_ICON", default = "")
     var weatherTemp by floatPref(key = "PREF_WEATHER_TEMP", default = 0f)
-    var weatherTempUnit by stringPref(key = "PREF_WEATHER_TEMP_UNIT", default = if (ConfigurationCompat.getLocales(context.resources.configuration)[0].isMetric()) "C" else "F")
-    var weatherRealTempUnit by stringPref(key = "PREF_WEATHER_REAL_TEMP_UNIT", default = if (ConfigurationCompat.getLocales(context.resources.configuration)[0].isMetric()) "C" else "F")
+    var weatherTempUnit by stringPref(key = "PREF_WEATHER_TEMP_UNIT", default = if (usesMetric()) "C" else "F")
+    var weatherRealTempUnit by stringPref(key = "PREF_WEATHER_REAL_TEMP_UNIT", default = if (usesMetric()) "C" else "F")
     var calendarAllDay by booleanPref(key = "PREF_CALENDAR_ALL_DAY", default = true)
     var calendarFilter by stringPref(key = "PREF_CALENDAR_FILTER", default = "")
 
@@ -46,7 +51,7 @@ object Preferences : KotprefModel() {
     var weatherProviderApiWeatherApi by stringPref(default = "")
     var weatherProviderApiWeatherBit by stringPref(default = "")
     var weatherProviderApiAccuweather by stringPref(default = "")
-    var weatherProvider by intPref(default = if (ConfigurationCompat.getLocales(context.resources.configuration)[0].isMetric()) Constants.WeatherProvider.YR.rawValue else Constants.WeatherProvider.WEATHER_GOV.rawValue)
+    var weatherProvider by intPref(default = if (usesMetric()) Constants.WeatherProvider.YR.rawValue else Constants.WeatherProvider.WEATHER_GOV.rawValue)
     var weatherProviderError by stringPref(default = "")
     var weatherProviderLocationError by stringPref(default = "")
     var eventAppName by stringPref(key = "PREF_EVENT_APP_NAME", default = "")
@@ -78,7 +83,6 @@ object Preferences : KotprefModel() {
 
     var clockTextColorDark by stringPref(default = "#FFFFFF")
     var clockTextAlphaDark by stringPref(default = "FF")
-
 
     var showAMPMIndicator by booleanPref(default = true)
 
