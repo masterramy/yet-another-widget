@@ -34,7 +34,22 @@ test "$(git -C "$TMP_SLIM" rev-parse HEAD)" = "$SLIMADAPTER_COMMIT"
 rm -rf app/src/main/java/net/idik/lib/slimadapter
 mkdir -p app/src/main/java/net/idik/lib
 cp -R "$TMP_SLIM/slimadapter/src/main/java/net/idik/lib/slimadapter" app/src/main/java/net/idik/lib/
-echo "SlimAdapter source: $SLIMADAPTER_COMMIT"
+
+# SlimAdapter's historical Java callback used a raw IViewInjector type. Modern Kotlin erases
+# generic view types on raw Java receivers, breaking existing .with<ImageView/CardView>() call sites.
+# Preserve the same API/behavior while retaining the generic receiver type for Kotlin interop.
+python3 - <<'PY'
+from pathlib import Path
+p = Path('app/src/main/java/net/idik/lib/slimadapter/SlimInjector.java')
+s = p.read_text()
+old = 'void onInject(T data, IViewInjector injector);'
+new = 'void onInject(T data, IViewInjector<?> injector);'
+if s.count(old) != 1:
+    raise SystemExit('Unexpected SlimInjector signature; fail closed')
+p.write_text(s.replace(old, new))
+PY
+grep -F 'void onInject(T data, IViewInjector<?> injector);' app/src/main/java/net/idik/lib/slimadapter/SlimInjector.java >/dev/null
+echo "SlimAdapter source: $SLIMADAPTER_COMMIT (generic injector bridge applied)"
 
 chmod +x ./gradlew
 ./gradlew --version
