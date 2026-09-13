@@ -4,7 +4,7 @@ buildscript {
     repositories {
         google()
         mavenCentral()
-        jcenter() // Q1 compatibility only; eliminate/replace JCenter-only deps in Q2.
+        maven { url 'https://repo.spring.io/libs-milestone' }
         maven { url 'https://jitpack.io' }
     }
     dependencies {
@@ -17,7 +17,9 @@ allprojects {
     repositories {
         google()
         mavenCentral()
-        jcenter() // Q1 compatibility only; do not carry to Q4 freeze.
+        // Legacy Q1 dependencies SlimAdapter/providers-android were originally published here.
+        // Replace them in Q2 rather than adding a third-party JCenter mirror.
+        maven { url 'https://repo.spring.io/libs-milestone' }
         maven { url 'https://jitpack.io' }
     }
 }
