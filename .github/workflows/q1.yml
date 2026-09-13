@@ -43,24 +43,12 @@ jobs:
 
   emulator-smoke:
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: macos-15-intel
     timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Enable KVM when available
-        shell: bash
-        run: |
-          if [ -e /dev/kvm ]; then
-            sudo chmod 0666 /dev/kvm
-            test -r /dev/kvm
-            test -w /dev/kvm
-            echo "KVM acceleration available"
-            ls -l /dev/kvm
-          else
-            echo "KVM unavailable on this hosted runner; emulator will use software acceleration"
-          fi
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
