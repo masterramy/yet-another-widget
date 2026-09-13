@@ -10,8 +10,19 @@ mkdir -p q1-evidence
 
 ui_dump() {
   local name="$1"
-  adb shell uiautomator dump /sdcard/window.xml >/dev/null 2>&1 || true
-  adb pull /sdcard/window.xml "q1-evidence/${name}.xml" >/dev/null 2>&1 || true
+  local remote="/sdcard/${name}.xml"
+  set +e
+  adb shell uiautomator dump "$remote" >"q1-evidence/${name}-uiautomator.txt" 2>&1
+  local rc=$?
+  adb pull "$remote" "q1-evidence/${name}.xml" >>"q1-evidence/${name}-uiautomator.txt" 2>&1
+  local pull_rc=$?
+  adb exec-out screencap -p > "q1-evidence/${name}.png" 2>>"q1-evidence/${name}-uiautomator.txt"
+  set -e
+  if [ "$rc" -ne 0 ] || [ "$pull_rc" -ne 0 ] || [ ! -s "q1-evidence/${name}.xml" ]; then
+    echo "UI dump failed for ${name} (uiautomator=$rc pull=$pull_rc)" >&2
+    cat "q1-evidence/${name}-uiautomator.txt" >&2 || true
+    return 1
+  fi
 }
 
 node_center() {
@@ -58,7 +69,6 @@ for node in root.iter('node'):
         cands.append(((x2-x1)*(y2-y1), (x1+x2)//2, (y1+y2)//2, text))
 if not cands:
     raise SystemExit(1)
-# Prefer the largest visible candidate after the app row has been expanded.
 _,x,y,_=sorted(cands, reverse=True)[0]
 print(x,y)
 PY
@@ -89,22 +99,25 @@ fi
 
 echo "== real launcher widget-picker placement =="
 adb shell input keyevent KEYCODE_HOME
-sleep 2
+sleep 3
+adb exec-out screencap -p > q1-evidence/launcher-home.png || true
 # Long-press an empty central area of the Pixel/Launcher3 home screen.
-adb shell input swipe 540 1250 540 1250 1200
-sleep 2
-ui_dump launcher-longpress
+adb shell input swipe 540 1250 540 1250 1600
+sleep 3
+if ! ui_dump launcher-longpress; then
+  exit 19
+fi
 if ! tap_node q1-evidence/launcher-longpress.xml "widgets"; then
   echo "Launcher widget entry not found" >&2
+  grep -o 'text="[^"]*"\|content-desc="[^"]*"\|resource-id="[^"]*"' q1-evidence/launcher-longpress.xml >&2 || true
   exit 20
 fi
 sleep 3
-ui_dump widget-picker
+ui_dump widget-picker || exit 19
 
-# Pixel Launcher groups widgets by application. Expand Another Widget if such a row is present.
 if tap_node q1-evidence/widget-picker.xml "another widget"; then
   sleep 2
-  ui_dump widget-picker-expanded
+  ui_dump widget-picker-expanded || exit 19
 else
   cp q1-evidence/widget-picker.xml q1-evidence/widget-picker-expanded.xml
 fi
@@ -113,22 +126,18 @@ source_xy="$(find_drag_source q1-evidence/widget-picker-expanded.xml)" || {
   echo "Another Widget drag source not found in launcher widget picker" >&2
   exit 21
 }
-# Drag the real launcher widget cell to the upper half of the workspace and hold long enough
-# for Launcher3 to cross the picker -> workspace transition.
 adb shell input swipe $source_xy 540 650 1800
 sleep 5
-ui_dump post-widget-drag
+ui_dump post-widget-drag || true
 adb shell dumpsys appwidget > q1-evidence/appwidget-after-placement.txt
 adb exec-out screencap -p > q1-evidence/widget-home.png || true
 
-# A true Q1 placement pass requires Launcher3 to have bound an appWidgetId to MainWidget.
 if ! grep -A8 -B8 -E "${PACKAGE//./\\.}/.*MainWidget|MainWidget" q1-evidence/appwidget-after-placement.txt | grep -q -E "appWidgetId|hostId|HostId|provider"; then
   echo "Launcher did not bind MainWidget after real picker drag" >&2
   grep -n -A12 -B12 -E "${PACKAGE//./\\.}|MainWidget" q1-evidence/appwidget-after-placement.txt >&2 || true
   exit 22
 fi
 
-# Ensure the widget/app did not crash during provider bind/update/render.
 adb logcat -d > q1-evidence/logcat-after-widget.txt
 if grep -E -q "FATAL EXCEPTION:.*|Process: ${PACKAGE//./\\.}" q1-evidence/logcat-after-widget.txt; then
   echo "Fatal exception detected after widget placement" >&2
