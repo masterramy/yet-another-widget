@@ -35,21 +35,22 @@ rm -rf app/src/main/java/net/idik/lib/slimadapter
 mkdir -p app/src/main/java/net/idik/lib
 cp -R "$TMP_SLIM/slimadapter/src/main/java/net/idik/lib/slimadapter" app/src/main/java/net/idik/lib/
 
-# SlimAdapter's historical Java callback used a raw IViewInjector type. Modern Kotlin erases
-# generic view types on raw Java receivers, breaking existing .with<ImageView/CardView>() call sites.
-# Preserve the same API/behavior while retaining the generic receiver type for Kotlin interop.
+# SlimAdapter's historical callback exposes a raw IViewInjector. Kotlin 2 erases generic view
+# types on that raw receiver; using a star projection fixes only the first fluent call because
+# the self-type becomes unknown again. SlimViewHolder always constructs DefaultViewInjector,
+# so retain that concrete self type at the callback boundary without changing runtime behavior.
 python3 - <<'PY'
 from pathlib import Path
 p = Path('app/src/main/java/net/idik/lib/slimadapter/SlimInjector.java')
 s = p.read_text()
 old = 'void onInject(T data, IViewInjector injector);'
-new = 'void onInject(T data, IViewInjector<?> injector);'
+new = 'void onInject(T data, IViewInjector<net.idik.lib.slimadapter.viewinjector.DefaultViewInjector> injector);'
 if s.count(old) != 1:
     raise SystemExit('Unexpected SlimInjector signature; fail closed')
 p.write_text(s.replace(old, new))
 PY
-grep -F 'void onInject(T data, IViewInjector<?> injector);' app/src/main/java/net/idik/lib/slimadapter/SlimInjector.java >/dev/null
-echo "SlimAdapter source: $SLIMADAPTER_COMMIT (generic injector bridge applied)"
+grep -F 'IViewInjector<net.idik.lib.slimadapter.viewinjector.DefaultViewInjector> injector' app/src/main/java/net/idik/lib/slimadapter/SlimInjector.java >/dev/null
+echo "SlimAdapter source: $SLIMADAPTER_COMMIT (concrete generic injector bridge applied)"
 
 chmod +x ./gradlew
 ./gradlew --version
