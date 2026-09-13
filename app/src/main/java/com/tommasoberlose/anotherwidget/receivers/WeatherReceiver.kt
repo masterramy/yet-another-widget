@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import com.tommasoberlose.anotherwidget.global.Actions
 import com.tommasoberlose.anotherwidget.global.Preferences
 import com.tommasoberlose.anotherwidget.helpers.WeatherHelper
@@ -13,9 +14,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.util.*
 
-
 class WeatherReceiver : BroadcastReceiver() {
-
     override fun onReceive(context: Context, intent: Intent) {
         when (intent.action) {
             Intent.ACTION_BOOT_COMPLETED,
@@ -25,18 +24,34 @@ class WeatherReceiver : BroadcastReceiver() {
             Intent.ACTION_TIME_CHANGED -> setUpdates(context)
 
             Actions.ACTION_WEATHER_UPDATE -> {
-                GlobalScope.launch(Dispatchers.IO) {
-                    WeatherHelper.updateWeather(context)
-                }
+                GlobalScope.launch(Dispatchers.IO) { WeatherHelper.updateWeather(context) }
             }
         }
     }
 
     companion object {
         private const val MINUTE = 60 * 1000L
+
+        private fun pending(context: Context, requestCode: Int): PendingIntent =
+            PendingIntent.getBroadcast(
+                context,
+                requestCode,
+                Intent(context, WeatherReceiver::class.java).apply { action = Actions.ACTION_WEATHER_UPDATE },
+                PendingIntent.FLAG_IMMUTABLE
+            )
+
+        private fun AlarmManager.scheduleBestEffort(triggerAtMillis: Long, operation: PendingIntent) {
+            when {
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && canScheduleExactAlarms() ->
+                    setExactAndAllowWhileIdle(AlarmManager.RTC, triggerAtMillis, operation)
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ->
+                    setAndAllowWhileIdle(AlarmManager.RTC, triggerAtMillis, operation)
+                else -> set(AlarmManager.RTC, triggerAtMillis, operation)
+            }
+        }
+
         fun setUpdates(context: Context) {
             removeUpdates(context)
-
             if (Preferences.showWeather) {
                 val interval = MINUTE * when (Preferences.weatherRefreshPeriod) {
                     0 -> 30
@@ -48,12 +63,7 @@ class WeatherReceiver : BroadcastReceiver() {
                     else -> 60
                 }
                 with(context.getSystemService(Context.ALARM_SERVICE) as AlarmManager) {
-                    setRepeating(
-                        AlarmManager.RTC,
-                        Calendar.getInstance().timeInMillis,
-                        interval,
-                        PendingIntent.getBroadcast(context, 0, Intent(context, WeatherReceiver::class.java).apply { action = Actions.ACTION_WEATHER_UPDATE }, 0)
-                    )
+                    setRepeating(AlarmManager.RTC, Calendar.getInstance().timeInMillis, interval, pending(context, 0))
                 }
             }
         }
@@ -62,11 +72,7 @@ class WeatherReceiver : BroadcastReceiver() {
             if (Preferences.showWeather) {
                 listOf(10, 20, 30).forEach {
                     with(context.getSystemService(Context.ALARM_SERVICE) as AlarmManager) {
-                        setExactAndAllowWhileIdle(
-                            AlarmManager.RTC,
-                            it * MINUTE,
-                            PendingIntent.getBroadcast(context, it, Intent(context, WeatherReceiver::class.java).apply { action = Actions.ACTION_WEATHER_UPDATE }, 0)
-                        )
+                        scheduleBestEffort(Calendar.getInstance().timeInMillis + it * MINUTE, pending(context, it))
                     }
                 }
             }
@@ -74,10 +80,8 @@ class WeatherReceiver : BroadcastReceiver() {
 
         fun removeUpdates(context: Context) {
             with(context.getSystemService(Context.ALARM_SERVICE) as AlarmManager) {
-                cancel(PendingIntent.getBroadcast(context, 0, Intent(context, WeatherReceiver::class.java).apply { action = Actions.ACTION_WEATHER_UPDATE }, 0))
-                listOf(10, 20, 30).forEach {
-                    cancel(PendingIntent.getBroadcast(context, it, Intent(context, WeatherReceiver::class.java).apply { action = Actions.ACTION_WEATHER_UPDATE }, 0))
-                }
+                cancel(pending(context, 0))
+                listOf(10, 20, 30).forEach { cancel(pending(context, it)) }
             }
         }
     }

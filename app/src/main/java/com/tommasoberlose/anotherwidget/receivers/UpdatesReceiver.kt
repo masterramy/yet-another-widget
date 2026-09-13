@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import com.tommasoberlose.anotherwidget.db.EventRepository
 import com.tommasoberlose.anotherwidget.global.Actions
 import com.tommasoberlose.anotherwidget.global.Constants
@@ -18,9 +19,7 @@ import kotlinx.coroutines.launch
 import org.joda.time.Period
 import java.util.*
 
-
 class UpdatesReceiver : BroadcastReceiver() {
-
     override fun onReceive(context: Context, intent: Intent) {
         when (intent.action) {
             Intent.ACTION_BOOT_COMPLETED,
@@ -40,18 +39,14 @@ class UpdatesReceiver : BroadcastReceiver() {
             Actions.ACTION_ALARM_UPDATE,
             Actions.ACTION_TIME_UPDATE -> {
                 MainWidget.updateWidget(context)
-                if (intent.hasExtra(EVENT_ID)) {
-                    setUpdates(context, intent.getLongExtra(EVENT_ID, -1))
-                }
+                if (intent.hasExtra(EVENT_ID)) setUpdates(context, intent.getLongExtra(EVENT_ID, -1))
             }
 
             Actions.ACTION_CLEAR_NOTIFICATION -> {
                 ActiveNotificationsHelper.clearLastNotification(context)
                 MainWidget.updateWidget(context)
             }
-            Actions.ACTION_UPDATE_GREETINGS -> {
-                MainWidget.updateWidget(context)
-            }
+            Actions.ACTION_UPDATE_GREETINGS -> MainWidget.updateWidget(context)
 
             Actions.ACTION_REFRESH -> {
                 GlobalScope.launch(Dispatchers.IO) {
@@ -66,19 +61,21 @@ class UpdatesReceiver : BroadcastReceiver() {
     companion object {
         const val EVENT_ID = "EVENT_ID"
 
+        private fun AlarmManager.scheduleBestEffort(type: Int, triggerAtMillis: Long, operation: PendingIntent) {
+            when {
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && canScheduleExactAlarms() -> setExact(type, triggerAtMillis, operation)
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.M -> setAndAllowWhileIdle(type, triggerAtMillis, operation)
+                else -> set(type, triggerAtMillis, operation)
+            }
+        }
+
         fun setUpdates(context: Context, eventId: Long? = null) {
             val eventRepository = EventRepository(context)
             if (eventId == null) {
                 removeUpdates(context)
-
-                eventRepository.getFutureEvents().forEach { event ->
-                    setEventUpdate(context, event)
-                }
+                eventRepository.getFutureEvents().forEach { event -> setEventUpdate(context, event) }
             } else {
-                val event = eventRepository.getEventByEventId(eventId)
-                if (event != null) {
-                    setEventUpdate(context, event)
-                }
+                eventRepository.getEventByEventId(eventId)?.let { setEventUpdate(context, it) }
             }
             eventRepository.close()
         }
@@ -103,7 +100,6 @@ class UpdatesReceiver : BroadcastReceiver() {
                 }
                 if (event.startDate <= limit) {
                     if (event.startDate > now.timeInMillis) {
-                        // Update the widget every hour till the event
                         if (diff.hours == 0) {
                             var minutes = 0
                             when (Preferences.widgetUpdateFrequency) {
@@ -115,11 +111,9 @@ class UpdatesReceiver : BroadcastReceiver() {
                                         else -> 0
                                     }
                                 }
-                                Constants.WidgetUpdateFrequency.HIGH.rawValue -> {
-                                    minutes = diff.minutes - (diff.minutes % 5)
-                                }
+                                Constants.WidgetUpdateFrequency.HIGH.rawValue -> minutes = diff.minutes - (diff.minutes % 5)
                             }
-                            setExact(
+                            scheduleBestEffort(
                                 AlarmManager.RTC,
                                 if (event.startDate - minutes * 1000 * 60 > (now.timeInMillis + 120 * 1000)) event.startDate - 60 * 1000 * minutes else now.timeInMillis + 120000,
                                 PendingIntent.getBroadcast(
@@ -129,11 +123,11 @@ class UpdatesReceiver : BroadcastReceiver() {
                                         action = Actions.ACTION_TIME_UPDATE
                                         putExtra(EVENT_ID, event.eventID)
                                     },
-                                    PendingIntent.FLAG_UPDATE_CURRENT
+                                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
                                 )
                             )
                         } else {
-                            setExact(
+                            scheduleBestEffort(
                                 AlarmManager.RTC,
                                 event.startDate - diff.hours * 1000 * 60 * 60 + if (diff.minutes > 30) (-30) else (+30),
                                 PendingIntent.getBroadcast(
@@ -143,29 +137,25 @@ class UpdatesReceiver : BroadcastReceiver() {
                                         action = Actions.ACTION_TIME_UPDATE
                                         putExtra(EVENT_ID, event.eventID)
                                     },
-                                    PendingIntent.FLAG_UPDATE_CURRENT
+                                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
                                 )
                             )
                         }
                     } else {
-                        // Update the widget one second after the event is finished
-                        val fireTime =
-                            if (event.endDate > now.timeInMillis + 120 * 1000) event.endDate else now.timeInMillis + 120000
-                        setExact(
+                        val fireTime = if (event.endDate > now.timeInMillis + 120 * 1000) event.endDate else now.timeInMillis + 120000
+                        scheduleBestEffort(
                             AlarmManager.RTC,
                             fireTime,
                             PendingIntent.getBroadcast(
                                 context,
                                 event.eventID.toInt(),
-                                Intent(context, UpdatesReceiver::class.java).apply {
-                                    action = Actions.ACTION_TIME_UPDATE
-                                },
-                                0
+                                Intent(context, UpdatesReceiver::class.java).apply { action = Actions.ACTION_TIME_UPDATE },
+                                PendingIntent.FLAG_IMMUTABLE
                             )
                         )
                     }
                 } else {
-                    setExact(
+                    scheduleBestEffort(
                         AlarmManager.RTC,
                         if (event.startDate - limit > now.timeInMillis + 120 * 1000) event.startDate - limit else now.timeInMillis + 120000,
                         PendingIntent.getBroadcast(
@@ -175,7 +165,7 @@ class UpdatesReceiver : BroadcastReceiver() {
                                 action = Actions.ACTION_TIME_UPDATE
                                 putExtra(EVENT_ID, event.eventID)
                             },
-                            PendingIntent.FLAG_UPDATE_CURRENT
+                            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
                         )
                     )
                 }
@@ -186,7 +176,14 @@ class UpdatesReceiver : BroadcastReceiver() {
             with(context.getSystemService(Context.ALARM_SERVICE) as AlarmManager) {
                 val eventRepository = EventRepository(context)
                 eventRepository.getFutureEvents().forEach {
-                    cancel(PendingIntent.getBroadcast(context, it.eventID.toInt(), Intent(context, UpdatesReceiver::class.java), 0))
+                    cancel(
+                        PendingIntent.getBroadcast(
+                            context,
+                            it.eventID.toInt(),
+                            Intent(context, UpdatesReceiver::class.java),
+                            PendingIntent.FLAG_IMMUTABLE
+                        )
+                    )
                 }
                 eventRepository.close()
             }
