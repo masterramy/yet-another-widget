@@ -8,7 +8,6 @@ import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
-import com.google.firebase.crashlytics.FirebaseCrashlytics
 
 
 object BitmapHelper {
@@ -39,15 +38,6 @@ object BitmapHelper {
             1
         }
 
-        if (draw) {
-            FirebaseCrashlytics.getInstance().setCustomKey("WIDTH SPEC", measuredWidth)
-            FirebaseCrashlytics.getInstance().setCustomKey("HEIGHT SPEC", measuredHeight)
-            FirebaseCrashlytics.getInstance().setCustomKey("VIEW measuredWidth", view.measuredWidth)
-            FirebaseCrashlytics.getInstance().setCustomKey("VIEW measuredHeight", view.measuredHeight)
-            FirebaseCrashlytics.getInstance().setCustomKey("WIDGET final width", measuredWidth)
-            FirebaseCrashlytics.getInstance().setCustomKey("WIDGET final height", view.measuredHeight)
-        }
-
         return try {
             val btm = Bitmap.createBitmap(
                 widgetWidth,
@@ -64,7 +54,7 @@ object BitmapHelper {
             }
             btm
         } catch (ex: Exception) {
-            FirebaseCrashlytics.getInstance().recordException(ex)
+            Log.e("BitmapHelper", "Failed to render widget bitmap", ex)
             Bitmap.createBitmap(5, 5, Bitmap.Config.ALPHA_8)
         }
     }
