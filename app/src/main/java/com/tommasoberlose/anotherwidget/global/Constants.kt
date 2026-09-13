@@ -10,17 +10,11 @@ object Constants {
     const val CUSTOM_FONT_DOWNLOAD_NEW = 3
 
     enum class ClockBottomMargin(val rawValue: Int) {
-        NONE(0),
-        SMALL(1),
-        MEDIUM(2),
-        LARGE(3)
+        NONE(0), SMALL(1), MEDIUM(2), LARGE(3)
     }
 
     enum class SecondRowTopMargin(val rawValue: Int) {
-        NONE(0),
-        SMALL(1),
-        MEDIUM(2),
-        LARGE(3)
+        NONE(0), SMALL(1), MEDIUM(2), LARGE(3)
     }
 
     enum class GlanceProviderId(val id: String) {
@@ -34,15 +28,13 @@ object Constants {
         EVENTS("EVENTS");
 
         companion object {
-            private val map = GlanceProviderId.values().associateBy(GlanceProviderId::id)
+            private val map = values().associateBy(GlanceProviderId::id)
             fun from(type: String) = map[type]
         }
     }
 
     enum class WidgetUpdateFrequency(val rawValue: Int) {
-        LOW(0),
-        DEFAULT(1),
-        HIGH(2)
+        LOW(0), DEFAULT(1), HIGH(2)
     }
 
     enum class WeatherProvider(val rawValue: Int) {
@@ -55,8 +47,8 @@ object Constants {
         YR(6);
 
         companion object {
-            private val map = WeatherProvider.values().associateBy(WeatherProvider::rawValue)
-            fun fromInt(type: Int) = map[type]
+            private val map = values().associateBy(WeatherProvider::rawValue)
+            fun fromInt(type: Int): WeatherProvider = map[type] ?: YR
         }
     }
 
@@ -70,20 +62,15 @@ object Constants {
 
         companion object {
             private val map = values().associateBy(GlanceNotificationTimer::rawValue)
-            fun fromInt(type: Int) = map[type]
+            fun fromInt(type: Int): GlanceNotificationTimer = map[type] ?: ONE_MINUTE
         }
     }
 
     enum class WeatherIconPack(val rawValue: Int) {
-        DEFAULT(0),
-        MINIMAL(1),
-        COOL(2),
-        GOOGLE_NEWS(3)
+        DEFAULT(0), MINIMAL(1), COOL(2), GOOGLE_NEWS(3)
     }
 
     enum class WidgetAlign(val rawValue: Int) {
-        LEFT(0),
-        RIGHT(1),
-        CENTER(2)
+        LEFT(0), RIGHT(1), CENTER(2)
     }
 }
