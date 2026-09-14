@@ -12,7 +12,7 @@ mkdir -p q1-evidence
 wait_for_launcher_ready() {
   echo "== wait for stable Android launcher/SystemUI =="
   adb wait-for-device
-  local deadline=$((SECONDS + 180))
+  local deadline=$((SECONDS + 300))
   local focus=""
   while [ "$SECONDS" -lt "$deadline" ]; do
     local boot
