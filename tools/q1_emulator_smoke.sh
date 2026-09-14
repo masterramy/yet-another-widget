@@ -9,21 +9,34 @@ test -n "$APK"
 rm -rf q1-evidence
 mkdir -p q1-evidence
 
+wake_and_unlock() {
+  adb shell settings put global stay_on_while_plugged_in 7 >/dev/null 2>&1 || true
+  adb shell svc power stayon true >/dev/null 2>&1 || true
+  adb shell input keyevent KEYCODE_WAKEUP >/dev/null 2>&1 || true
+  adb shell wm dismiss-keyguard >/dev/null 2>&1 || true
+  sleep 1
+}
+
 wait_for_launcher_ready() {
   echo "== wait for stable Android launcher/SystemUI =="
   adb wait-for-device
+  wake_and_unlock
   local deadline=$((SECONDS + 300))
   local focus=""
   while [ "$SECONDS" -lt "$deadline" ]; do
     local boot
     boot="$(adb shell getprop sys.boot_completed 2>/dev/null | tr -d '\r' || true)"
     if [ "$boot" = "1" ]; then
+      wake_and_unlock
       adb shell input keyevent KEYCODE_HOME >/dev/null 2>&1 || true
       sleep 2
       focus="$(adb shell dumpsys window 2>/dev/null | grep -m1 'mCurrentFocus' || true)"
       if echo "$focus" | grep -Eqi 'launcher|nexuslauncher'; then
         adb shell am wait-for-broadcast-idle >/dev/null 2>&1 || true
         sleep 5
+        wake_and_unlock
+        adb shell input keyevent KEYCODE_HOME >/dev/null 2>&1 || true
+        sleep 2
         focus="$(adb shell dumpsys window 2>/dev/null | grep -m1 'mCurrentFocus' || true)"
         if echo "$focus" | grep -Eqi 'launcher|nexuslauncher'; then
           echo "Launcher ready: $focus"
@@ -35,6 +48,7 @@ wait_for_launcher_ready() {
   done
   echo "Launcher/SystemUI never reached a stable HOME focus" >&2
   adb shell dumpsys window > q1-evidence/window-not-ready.txt 2>&1 || true
+  adb shell dumpsys power > q1-evidence/power-not-ready.txt 2>&1 || true
   adb exec-out screencap -p > q1-evidence/system-not-ready.png 2>/dev/null || true
   return 1
 }
