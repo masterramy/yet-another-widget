@@ -12,9 +12,31 @@ mkdir -p q1-evidence
 wake_and_unlock() {
   adb shell settings put global stay_on_while_plugged_in 7 >/dev/null 2>&1 || true
   adb shell svc power stayon true >/dev/null 2>&1 || true
+  adb shell locksettings set-disabled true >/dev/null 2>&1 || true
   adb shell input keyevent KEYCODE_WAKEUP >/dev/null 2>&1 || true
+  adb shell input keyevent 82 >/dev/null 2>&1 || true
   adb shell wm dismiss-keyguard >/dev/null 2>&1 || true
   sleep 1
+}
+
+wait_for_android_ready() {
+  echo "== wait for Android boot/package services =="
+  adb wait-for-device
+  local deadline=$((SECONDS + 300))
+  while [ "$SECONDS" -lt "$deadline" ]; do
+    local boot
+    boot="$(adb shell getprop sys.boot_completed 2>/dev/null | tr -d '\r' || true)"
+    if [ "$boot" = "1" ] && adb shell pm path com.android.launcher3 >/dev/null 2>&1; then
+      echo "Android boot/package services ready."
+      return 0
+    fi
+    sleep 3
+  done
+  echo "Android never reached boot/package-service readiness" >&2
+  adb shell dumpsys window > q1-evidence/window-not-ready.txt 2>&1 || true
+  adb shell dumpsys power > q1-evidence/power-not-ready.txt 2>&1 || true
+  adb exec-out screencap -p > q1-evidence/system-not-ready.png 2>/dev/null || true
+  return 1
 }
 
 wait_for_launcher_ready() {
@@ -177,7 +199,7 @@ raise SystemExit(1)
 PY
 }
 
-wait_for_launcher_ready || exit 18
+wait_for_android_ready || exit 18
 
 echo "== install =="
 adb install -r "$APK"
