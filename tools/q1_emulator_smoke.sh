@@ -292,9 +292,16 @@ source_xy="$(find_drag_source q1-evidence/widget-picker-expanded.xml)" || {
   exit 21
 }
 echo "Another Widget preview drag source: $source_xy" | tee q1-evidence/widget-drag.txt
-# Android's draganddrop command deliberately holds for the platform long-press timeout
-# before moving, unlike a plain swipe (which Launcher3 interprets as list scrolling).
-adb shell input draganddrop $source_xy 540 650 1800
+# The picker is a scrollable RecyclerView. A single draganddrop gesture can be
+# interpreted as list motion before Launcher3 establishes a widget drag. Use a
+# fail-closed two-stage pointer sequence: hold the preview beyond long-press
+# timeout, then move the still-down pointer to HOME and release there.
+read -r source_x source_y <<<"$source_xy"
+adb shell input motionevent DOWN "$source_x" "$source_y"
+sleep 2
+adb shell input motionevent MOVE 540 650
+sleep 2
+adb shell input motionevent UP 540 650
 sleep 8
 ui_dump post-widget-drag || true
 adb shell dumpsys appwidget > q1-evidence/appwidget-after-placement.txt
