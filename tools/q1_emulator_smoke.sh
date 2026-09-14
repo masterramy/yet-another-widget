@@ -57,6 +57,25 @@ ui_dump() {
   fi
 }
 
+capture_launch_diagnostics() {
+  adb logcat -d > q1-evidence/logcat.txt 2>&1 || true
+  adb shell dumpsys activity activities > q1-evidence/activities.txt 2>&1 || true
+  adb shell dumpsys window > q1-evidence/window.txt 2>&1 || true
+  adb shell dumpsys package "$PACKAGE" > q1-evidence/package.txt 2>&1 || true
+  adb shell pidof "$PACKAGE" > q1-evidence/pidof.txt 2>&1 || true
+  adb shell ps -A > q1-evidence/ps.txt 2>&1 || true
+  {
+    echo "current_focus:"
+    grep -m1 'mCurrentFocus' q1-evidence/window.txt || true
+    echo "resumed_activity:"
+    grep -m2 -E 'mResumedActivity|topResumedActivity|ResumedActivity' q1-evidence/activities.txt || true
+    echo "package_activity_matches:"
+    grep -n -A5 -B3 "$PACKAGE" q1-evidence/activities.txt | head -n 120 || true
+    echo "pidof:"
+    cat q1-evidence/pidof.txt || true
+  } > q1-evidence/launch-summary.txt
+}
+
 node_center() {
   local xml="$1"
   local needle="$2"
@@ -117,17 +136,41 @@ adb logcat -c
 adb shell am force-stop "$PACKAGE" || true
 adb shell am start -W -n "$ACTIVITY"
 sleep 7
-ui_dump main-activity-ui || exit 24
+ui_dump main-activity-ui || {
+  capture_launch_diagnostics
+  exit 24
+}
+capture_launch_diagnostics
+
 if ! grep -qi 'Another Widget' q1-evidence/main-activity-ui.xml; then
   echo "MainActivity did not render the expected app shell" >&2
-  exit 25
+  cat q1-evidence/launch-summary.txt >&2 || true
+
+  if grep -E -q "FATAL EXCEPTION:.*|Process: ${PACKAGE//./\\.}" q1-evidence/logcat.txt; then
+    echo "Classification: app process fatal during/after launch" >&2
+    grep -n -A50 -B8 -E "FATAL EXCEPTION:|Process: ${PACKAGE//./\\.}" q1-evidence/logcat.txt >&2 || true
+    exit 26
+  fi
+
+  if [ ! -s q1-evidence/pidof.txt ]; then
+    echo "Classification: app process absent after successful am start; inspect lifecycle/activity logs" >&2
+    grep -n -E "ActivityTaskManager|ActivityManager|am_finish_activity|am_destroy_activity|Force finishing|${PACKAGE//./\\.}" q1-evidence/logcat.txt | tail -n 160 >&2 || true
+    exit 27
+  fi
+
+  if ! grep -q "$PACKAGE" q1-evidence/activities.txt; then
+    echo "Classification: app process alive but no package activity remains in activity task state" >&2
+    grep -n -E "ActivityTaskManager|ActivityManager|am_finish_activity|am_destroy_activity|${PACKAGE//./\\.}" q1-evidence/logcat.txt | tail -n 160 >&2 || true
+    exit 28
+  fi
+
+  echo "Classification: app process/activity state exists but launcher owns visible focus; inspect window/activity routing evidence" >&2
+  exit 29
 fi
 
 adb shell dumpsys package "$PACKAGE" | grep -E 'MainWidget|MainActivity|versionName|targetSdk' || true
 adb shell dumpsys activity activities | grep -A4 -B2 "$PACKAGE" || true
 cp q1-evidence/main-activity-ui.png q1-evidence/main-activity.png
-adb logcat -d > q1-evidence/logcat.txt
-adb shell dumpsys package "$PACKAGE" > q1-evidence/package.txt
 adb shell cmd appwidget help > q1-evidence/appwidget-help.txt 2>&1 || true
 
 if grep -E -q "FATAL EXCEPTION:.*|Process: ${PACKAGE//./\\.}" q1-evidence/logcat.txt; then
