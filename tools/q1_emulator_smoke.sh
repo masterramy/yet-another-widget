@@ -138,18 +138,42 @@ find_drag_source() {
   python3 - "$xml" <<'PY'
 import re, sys, xml.etree.ElementTree as ET
 root = ET.parse(sys.argv[1]).getroot()
-cands=[]
-for node in root.iter('node'):
-    text=' '.join([node.attrib.get('text',''),node.attrib.get('content-desc',''),node.attrib.get('resource-id','')]).lower()
-    m=re.match(r'\[(\d+),(\d+)\]\[(\d+),(\d+)\]',node.attrib.get('bounds',''))
-    if not m: continue
-    x1,y1,x2,y2=map(int,m.groups())
-    if ('another widget' in text or 'widgetcell' in text or 'widget_cell' in text) and (x2-x1)>80 and (y2-y1)>80:
-        cands.append(((x2-x1)*(y2-y1), (x1+x2)//2, (y1+y2)//2, text))
-if not cands:
-    raise SystemExit(1)
-_,x,y,_=sorted(cands, reverse=True)[0]
-print(x,y)
+for cell in root.iter('node'):
+    desc = cell.attrib.get('content-desc', '').lower()
+    klass = cell.attrib.get('class', '').lower()
+    if 'another widget widget' not in desc or 'widgetcell' not in klass:
+        continue
+    for node in cell.iter('node'):
+        if node.attrib.get('resource-id', '').endswith('/widget_preview_container'):
+            m = re.match(r'\[(\d+),(\d+)\]\[(\d+),(\d+)\]', node.attrib.get('bounds',''))
+            if m:
+                x1,y1,x2,y2 = map(int,m.groups())
+                print((x1+x2)//2, (y1+y2)//2)
+                raise SystemExit(0)
+    m = re.match(r'\[(\d+),(\d+)\]\[(\d+),(\d+)\]', cell.attrib.get('bounds',''))
+    if m:
+        x1,y1,x2,y2 = map(int,m.groups())
+        print((x1+x2)//2, (y1+y2)//2)
+        raise SystemExit(0)
+raise SystemExit(1)
+PY
+}
+
+main_widget_bound_to_launcher() {
+  local dump="$1"
+  python3 - "$dump" "$PACKAGE" <<'PY'
+import re, sys
+path, package = sys.argv[1:]
+text = open(path, errors='replace').read()
+if 'Widgets:' not in text or 'Hosts:' not in text:
+    raise SystemExit(2)
+section = text.split('Widgets:', 1)[1].split('Hosts:', 1)[0]
+blocks = re.split(r'(?m)^\s*Widget \[\d+\]:\s*$', section)[1:]
+for block in blocks:
+    if package in block and 'MainWidget' in block and ('pkg:com.android.launcher3' in block or 'pkg:com.google.android.apps.nexuslauncher' in block):
+        print(block.strip())
+        raise SystemExit(0)
+raise SystemExit(1)
 PY
 }
 
@@ -242,20 +266,30 @@ else
 fi
 
 source_xy="$(find_drag_source q1-evidence/widget-picker-expanded.xml)" || {
-  echo "Another Widget drag source not found in launcher widget picker" >&2
+  echo "Another Widget preview drag source not found in launcher widget picker" >&2
   exit 21
 }
-adb shell input swipe $source_xy 540 650 1800
-sleep 5
+echo "Another Widget preview drag source: $source_xy" | tee q1-evidence/widget-drag.txt
+# Android's draganddrop command deliberately holds for the platform long-press timeout
+# before moving, unlike a plain swipe (which Launcher3 interprets as list scrolling).
+adb shell input draganddrop $source_xy 540 650 1800
+sleep 8
 ui_dump post-widget-drag || true
 adb shell dumpsys appwidget > q1-evidence/appwidget-after-placement.txt
+adb shell dumpsys window > q1-evidence/window-after-placement.txt 2>&1 || true
 adb exec-out screencap -p > q1-evidence/widget-home.png || true
 
-if ! grep -A8 -B8 -E "${PACKAGE//./\\.}/.*MainWidget|MainWidget" q1-evidence/appwidget-after-placement.txt | grep -q -E "appWidgetId|hostId|HostId|provider"; then
-  echo "Launcher did not bind MainWidget after real picker drag" >&2
-  grep -n -A12 -B12 -E "${PACKAGE//./\\.}|MainWidget" q1-evidence/appwidget-after-placement.txt >&2 || true
+if [ -s q1-evidence/post-widget-drag.xml ] && grep -q 'primary_widgets_list_view' q1-evidence/post-widget-drag.xml; then
+  echo "Launcher widget picker remained open after drag-and-drop" >&2
   exit 22
 fi
+
+if ! main_widget_bound_to_launcher q1-evidence/appwidget-after-placement.txt > q1-evidence/main-widget-binding.txt; then
+  echo "Launcher did not bind MainWidget after real picker drag" >&2
+  grep -n -A16 -B16 -E "${PACKAGE//./\\.}|MainWidget|Widgets:|Hosts:" q1-evidence/appwidget-after-placement.txt >&2 || true
+  exit 22
+fi
+cat q1-evidence/main-widget-binding.txt
 
 adb logcat -d > q1-evidence/logcat-after-widget.txt
 if grep -E -q "FATAL EXCEPTION:.*|Process: ${PACKAGE//./\\.}" q1-evidence/logcat-after-widget.txt; then
