@@ -168,7 +168,7 @@ text = open(path, errors='replace').read()
 if 'Widgets:' not in text or 'Hosts:' not in text:
     raise SystemExit(2)
 section = text.split('Widgets:', 1)[1].split('Hosts:', 1)[0]
-blocks = re.split(r'(?m)^\s*Widget \[\d+\]:\s*$', section)[1:]
+blocks = re.split(r'(?m)^\s*\[\d+\]\s+id=\d+\s*$', section)[1:]
 for block in blocks:
     if package in block and 'MainWidget' in block and ('pkg:com.android.launcher3' in block or 'pkg:com.google.android.apps.nexuslauncher' in block):
         print(block.strip())
