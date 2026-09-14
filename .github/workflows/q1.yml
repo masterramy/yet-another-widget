@@ -69,6 +69,7 @@ jobs:
           arch: x86_64
           profile: pixel_6
           disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -feature -Vulkan -no-snapshot -noaudio -no-boot-anim
           script: bash tools/q1_emulator_smoke.sh
       - uses: actions/upload-artifact@v4
         if: always()
