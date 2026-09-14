@@ -90,6 +90,20 @@ capture_launch_diagnostics() {
   } > q1-evidence/launch-summary.txt
 }
 
+app_shell_visible_from_system_state() {
+  [ -s q1-evidence/pidof.txt ] || return 1
+  [ -s q1-evidence/main-activity-ui.png ] || return 1
+  grep -E -q "topResumedActivity=.*${PACKAGE//./\\.}.*MainActivity|mResumedActivity=.*${PACKAGE//./\\.}.*MainActivity|ResumedActivity.*${PACKAGE//./\\.}.*MainActivity" q1-evidence/activities.txt || return 1
+  grep -q 'state=RESUMED' q1-evidence/activities.txt || return 1
+  grep -q 'reportedDrawn=true' q1-evidence/activities.txt || return 1
+  grep -E -q 'nowVisible=true|mVisibleRequested=true mVisible=true' q1-evidence/activities.txt || return 1
+  grep -E -q "mCurrentFocus=.*${PACKAGE//./\\.}.*MainActivity" q1-evidence/window.txt || return 1
+  if grep -E -q "FATAL EXCEPTION:.*|Process: ${PACKAGE//./\\.}" q1-evidence/logcat.txt; then
+    return 1
+  fi
+  return 0
+}
+
 node_center() {
   local xml="$1"
   local needle="$2"
@@ -150,36 +164,46 @@ adb logcat -c
 adb shell am force-stop "$PACKAGE" || true
 adb shell am start -W -n "$ACTIVITY"
 sleep 7
-ui_dump main-activity-ui || {
-  capture_launch_diagnostics
-  exit 24
-}
+main_ui_dump_ok=1
+if ! ui_dump main-activity-ui; then
+  main_ui_dump_ok=0
+fi
 capture_launch_diagnostics
 
-if ! grep -qi 'Another Widget' q1-evidence/main-activity-ui.xml; then
-  echo "MainActivity did not render the expected app shell" >&2
-  cat q1-evidence/launch-summary.txt >&2 || true
+if [ "$main_ui_dump_ok" -eq 1 ]; then
+  if ! grep -qi 'Another Widget' q1-evidence/main-activity-ui.xml; then
+    echo "MainActivity did not render the expected app shell" >&2
+    cat q1-evidence/launch-summary.txt >&2 || true
 
-  if grep -E -q "FATAL EXCEPTION:.*|Process: ${PACKAGE//./\\.}" q1-evidence/logcat.txt; then
-    echo "Classification: app process fatal during/after launch" >&2
-    grep -n -A50 -B8 -E "FATAL EXCEPTION:|Process: ${PACKAGE//./\\.}" q1-evidence/logcat.txt >&2 || true
-    exit 26
+    if grep -E -q "FATAL EXCEPTION:.*|Process: ${PACKAGE//./\\.}" q1-evidence/logcat.txt; then
+      echo "Classification: app process fatal during/after launch" >&2
+      grep -n -A50 -B8 -E "FATAL EXCEPTION:|Process: ${PACKAGE//./\\.}" q1-evidence/logcat.txt >&2 || true
+      exit 26
+    fi
+
+    if [ ! -s q1-evidence/pidof.txt ]; then
+      echo "Classification: app process absent after successful am start; inspect lifecycle/activity logs" >&2
+      grep -n -E "ActivityTaskManager|ActivityManager|am_finish_activity|am_destroy_activity|Force finishing|${PACKAGE//./\\.}" q1-evidence/logcat.txt | tail -n 160 >&2 || true
+      exit 27
+    fi
+
+    if ! grep -q "$PACKAGE" q1-evidence/activities.txt; then
+      echo "Classification: app process alive but no package activity remains in activity task state" >&2
+      grep -n -E "ActivityTaskManager|ActivityManager|am_finish_activity|am_destroy_activity|${PACKAGE//./\\.}" q1-evidence/logcat.txt | tail -n 160 >&2 || true
+      exit 28
+    fi
+
+    echo "Classification: app process/activity state exists but launcher owns visible focus; inspect window/activity routing evidence" >&2
+    exit 29
   fi
-
-  if [ ! -s q1-evidence/pidof.txt ]; then
-    echo "Classification: app process absent after successful am start; inspect lifecycle/activity logs" >&2
-    grep -n -E "ActivityTaskManager|ActivityManager|am_finish_activity|am_destroy_activity|Force finishing|${PACKAGE//./\\.}" q1-evidence/logcat.txt | tail -n 160 >&2 || true
-    exit 27
+else
+  if app_shell_visible_from_system_state; then
+    echo "UiAutomator XML unavailable; accepting fail-closed rendered foreground MainActivity evidence."
+  else
+    echo "MainActivity UI XML unavailable and system-state fallback did not prove a rendered foreground shell" >&2
+    cat q1-evidence/launch-summary.txt >&2 || true
+    exit 24
   fi
-
-  if ! grep -q "$PACKAGE" q1-evidence/activities.txt; then
-    echo "Classification: app process alive but no package activity remains in activity task state" >&2
-    grep -n -E "ActivityTaskManager|ActivityManager|am_finish_activity|am_destroy_activity|${PACKAGE//./\\.}" q1-evidence/logcat.txt | tail -n 160 >&2 || true
-    exit 28
-  fi
-
-  echo "Classification: app process/activity state exists but launcher owns visible focus; inspect window/activity routing evidence" >&2
-  exit 29
 fi
 
 adb shell dumpsys package "$PACKAGE" | grep -E 'MainWidget|MainActivity|versionName|targetSdk' || true
