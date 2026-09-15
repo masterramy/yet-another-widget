@@ -14,12 +14,13 @@ if [ "$rc" -ne 22 ]; then
   exit "$rc"
 fi
 
-echo "== Q1 placement recovery: Launcher-native long drag =="
-# The preceding fail-closed smoke proved build/install/render/provider discovery and
-# classified exit 22 at the picker gesture boundary. Retry only that invalidated
-# surface with Android's single-process draganddrop injector. The run40 recovery
-# target at y=220 overlapped Launcher's existing 4x1 Search widget, so use the
-# visually verified empty middle-upper row while preserving the strict bind check.
+echo "== Q1 placement recovery: continuous Launcher pointer drag =="
+# The base smoke already proved build/install/render/provider discovery. Run41
+# also proved that a valid empty HOME row alone does not make Android's one-shot
+# `input draganddrop` establish Launcher3's widget drag lifecycle. Retry only
+# this invalidated input surface with one continuous pointer: DOWN on the real
+# preview, hold past long-press timeout, MOVE through the picker boundary onto
+# HOME, then UP in the known-empty 4x1 row. Shipping source is untouched.
 adb shell input keyevent KEYCODE_HOME
 sleep 2
 adb shell input swipe 540 1250 540 1250 1600
@@ -79,10 +80,18 @@ PY
 echo "Recovery drag source: $source_xy" | tee q1-evidence/widget-drag-recovery.txt
 read -r sx sy <<<"$source_xy"
 echo "Recovery drag target: 540 700" | tee -a q1-evidence/widget-drag-recovery.txt
-adb shell input draganddrop "$sx" "$sy" 540 700 2500
+adb shell input motionevent DOWN "$sx" "$sy"
+sleep 2
+adb shell input motionevent MOVE "$sx" 760
+sleep 1
+adb shell input motionevent MOVE 540 700
+sleep 2
+adb shell input motionevent UP 540 700
 sleep 10
 adb shell dumpsys appwidget > q1-evidence/appwidget-after-recovery.txt
+adb shell dumpsys window > q1-evidence/window-after-recovery.txt 2>&1 || true
 adb exec-out screencap -p > q1-evidence/widget-home-recovery.png || true
+adb logcat -d > q1-evidence/logcat-after-recovery.txt 2>&1 || true
 
 python3 - q1-evidence/appwidget-after-recovery.txt "$PACKAGE" <<'PY'
 import re,sys
@@ -97,4 +106,9 @@ for block in re.split(r'(?m)^\s*\[\d+\]\s+id=\d+\s*$',section)[1:]:
 raise SystemExit(22)
 PY
 
-echo "Q1 real Launcher-hosted MainWidget placement GREEN via recovery drag."
+if grep -E -q "FATAL EXCEPTION:.*|Process: ${PACKAGE//./\\.}" q1-evidence/logcat-after-recovery.txt; then
+  echo "Fatal exception detected after recovery widget placement" >&2
+  exit 23
+fi
+
+echo "Q1 real Launcher-hosted MainWidget placement GREEN via continuous recovery drag."
