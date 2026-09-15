@@ -32,7 +32,6 @@ import com.tommasoberlose.anotherwidget.helpers.MediaPlayerHelper
 import com.tommasoberlose.anotherwidget.helpers.WeatherHelper
 import com.tommasoberlose.anotherwidget.ui.activities.settings.IntegrationsActivity
 import com.tommasoberlose.anotherwidget.ui.activities.MainActivity
-import com.tommasoberlose.anotherwidget.ui.activities.settings.SupportDevActivity
 import com.tommasoberlose.anotherwidget.ui.viewmodels.MainViewModel
 import com.tommasoberlose.anotherwidget.utils.checkGrantedPermission
 import com.tommasoberlose.anotherwidget.utils.ignoreExceptions
@@ -84,6 +83,8 @@ class SettingsFragment : Fragment() {
 
         binding.showWidgetPreviewToggle.setCheckedImmediatelyNoEvent(Preferences.showPreview)
         binding.showWallpaperToggle.setCheckedImmediatelyNoEvent(Preferences.showWallpaper)
+        // Paid-upfront release: the legacy donation/IAP entry point is intentionally unavailable.
+        binding.actionHelpDev.visibility = View.GONE
 
         setupListener()
 
@@ -195,10 +196,6 @@ class SettingsFragment : Fragment() {
 
         binding.actionPrivacyPolicy.setOnClickListener {
             requireActivity().openURI("https://github.com/tommasoberlose/another-widget/blob/master/privacy-policy.md")
-        }
-
-        binding.actionHelpDev.setOnClickListener {
-            startActivity(Intent(requireContext(), SupportDevActivity::class.java))
         }
 
         binding.actionRefreshWidget.setOnClickListener {
