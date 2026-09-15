@@ -37,7 +37,9 @@ jobs:
       - name: Q1 deterministic build
         shell: bash
         run: bash tools/q1_build.sh
-      - uses: actions/upload-artifact@v4
+      - name: Upload debug APK (diagnostic only)
+        uses: actions/upload-artifact@v4
+        continue-on-error: true
         with:
           name: q1-debug-apk
           path: app/build/outputs/apk/debug/*.apk
@@ -81,8 +83,10 @@ jobs:
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
           script: bash tools/q1_emulator_smoke_recover.sh
-      - uses: actions/upload-artifact@v4
+      - name: Upload emulator evidence (diagnostic only)
+        uses: actions/upload-artifact@v4
         if: always()
+        continue-on-error: true
         with:
           name: q1-emulator-evidence
           path: q1-evidence/**
