@@ -2,24 +2,22 @@ package com.tommasoberlose.anotherwidget.helpers
 
 import android.Manifest
 import android.content.Context
-import android.util.Log
 import com.tommasoberlose.anotherwidget.R
 import com.tommasoberlose.anotherwidget.db.EventRepository
 import com.tommasoberlose.anotherwidget.global.Constants
 import com.tommasoberlose.anotherwidget.global.Preferences
 import com.tommasoberlose.anotherwidget.models.GlanceProvider
 import com.tommasoberlose.anotherwidget.utils.checkGrantedPermission
-import com.tommasoberlose.anotherwidget.utils.checkIfFitInstalled
 import java.util.ArrayList
 
 object GlanceProviderHelper {
     fun getGlanceProviders(context: Context): ArrayList<Constants.GlanceProviderId> {
         val enabledProviders = Preferences.enabledGlanceProviderOrder.split(",").filter { it != "" }
 
+        // GOOGLE_FIT_STEPS remains as an inert enum value so existing serialized provider
+        // orders stay readable, but the retired provider is never exposed or rendered.
         val providers = Constants.GlanceProviderId.values()
-            .filter {
-                context.checkIfFitInstalled() || it != Constants.GlanceProviderId.GOOGLE_FIT_STEPS
-            }
+            .filter { it != Constants.GlanceProviderId.GOOGLE_FIT_STEPS }
             .toTypedArray()
 
         return ArrayList(providers.filter { enabledProviders.contains(it.id) }.sortedWith(Comparator { p1, p2 ->
@@ -66,12 +64,7 @@ object GlanceProviderHelper {
                    R.drawable.round_battery_charging_full_24
                )
             }
-            Constants.GlanceProviderId.GOOGLE_FIT_STEPS -> {
-               GlanceProvider(providerId.id,
-                   context.getString(R.string.settings_daily_steps_title),
-                   R.drawable.round_favorite_border_24
-               )
-            }
+            Constants.GlanceProviderId.GOOGLE_FIT_STEPS -> null
             Constants.GlanceProviderId.NOTIFICATIONS -> {
                 GlanceProvider(providerId.id,
                     context.getString(R.string.settings_show_notifications_title),
@@ -108,10 +101,9 @@ object GlanceProviderHelper {
                 (MediaPlayerHelper.isSomeonePlaying(context)) ||
                 (Preferences.showBatteryCharging && Preferences.isCharging || Preferences.isBatteryLevelLow) ||
                 (Preferences.customNotes.isNotEmpty()) ||
-                (Preferences.showDailySteps && Preferences.googleFitSteps > 0) ||
                 (Preferences.showGreetings && GreetingsHelper.showGreetings()) ||
-                        (Preferences.showEventsAsGlanceProvider && Preferences.showEvents && context.checkGrantedPermission(
-                            Manifest.permission.READ_CALENDAR) && eventRepository.getNextEvent() != null)
+                (Preferences.showEventsAsGlanceProvider && Preferences.showEvents && context.checkGrantedPermission(
+                    Manifest.permission.READ_CALENDAR) && eventRepository.getNextEvent() != null)
             )
         eventRepository.close()
         return showGlance

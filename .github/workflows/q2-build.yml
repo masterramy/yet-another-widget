@@ -39,6 +39,14 @@ jobs:
           test ! -e app/src/main/java/com/tommasoberlose/anotherwidget/ui/viewmodels/settings/SupportDevViewModel.kt
           test ! -e app/src/main/res/layout/activity_support_dev.xml
           test ! -e app/src/main/res/layout/inapp_product_layout.xml
+      - name: Google Fit and exact-polling surface must be retired
+        shell: bash
+        run: |
+          set -euo pipefail
+          ! grep -R "play-services-fitness\|play-services-auth" app/build.gradle
+          ! grep -R "ACTIVITY_RECOGNITION\|com.google.android.apps.fitness\|ActivityDetectionReceiver" app/src/main app/build.gradle
+          ! grep -R "com.google.android.gms.fitness\|FitnessOptions\|getHistoryClient" app/src/main/java
+          test ! -e app/src/main/java/com/tommasoberlose/anotherwidget/receivers/ActivityDetectionReceiver.kt
       - name: Q2 deterministic build
         shell: bash
         run: bash tools/q1_build.sh
