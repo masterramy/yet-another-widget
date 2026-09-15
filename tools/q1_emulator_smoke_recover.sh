@@ -2,6 +2,9 @@
 set -euo pipefail
 
 PACKAGE="com.tommasoberlose.anotherwidget"
+TEST_APK="app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk"
+TEST_RUNNER="com.tommasoberlose.anotherwidget.test/androidx.test.runner.AndroidJUnitRunner"
+TEST_CLASS="com.tommasoberlose.anotherwidget.LauncherWidgetDragTest"
 
 set +e
 bash tools/q1_emulator_smoke.sh
@@ -14,13 +17,101 @@ if [ "$rc" -ne 22 ]; then
   exit "$rc"
 fi
 
-echo "== Q1 placement recovery: continuous Launcher pointer drag =="
-# The base smoke already proved build/install/render/provider discovery. Run41
-# also proved that a valid empty HOME row alone does not make Android's one-shot
-# `input draganddrop` establish Launcher3's widget drag lifecycle. Retry only
-# this invalidated input surface with one continuous pointer: DOWN on the real
-# preview, hold past long-press timeout, MOVE through the picker boundary onto
-# HOME, then UP in the known-empty 4x1 row. Shipping source is untouched.
+echo "== Q1 placement recovery: UiAutomation coherent Launcher pointer drag =="
+# The base smoke has already proved build/install/render/provider discovery.
+# Runs 40-43 also proved that one-shot draganddrop and separate shell motionevent
+# processes do not establish Launcher3's widget drag lifecycle reliably. Build
+# and install a Q1-only instrumentation helper, then inject one coherent pointer
+# stream from a single UiAutomation process. Shipping app source is untouched.
+TEST_SOURCE="app/src/androidTest/java/com/tommasoberlose/anotherwidget/LauncherWidgetDragTest.kt"
+mkdir -p "$(dirname "$TEST_SOURCE")"
+cat > "$TEST_SOURCE" <<'KOTLIN'
+package com.tommasoberlose.anotherwidget
+
+import android.os.SystemClock
+import android.view.InputDevice
+import android.view.MotionEvent
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
+import org.junit.Assert.assertTrue
+import org.junit.Test
+import org.junit.runner.RunWith
+
+/** Q1-only launcher harness. It injects one coherent touchscreen pointer stream globally. */
+@RunWith(AndroidJUnit4::class)
+class LauncherWidgetDragTest {
+    @Test
+    fun injectWidgetDrag() {
+        val instrumentation = InstrumentationRegistry.getInstrumentation()
+        val args = InstrumentationRegistry.getArguments()
+
+        fun coordinate(name: String): Float = requireNotNull(args.getString(name)) {
+            "Missing instrumentation argument: $name"
+        }.toFloat()
+
+        val sourceX = coordinate("sourceX")
+        val sourceY = coordinate("sourceY")
+        val edgeY = coordinate("edgeY")
+        val targetX = coordinate("targetX")
+        val targetY = coordinate("targetY")
+        val ui = instrumentation.uiAutomation
+        val downTime = SystemClock.uptimeMillis()
+
+        fun inject(action: Int, x: Float, y: Float) {
+            val event = MotionEvent.obtain(
+                downTime,
+                SystemClock.uptimeMillis(),
+                action,
+                x,
+                y,
+                0
+            )
+            event.source = InputDevice.SOURCE_TOUCHSCREEN
+            try {
+                assertTrue("UiAutomation rejected MotionEvent action=$action x=$x y=$y", ui.injectInputEvent(event, true))
+            } finally {
+                event.recycle()
+            }
+        }
+
+        fun movePath(fromX: Float, fromY: Float, toX: Float, toY: Float, steps: Int, delayMs: Long) {
+            for (step in 1..steps) {
+                val fraction = step.toFloat() / steps.toFloat()
+                inject(
+                    MotionEvent.ACTION_MOVE,
+                    fromX + (toX - fromX) * fraction,
+                    fromY + (toY - fromY) * fraction
+                )
+                SystemClock.sleep(delayMs)
+            }
+        }
+
+        inject(MotionEvent.ACTION_DOWN, sourceX, sourceY)
+        // Hold well past Launcher3's widget-preview long-press threshold.
+        SystemClock.sleep(1600)
+
+        // Cross the picker-to-workspace boundary while the same pointer remains down.
+        movePath(sourceX, sourceY, targetX, edgeY, steps = 24, delayMs = 30)
+        SystemClock.sleep(800)
+
+        // Once HOME is exposed, move into the known-empty 4x1 row and release there.
+        movePath(targetX, edgeY, targetX, targetY, steps = 12, delayMs = 35)
+        SystemClock.sleep(300)
+        inject(MotionEvent.ACTION_UP, targetX, targetY)
+        SystemClock.sleep(1000)
+    }
+}
+KOTLIN
+
+# Rebuild only the Q1 test APK after adding the harness source. This mutation is
+# runner-local and does not alter shipping app/product source bytes.
+./gradlew --no-daemon :app:assembleDebugAndroidTest | tee q1-evidence/androidtest-rebuild.txt
+if [ ! -f "$TEST_APK" ]; then
+  echo "Missing Q1 androidTest APK after harness rebuild: $TEST_APK" >&2
+  exit 30
+fi
+adb install -r "$TEST_APK" | tee q1-evidence/androidtest-install.txt
+
 adb shell input keyevent KEYCODE_HOME
 sleep 2
 adb shell input swipe 540 1250 540 1250 1600
@@ -79,15 +170,26 @@ PY
 )"
 echo "Recovery drag source: $source_xy" | tee q1-evidence/widget-drag-recovery.txt
 read -r sx sy <<<"$source_xy"
+echo "Recovery transition waypoint: 540 220" | tee -a q1-evidence/widget-drag-recovery.txt
 echo "Recovery drag target: 540 700" | tee -a q1-evidence/widget-drag-recovery.txt
-adb shell input motionevent DOWN "$sx" "$sy"
-sleep 2
-adb shell input motionevent MOVE "$sx" 760
-sleep 1
-adb shell input motionevent MOVE 540 700
-sleep 2
-adb shell input motionevent UP 540 700
-sleep 10
+
+set +e
+adb shell am instrument -w -r \
+  -e class "$TEST_CLASS" \
+  -e sourceX "$sx" \
+  -e sourceY "$sy" \
+  -e edgeY 220 \
+  -e targetX 540 \
+  -e targetY 700 \
+  "$TEST_RUNNER" | tee q1-evidence/instrumentation-drag.txt
+instr_rc=${PIPESTATUS[0]}
+set -e
+if [ "$instr_rc" -ne 0 ] || grep -q '^FAILURES!!!' q1-evidence/instrumentation-drag.txt || ! grep -Eq '^OK \([0-9]+ test' q1-evidence/instrumentation-drag.txt; then
+  echo "Q1 UiAutomation drag instrumentation did not complete cleanly" >&2
+  exit 30
+fi
+
+sleep 8
 adb shell dumpsys appwidget > q1-evidence/appwidget-after-recovery.txt
 adb shell dumpsys window > q1-evidence/window-after-recovery.txt 2>&1 || true
 adb exec-out screencap -p > q1-evidence/widget-home-recovery.png || true
@@ -111,4 +213,4 @@ if grep -E -q "FATAL EXCEPTION:.*|Process: ${PACKAGE//./\\.}" q1-evidence/logcat
   exit 23
 fi
 
-echo "Q1 real Launcher-hosted MainWidget placement GREEN via continuous recovery drag."
+echo "Q1 real Launcher-hosted MainWidget placement GREEN via UiAutomation recovery drag."
