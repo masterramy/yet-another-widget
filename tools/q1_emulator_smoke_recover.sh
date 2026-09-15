@@ -17,8 +17,9 @@ fi
 echo "== Q1 placement recovery: Launcher-native long drag =="
 # The preceding fail-closed smoke proved build/install/render/provider discovery and
 # classified exit 22 at the picker gesture boundary. Retry only that invalidated
-# surface with Android's single-process draganddrop injector, moving far enough
-# toward the top of HOME for Launcher3 to transition out of its RecyclerView.
+# surface with Android's single-process draganddrop injector. The run40 recovery
+# target at y=220 overlapped Launcher's existing 4x1 Search widget, so use the
+# visually verified empty middle-upper row while preserving the strict bind check.
 adb shell input keyevent KEYCODE_HOME
 sleep 2
 adb shell input swipe 540 1250 540 1250 1600
@@ -77,7 +78,8 @@ PY
 )"
 echo "Recovery drag source: $source_xy" | tee q1-evidence/widget-drag-recovery.txt
 read -r sx sy <<<"$source_xy"
-adb shell input draganddrop "$sx" "$sy" 540 220 2500
+echo "Recovery drag target: 540 700" | tee -a q1-evidence/widget-drag-recovery.txt
+adb shell input draganddrop "$sx" "$sy" 540 700 2500
 sleep 10
 adb shell dumpsys appwidget > q1-evidence/appwidget-after-recovery.txt
 adb exec-out screencap -p > q1-evidence/widget-home-recovery.png || true
