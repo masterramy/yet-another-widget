@@ -5,7 +5,9 @@ object Constants {
     const val RESULT_APP_NAME = "RESULT_APP_NAME"
     const val RESULT_APP_PACKAGE = "RESULT_APP_PACKAGE"
 
-    const val CUSTOM_FONT_GOOGLE_SANS = 1
+    // Retired bundled Google Sans compatibility sentinel. Historical stored value 1 now
+    // falls through to the system/default font without redistributing Google font binaries.
+    const val CUSTOM_FONT_GOOGLE_SANS = -1
     const val CUSTOM_FONT_DOWNLOADED = 2
     const val CUSTOM_FONT_DOWNLOAD_NEW = 3
 
