@@ -67,12 +67,14 @@ jobs:
             echo "ERROR: inherited network identity or GeoNames credential remains" >&2
             exit 1
           fi
-      - name: Google Sans residue census
+      - name: Google Sans residue must be absent
         shell: bash
         run: |
           set -euo pipefail
-          echo "--- Google Sans residue (census only; hard gate follows cleanup) ---"
-          grep -R -n -E "@font/google_sans|Google Sans|google_sans_" app/src/main || true
+          if grep -R -n -E "@font/google_sans|Google Sans|google_sans_" app/src/main; then
+            echo "ERROR: retired Google Sans identity-sensitive residue remains" >&2
+            exit 1
+          fi
       - name: Q2 deterministic build
         shell: bash
         run: bash tools/q1_build.sh
