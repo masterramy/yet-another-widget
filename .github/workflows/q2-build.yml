@@ -71,10 +71,16 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if grep -R -n -E "@font/google_sans|Google Sans|google_sans_" app/src/main; then
-            echo "ERROR: retired Google Sans identity-sensitive residue remains" >&2
+          if find app/src/main -type f \( -iname '*google_sans*' -o -iname '*googlesans*' \) -print -quit | grep -q .; then
+            echo "ERROR: retired Google Sans asset filename remains" >&2
+            find app/src/main -type f \( -iname '*google_sans*' -o -iname '*googlesans*' \) -print >&2
             exit 1
           fi
+          if grep -R -I -n -E "@font/google_sans|Google Sans|google_sans_|GoogleSans" app/src/main; then
+            echo "ERROR: retired Google Sans text/source reference remains" >&2
+            exit 1
+          fi
+          echo "Google Sans source residue absent."
       - name: Q2 deterministic build
         shell: bash
         run: bash tools/q1_build.sh
