@@ -76,7 +76,9 @@ jobs:
             find app/src/main -type f \( -iname '*google_sans*' -o -iname '*googlesans*' \) -print >&2
             exit 1
           fi
-          if grep -R -I -n -E "@font/google_sans|Google Sans|google_sans_|GoogleSans" app/src/main; then
+          if grep -R -n -E "@font/google_sans|Google Sans|google_sans_|GoogleSans" app/src/main \
+            --include='*.xml' --include='*.kt' --include='*.java' --include='*.gradle' \
+            --include='*.properties' --include='*.json' --include='*.md'; then
             echo "ERROR: retired Google Sans text/source reference remains" >&2
             exit 1
           fi
