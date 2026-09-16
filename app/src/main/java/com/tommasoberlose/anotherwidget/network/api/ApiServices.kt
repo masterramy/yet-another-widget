@@ -5,14 +5,14 @@ import retrofit2.http.*
 
 object ApiServices {
     interface WeatherGovApiService {
-        @Headers("User-Agent: (Another Widget, tommaso.berlose@gmail.com)")
+        @Headers("User-Agent: YetAnotherWidget/2.3.3 (https://github.com/masterramy/yet-another-widget)")
         @GET("points/{latitude},{longitude}")
         suspend fun getGridPoints(
             @Path("latitude") latitude: String,
             @Path("longitude") longitude: String
         ): NetworkResponse<HashMap<String, Any>, HashMap<String, Any>>
 
-        @Headers("User-Agent: (Another Widget, tommaso.berlose@gmail.com)")
+        @Headers("User-Agent: YetAnotherWidget/2.3.3 (https://github.com/masterramy/yet-another-widget)")
         @GET("gridpoints/{gridId}/{gridX},{gridY}/forecast")
         suspend fun getWeather(
             @Path("gridId") gridId: String,
@@ -69,15 +69,6 @@ object ApiServices {
         suspend fun getWeather(
             @Query("lat") lat: String,
             @Query("lon") lon: String,
-        ): NetworkResponse<HashMap<String, Any>, HashMap<String, Any>>
-    }
-
-    interface TimeZonesService {
-        @GET("timezoneJSON")
-        suspend fun getTimeZone(
-            @Query("lat") lat: String,
-            @Query("lng") lon: String,
-            @Query("username") username: String = "tommaso.berlose",
         ): NetworkResponse<HashMap<String, Any>, HashMap<String, Any>>
     }
 }

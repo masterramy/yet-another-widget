@@ -73,7 +73,7 @@
                         android:background="@color/colorPrimaryDark"
                         android:paddingLeft="16dp"
                         android:paddingRight="16dp"
-                        android:inputType="textCapWords"
+                        android:inputType="text"
                         android:id="@+id/location"
                         android:fontFamily="@font/google_sans"
                         android:gravity="center_vertical|start"
@@ -91,36 +91,6 @@
                         android:layout_gravity="center_vertical|end"
                         android:id="@+id/clear_search" />
                 </com.google.android.material.card.MaterialCardView>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="8dp"
-                    android:paddingTop="8dp"
-                    android:gravity="center_vertical">
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:padding="4dp"
-                        android:src="@drawable/outline_info_24"
-                        app:tint="@color/colorSecondaryText"/>
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:duplicateParentState="true"
-                        android:linksClickable="true"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:id="@+id/geoname_credits"
-                        android:textColorLink="@color/colorPrimaryText"
-                        android:text="@string/geoname_credit"
-                        android:textColor="@color/colorSecondaryText"
-                        android:letterSpacing="0"
-                        android:fontFamily="@font/google_sans"
-                        android:textAppearance="@style/AnotherWidget.Settings.Subtitle"
-                        app:textAllCaps="false" />
-                </LinearLayout>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
         <RelativeLayout
