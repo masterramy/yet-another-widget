@@ -101,6 +101,14 @@ jobs:
           grep -Fq 'Preferences.customLocationLat != "" && Preferences.customLocationLon != ""' "$helper"
           grep -Fq 'LocationService.requestNewLocation(this@CustomLocationActivity)' "$chooser"
           echo "Location foreground-service safety contract present."
+      - name: Local preference backup must be disabled
+        shell: bash
+        run: |
+          set -euo pipefail
+          manifest=app/src/main/AndroidManifest.xml
+          grep -Fq 'android:allowBackup="false"' "$manifest"
+          ! grep -Fq 'android:allowBackup="true"' "$manifest"
+          echo "Application backup disabled for local preference/API-key state."
       - name: Q2 deterministic build
         shell: bash
         run: bash tools/q1_build.sh
