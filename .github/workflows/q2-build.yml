@@ -1,37 +1,113 @@
-name: Yet Another Widget Q2 Location Repair
+name: Yet Another Widget Q2 Build
 
 on:
   push:
     branches:
       - q2-publication-hardening-api36
+  workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  repair:
-    if: "github.event.head_commit.message == 'Q2: repair guarded location hardening runner'"
+  build:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Apply exact-head location hardening
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: platform-tools
+      - name: Install Android 36 SDK
         shell: bash
-        env:
-          BASE_HEAD: 3a5610879db84b556754ddc743bed0323ab9bcad
+        run: |
+          yes | sdkmanager --licenses >/dev/null || true
+          sdkmanager 'platforms;android-36' 'build-tools;36.0.0' 'platform-tools'
+      - name: Donation/Billing surface must be absent
+        shell: bash
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD^^)" = "$BASE_HEAD"
-          unexpected="$(git diff --name-only "$BASE_HEAD" HEAD | grep -Ev '^(\.github/workflows/q2-build\.yml|tools/q2_location_hardening\.py)$' || true)"
-          test -z "$unexpected"
-          python tools/q2_location_hardening.py
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add app/src/main
-          echo "Source-only location hardening paths:"
-          git diff --cached --name-only
-          test "$(git diff --cached --name-only | wc -l | tr -d ' ')" = "4"
-          git commit -m "Q2: harden modern location refresh path"
-          git push origin HEAD:q2-publication-hardening-api36
+          if grep -R -E "com.android.billingclient|com.android.vending.BILLING|SupportDevActivity|SupportDevViewModel" \
+            app/build.gradle app/src/main/AndroidManifest.xml app/src/main/java; then
+            echo "ERROR: retired Billing/SupportDev surface remains" >&2
+            exit 1
+          fi
+          test ! -e app/src/main/java/com/tommasoberlose/anotherwidget/ui/activities/settings/SupportDevActivity.kt
+          test ! -e app/src/main/java/com/tommasoberlose/anotherwidget/ui/viewmodels/settings/SupportDevViewModel.kt
+          test ! -e app/src/main/res/layout/activity_support_dev.xml
+          test ! -e app/src/main/res/layout/inapp_product_layout.xml
+      - name: Google Fit and exact-polling surface must be retired
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -R -E "play-services-fitness|play-services-auth" app/build.gradle; then
+            echo "ERROR: retired Google Fit/Auth dependency remains" >&2
+            exit 1
+          fi
+          if grep -R -E "ACTIVITY_RECOGNITION|com.google.android.apps.fitness|ActivityDetectionReceiver" app/src/main app/build.gradle; then
+            echo "ERROR: retired Google Fit/activity-recognition surface remains" >&2
+            exit 1
+          fi
+          if grep -R -E "com.google.android.gms.fitness|FitnessOptions|getHistoryClient|GoogleSignIn" app/src/main/java; then
+            echo "ERROR: retired Google Fit/sign-in implementation remains" >&2
+            exit 1
+          fi
+          test ! -e app/src/main/java/com/tommasoberlose/anotherwidget/receivers/ActivityDetectionReceiver.kt
+      - name: Historical network identity must be absent
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -R -n -E "api\.geonames\.org|tommaso\.berlose(@gmail\.com)?" app/src/main/java; then
+            echo "ERROR: inherited network identity or GeoNames credential remains" >&2
+            exit 1
+          fi
+      - name: Google Sans residue must be absent
+        shell: bash
+        run: |
+          set -euo pipefail
+          if find app/src/main -type f \( -iname '*google_sans*' -o -iname '*googlesans*' \) -print -quit | grep -q .; then
+            echo "ERROR: retired Google Sans asset filename remains" >&2
+            find app/src/main -type f \( -iname '*google_sans*' -o -iname '*googlesans*' \) -print >&2
+            exit 1
+          fi
+          if grep -R -n -E "@font/google_sans|Google Sans|google_sans_|GoogleSans" app/src/main \
+            --include='*.xml' --include='*.kt' --include='*.java' --include='*.gradle' \
+            --include='*.properties' --include='*.json' --include='*.md'; then
+            echo "ERROR: retired Google Sans text/source reference remains" >&2
+            exit 1
+          fi
+          echo "Google Sans source residue absent."
+      - name: Location foreground-service safety contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          manifest=app/src/main/AndroidManifest.xml
+          service=app/src/main/java/com/tommasoberlose/anotherwidget/services/LocationService.kt
+          helper=app/src/main/java/com/tommasoberlose/anotherwidget/helpers/WeatherHelper.kt
+          chooser=app/src/main/java/com/tommasoberlose/anotherwidget/ui/activities/tabs/CustomLocationActivity.kt
+          test "$(grep -c 'android.permission.FOREGROUND_SERVICE_LOCATION' "$manifest")" = "1"
+          grep -Fq 'android:foregroundServiceType="location"' "$manifest"
+          grep -Fq 'FOREGROUND_SERVICE_TYPE_LOCATION' "$service"
+          grep -Fq 'return START_NOT_STICKY' "$service"
+          ! grep -Fq 'return START_STICKY' "$service"
+          grep -Fq 'PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE' "$service"
+          grep -Fq 'context is Activity && context.checkGrantedPermission' "$helper"
+          grep -Fq 'Preferences.customLocationLat != "" && Preferences.customLocationLon != ""' "$helper"
+          grep -Fq 'LocationService.requestNewLocation(this@CustomLocationActivity)' "$chooser"
+          echo "Location foreground-service safety contract present."
+      - name: Q2 deterministic build
+        shell: bash
+        run: bash tools/q1_build.sh
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v4
+        continue-on-error: true
+        with:
+          name: q2-debug-apk
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
