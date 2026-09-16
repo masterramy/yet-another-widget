@@ -67,7 +67,7 @@
             android:textColor="@color/errorColorText"
             android:letterSpacing="0"
             android:visibility="gone"
-            android:fontFamily="@font/google_sans_medium"
+            android:fontFamily="sans-serif-medium"
             android:text="@string/api_key_required_message"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
             app:textAllCaps="false" />
