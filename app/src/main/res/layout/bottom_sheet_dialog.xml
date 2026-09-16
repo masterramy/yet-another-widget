@@ -59,7 +59,7 @@
             android:id="@+id/action_negative"
             android:letterSpacing="0"
             android:text="@string/action_dismiss"
-            android:fontFamily="@font/google_sans"
+            android:fontFamily="sans-serif"
             android:textStyle="bold"
             app:textAllCaps="false" />
         <com.google.android.material.button.MaterialButton
@@ -75,7 +75,7 @@
             android:id="@+id/action_positive"
             android:letterSpacing="0"
             android:text="@string/action_accept"
-            android:fontFamily="@font/google_sans"
+            android:fontFamily="sans-serif"
             android:textStyle="bold"
             app:textAllCaps="false" />
     </LinearLayout>
