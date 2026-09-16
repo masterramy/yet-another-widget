@@ -78,7 +78,7 @@
                         android:maxLines="1"
                         android:singleLine="true"
                         android:hint="@string/song_info_format_activity_title"
-                        android:fontFamily="@font/google_sans"
+                        android:fontFamily="sans-serif"
                         android:text="@={viewModel.mediaInfoFormatInput}"
                         android:autofillHints=""
                         tools:ignore="TextFields" />
