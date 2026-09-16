@@ -75,7 +75,7 @@
                         android:paddingRight="16dp"
                         android:inputType="text"
                         android:id="@+id/location"
-                        android:fontFamily="@font/google_sans"
+                        android:fontFamily="sans-serif"
                         android:gravity="center_vertical|start"
                         android:hint="@string/search"
                         android:textAlignment="viewStart"
