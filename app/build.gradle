@@ -13,7 +13,6 @@ android {
         versionCode 139
         versionName "2.3.3-q1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        renderscriptSupportModeEnabled true
     }
 
     buildTypes {
@@ -36,7 +35,6 @@ android {
         dataBinding = true
         viewBinding = true
         buildConfig = true
-        renderScript = true
     }
 }
 
