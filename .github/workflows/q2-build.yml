@@ -109,6 +109,20 @@ jobs:
           grep -Fq 'android:allowBackup="false"' "$manifest"
           ! grep -Fq 'android:allowBackup="true"' "$manifest"
           echo "Application backup disabled for local preference/API-key state."
+      - name: Weather provider transport and migration contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          weather_api=app/src/main/java/com/tommasoberlose/anotherwidget/network/repository/WeatherApiRepository.kt
+          api_services=app/src/main/java/com/tommasoberlose/anotherwidget/network/api/ApiServices.kt
+          constants=app/src/main/java/com/tommasoberlose/anotherwidget/global/Constants.kt
+          grep -Fq 'private const val BASE_URL_API = "https://api.weatherapi.com/v1/"' "$weather_api"
+          ! grep -Fq 'http://api.weatherapi.com' "$weather_api"
+          grep -Fq '@Headers("User-Agent: YetAnotherWidget/2.3.3 (https://github.com/masterramy/yet-another-widget)")' "$api_services"
+          grep -Fq '@GET("compact")' "$api_services"
+          ! grep -Fq '@GET("compact.json")' "$api_services"
+          grep -Fq 'HERE.rawValue, ACCUWEATHER.rawValue -> YR' "$constants"
+          echo "Weather provider transport and historical-provider migration contract present."
       - name: Q2 deterministic build
         shell: bash
         run: bash tools/q1_build.sh

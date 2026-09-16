@@ -64,8 +64,8 @@ object ApiServices {
     }
 
     interface YrService {
-        @Headers("User-Agent: AnotherWidget")
-        @GET("compact.json")
+        @Headers("User-Agent: YetAnotherWidget/2.3.3 (https://github.com/masterramy/yet-another-widget)")
+        @GET("compact")
         suspend fun getWeather(
             @Query("lat") lat: String,
             @Query("lon") lon: String,

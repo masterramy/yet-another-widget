@@ -13,7 +13,7 @@ class WeatherApiRepository {
     suspend fun getWeather() = apiServiceApi.getWeather(Preferences.weatherProviderApiWeatherApi, "${Preferences.customLocationLat},${Preferences.customLocationLon}")
 
     companion object {
-        private const val BASE_URL_API = "http://api.weatherapi.com/v1/"
+        private const val BASE_URL_API = "https://api.weatherapi.com/v1/"
 
         private fun getRetrofit(): Retrofit {
             return Retrofit.Builder()
