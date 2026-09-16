@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   repair:
-    if: github.event.head_commit.message == 'Q2: stage guarded location hardening'
+    if: "github.event.head_commit.message == 'Q2: repair guarded location hardening runner'"
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -23,8 +23,9 @@ jobs:
           BASE_HEAD: 3a5610879db84b556754ddc743bed0323ab9bcad
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD^)" = "$BASE_HEAD"
-          test "$(git diff --name-only "$BASE_HEAD" HEAD | sort)" = $'.github/workflows/q2-build.yml\ntools/q2_location_hardening.py'
+          test "$(git rev-parse HEAD^^)" = "$BASE_HEAD"
+          unexpected="$(git diff --name-only "$BASE_HEAD" HEAD | grep -Ev '^(\.github/workflows/q2-build\.yml|tools/q2_location_hardening\.py)$' || true)"
+          test -z "$unexpected"
           python tools/q2_location_hardening.py
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
