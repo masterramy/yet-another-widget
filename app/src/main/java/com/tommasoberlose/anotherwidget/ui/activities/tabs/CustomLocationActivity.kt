@@ -22,6 +22,7 @@ import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.tommasoberlose.anotherwidget.databinding.ActivityCustomLocationBinding
 import com.tommasoberlose.anotherwidget.global.Preferences
+import com.tommasoberlose.anotherwidget.services.LocationService
 import com.tommasoberlose.anotherwidget.ui.viewmodels.tabs.CustomLocationViewModel
 import kotlinx.coroutines.*
 import net.idik.lib.slimadapter.SlimAdapter
@@ -128,6 +129,9 @@ class CustomLocationActivity : AppCompatActivity() {
                                 remove(Preferences::customLocationLon)
                                 remove(Preferences::customLocationAdd)
                             }
+                            // GPS mode is user-selected here while this Activity is visible, so
+                            // start the one-shot location service before returning to settings.
+                            LocationService.requestNewLocation(this@CustomLocationActivity)
                             setResult(Activity.RESULT_OK)
                             finish()
                         }

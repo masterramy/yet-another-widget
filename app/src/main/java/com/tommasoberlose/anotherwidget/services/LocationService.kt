@@ -30,11 +30,15 @@ class LocationService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        startForeground(LOCATION_ACCESS_NOTIFICATION_ID, getLocationAccessNotification())
+        ServiceCompat.startForeground(
+            this,
+            LOCATION_ACCESS_NOTIFICATION_ID,
+            getLocationAccessNotification(),
+            android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION
+        )
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        startForeground(LOCATION_ACCESS_NOTIFICATION_ID, getLocationAccessNotification())
         job?.cancel()
         job = GlobalScope.launch(Dispatchers.IO) {
             if (ActivityCompat.checkSelfPermission(
@@ -72,7 +76,7 @@ class LocationService : Service() {
                 stopSelf()
             }
         }
-        return START_STICKY
+        return START_NOT_STICKY
     }
 
     override fun onDestroy() {
@@ -116,7 +120,7 @@ class LocationService : Service() {
                 .setColor(ContextCompat.getColor(this@LocationService, R.color.colorAccent))
 
             // Main intent that open the activity
-            builder.setContentIntent(PendingIntent.getActivity(this@LocationService, 0, Intent(this@LocationService, MainActivity::class.java), PendingIntent.FLAG_UPDATE_CURRENT))
+            builder.setContentIntent(PendingIntent.getActivity(this@LocationService, 0, Intent(this@LocationService, MainActivity::class.java), PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE))
 
             return builder.build()
         }

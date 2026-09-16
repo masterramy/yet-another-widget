@@ -1,6 +1,7 @@
 package com.tommasoberlose.anotherwidget.helpers
 
 import android.Manifest
+import android.app.Activity
 import android.content.Context
 import com.chibatching.kotpref.Kotpref
 import com.tommasoberlose.anotherwidget.R
@@ -24,8 +25,12 @@ object WeatherHelper {
         val networkApi = WeatherNetworkApi(context)
         if (Preferences.customLocationAdd != "") {
             networkApi.updateWeather()
-        } else if (context.checkGrantedPermission(Manifest.permission.ACCESS_FINE_LOCATION)) {
+        } else if (context is Activity && context.checkGrantedPermission(Manifest.permission.ACCESS_FINE_LOCATION)) {
+            // Refresh device coordinates only from a visible app surface. Scheduled/background
+            // refreshes reuse the last coordinates instead of starting a location FGS.
             LocationService.requestNewLocation(context)
+        } else if (Preferences.customLocationLat != "" && Preferences.customLocationLon != "") {
+            networkApi.updateWeather()
         }
     }
 
