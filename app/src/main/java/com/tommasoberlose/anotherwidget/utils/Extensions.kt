@@ -233,15 +233,6 @@ fun String.getCapWordString(): String {
     }
 }
 
-fun Context.checkIfFitInstalled(): Boolean {
-    return try {
-        packageManager.getPackageInfo("com.google.android.apps.fitness", PackageManager.GET_ACTIVITIES)
-        true
-    } catch (e: Exception) {
-        false
-    }
-}
-
 fun Intent.isDefaultSet(context: Context): Boolean {
     val pm = context.packageManager
     return try {
