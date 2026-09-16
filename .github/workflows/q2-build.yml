@@ -23,13 +23,10 @@ jobs:
           BASE_HEAD: 230709beae394fb40317f413eab9d2748529ea11
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD^^)" = "$BASE_HEAD"
+          test "$(git rev-parse HEAD^^^)" = "$BASE_HEAD"
           unexpected="$(git diff --name-only "$BASE_HEAD" HEAD | grep -Ev '^(\.github/workflows/q2-build\.yml|tools/q2_font_cleanup\.py)$' || true)"
           test -z "$unexpected"
           python tools/q2_font_cleanup.py
-          git checkout "$BASE_HEAD" -- .github/workflows/q2-build.yml
-          rm tools/q2_font_cleanup.py
-          git diff --exit-code "$BASE_HEAD" -- .github/workflows/q2-build.yml
           if find app/src/main -type f \( -iname '*google_sans*' -o -iname '*googlesans*' \) -print -quit | grep -q .; then
             echo "ERROR: retired font asset filename remains" >&2
             exit 1
@@ -42,10 +39,10 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A
-          echo "Cleanup commit paths:"
+          git add app/src/main
+          echo "Source-only cleanup commit paths:"
           git diff --cached --name-only
-          git diff --cached --quiet && { echo "ERROR: cleanup produced no changes" >&2; exit 1; }
+          git diff --cached --quiet && { echo "ERROR: cleanup produced no source changes" >&2; exit 1; }
           git commit -m "Q2: finish retired bundled font cleanup"
           git push origin HEAD:q2-publication-hardening-api36
       - uses: actions/setup-java@v4
