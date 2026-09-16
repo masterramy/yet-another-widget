@@ -109,7 +109,7 @@ object Preferences : KotprefModel() {
     var showAcceptedEvents by booleanPref(default = true)
     var showOnlyBusyEvents by booleanPref(default = false)
     var secondRowInformation by intPref(key = "PREF_SECOND_ROW_INFORMATION", default = 0)
-    var customFont by intPref(key = "PREF_CUSTOM_FONT", default = Constants.CUSTOM_FONT_GOOGLE_SANS)
+    var customFont by intPref(key = "PREF_CUSTOM_FONT", default = Constants.CUSTOM_FONT_DEFAULT)
     var customFontFile by stringPref(default = "")
     var customFontName by stringPref(default = "")
     var customFontVariant by stringPref(default = "regular")

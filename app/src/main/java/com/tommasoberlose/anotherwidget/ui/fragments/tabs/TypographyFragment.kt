@@ -258,16 +258,15 @@ class TypographyFragment : Fragment() {
         }
 
         binding.actionCustomFont.setOnClickListener {
-            val dialog = BottomSheetMenu<Int>(requireContext(), header = getString(R.string.settings_custom_font_title)).setSelectedValue(
-                Preferences.customFont)
-            dialog.addItem(SettingsStringHelper.getCustomFontLabel(requireContext(), 0), 0)
-
-            if (Preferences.customFont == Constants.CUSTOM_FONT_GOOGLE_SANS) {
-                dialog.addItem(SettingsStringHelper.getCustomFontLabel(requireContext(), Constants.CUSTOM_FONT_GOOGLE_SANS), Constants.CUSTOM_FONT_GOOGLE_SANS)
-            }
+            val selectedFont = if (
+                Preferences.customFont == Constants.CUSTOM_FONT_DOWNLOADED &&
+                Preferences.customFontFile.isNotEmpty()
+            ) Constants.CUSTOM_FONT_DOWNLOADED else Constants.CUSTOM_FONT_DEFAULT
+            val dialog = BottomSheetMenu<Int>(requireContext(), header = getString(R.string.settings_custom_font_title)).setSelectedValue(selectedFont)
+            dialog.addItem(SettingsStringHelper.getCustomFontLabel(requireContext(), Constants.CUSTOM_FONT_DEFAULT), Constants.CUSTOM_FONT_DEFAULT)
 
             if (Preferences.customFontFile != "") {
-                dialog.addItem(SettingsStringHelper.getCustomFontLabel(requireContext(), Preferences.customFont), Constants.CUSTOM_FONT_DOWNLOADED)
+                dialog.addItem(SettingsStringHelper.getCustomFontLabel(requireContext(), Constants.CUSTOM_FONT_DOWNLOADED), Constants.CUSTOM_FONT_DOWNLOADED)
             }
             dialog.addItem(getString(R.string.action_custom_font_to_search), Constants.CUSTOM_FONT_DOWNLOAD_NEW)
             dialog.addOnSelectItemListener { value ->

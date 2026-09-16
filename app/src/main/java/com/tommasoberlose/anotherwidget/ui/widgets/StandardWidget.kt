@@ -918,29 +918,7 @@ class StandardWidget(val context: Context) {
             bindingView.actionPreviousShadow.scaleX = bindingView.actionPreviousShadow.scaleX * -1
 
             // Custom Font
-            if (Preferences.customFont == Constants.CUSTOM_FONT_GOOGLE_SANS) {
-                val googleSans: Typeface = when (Preferences.customFontVariant) {
-                    "100" -> Typeface.createFromAsset(context.assets, "fonts/google_sans_thin.ttf")
-                    "200" -> Typeface.createFromAsset(context.assets, "fonts/google_sans_light.ttf")
-                    "500" -> Typeface.createFromAsset(context.assets, "fonts/google_sans_medium.ttf")
-                    "700" -> Typeface.createFromAsset(context.assets, "fonts/google_sans_bold.ttf")
-                    "800" -> Typeface.createFromAsset(context.assets, "fonts/google_sans_black.ttf")
-                    else -> Typeface.createFromAsset(context.assets, "fonts/google_sans_regular.ttf")
-                }
-
-                listOf<TextView>(
-                    bindingView.date,
-                    bindingView.weatherDateLineDivider,
-                    bindingView.weatherDateLineTemperature,
-                    bindingView.nextEvent,
-                    bindingView.nextEventDifferenceTime,
-                    bindingView.subLineText,
-                    bindingView.weatherSubLineDivider,
-                    bindingView.weatherSubLineTemperature,
-                ).forEach {
-                    it.typeface = googleSans
-                }
-            } else if (Preferences.customFont == Constants.CUSTOM_FONT_DOWNLOADED && typeface != null) {
+            if (Preferences.customFont == Constants.CUSTOM_FONT_DOWNLOADED && typeface != null) {
                 listOf<TextView>(
                     bindingView.date,
                     bindingView.weatherDateLineDivider,

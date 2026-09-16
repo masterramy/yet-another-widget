@@ -39,7 +39,6 @@
         android:id="@+id/notes"
         android:gravity="center"
         android:textDirection="locale"
-        android:fontFamily="@font/google_sans"
         android:inputType="textCapSentences|textMultiLine"
         android:maxLines="2"
         android:lines="2"
