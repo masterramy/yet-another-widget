@@ -92,7 +92,7 @@
                     app:boxStrokeWidth="0dp"
                     app:hintTextColor="@color/colorAccent"
                     android:hint="@string/settings_weather_provider_api_key_title"
-                    android:fontFamily="@font/google_sans"
+                    android:fontFamily="sans-serif"
                     android:textAlignment="viewStart"
                     android:textDirection="locale"
                     style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox">
@@ -102,7 +102,7 @@
                         android:textAlignment="viewStart"
                         android:textDirection="locale"
                         android:id="@+id/api_key_inner"
-                        android:fontFamily="@font/google_sans"
+                        android:fontFamily="sans-serif"
                         android:gravity="center_vertical|start" />
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
