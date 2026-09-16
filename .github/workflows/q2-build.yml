@@ -59,6 +59,20 @@ jobs:
             exit 1
           fi
           test ! -e app/src/main/java/com/tommasoberlose/anotherwidget/receivers/ActivityDetectionReceiver.kt
+      - name: Historical network identity must be absent
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -R -n -E "api\.geonames\.org|tommaso\.berlose(@gmail\.com)?" app/src/main/java; then
+            echo "ERROR: inherited network identity or GeoNames credential remains" >&2
+            exit 1
+          fi
+      - name: Google Sans residue census
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "--- Google Sans residue (census only; hard gate follows cleanup) ---"
+          grep -R -n -E "@font/google_sans|Google Sans|google_sans_" app/src/main || true
       - name: Q2 deterministic build
         shell: bash
         run: bash tools/q1_build.sh
