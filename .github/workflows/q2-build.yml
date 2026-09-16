@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
@@ -17,6 +17,161 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - name: Apply one-use exact-head font cleanup
+        shell: bash
+        env:
+          BASE_HEAD: 230709beae394fb40317f413eab9d2748529ea11
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = "$BASE_HEAD"
+          test "$(git diff --name-only HEAD^ HEAD)" = ".github/workflows/q2-build.yml"
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          def replace_once(path, old, new):
+              p = Path(path)
+              data = p.read_text(encoding="utf-8")
+              count = data.count(old)
+              if count != 1:
+                  raise SystemExit(f"{path}: expected exactly one literal match, found {count}")
+              p.write_text(data.replace(old, new, 1), encoding="utf-8")
+
+          def regex_once(path, pattern, replacement):
+              p = Path(path)
+              data = p.read_text(encoding="utf-8")
+              updated, count = re.subn(pattern, replacement, data, count=1, flags=re.MULTILINE | re.DOTALL)
+              if count != 1:
+                  raise SystemExit(f"{path}: expected exactly one regex match, found {count}")
+              p.write_text(updated, encoding="utf-8")
+
+          renderer_pattern = (
+              r'^            // Custom Font\n'
+              r'            if \(Preferences\.customFont == Constants\.CUSTOM_FONT_GOOGLE_SANS\) \{\n'
+              r'.*?'
+              r'^            \} else if \(Preferences\.customFont == Constants\.CUSTOM_FONT_DOWNLOADED && typeface != null\) \{\n'
+          )
+          renderer_replacement = (
+              '            // Custom Font\n'
+              '            if (Preferences.customFont == Constants.CUSTOM_FONT_DOWNLOADED && typeface != null) {\n'
+          )
+          for renderer in (
+              "app/src/main/java/com/tommasoberlose/anotherwidget/ui/widgets/AlignedWidget.kt",
+              "app/src/main/java/com/tommasoberlose/anotherwidget/ui/widgets/StandardWidget.kt",
+          ):
+              regex_once(renderer, renderer_pattern, renderer_replacement)
+
+          replace_once(
+              "app/src/main/java/com/tommasoberlose/anotherwidget/global/Constants.kt",
+              "    // Retired bundled Google Sans compatibility sentinel. Historical stored value 1 now\n"
+              "    // falls through to the system/default font without redistributing Google font binaries.\n"
+              "    const val CUSTOM_FONT_GOOGLE_SANS = -1\n",
+              "    const val CUSTOM_FONT_DEFAULT = 0\n",
+          )
+
+          replace_once(
+              "app/src/main/java/com/tommasoberlose/anotherwidget/global/Preferences.kt",
+              "    var customFont by intPref(key = \"PREF_CUSTOM_FONT\", default = Constants.CUSTOM_FONT_GOOGLE_SANS)\n",
+              "    var customFont by intPref(key = \"PREF_CUSTOM_FONT\", default = Constants.CUSTOM_FONT_DEFAULT)\n",
+          )
+
+          replace_once(
+              "app/src/main/java/com/tommasoberlose/anotherwidget/helpers/SettingsStringHelper.kt",
+              "            Constants.CUSTOM_FONT_GOOGLE_SANS -> context.getString(R.string.custom_font_subtitle_1) + \" - ${getVariantLabel(context, Preferences.customFontVariant)}\"\n",
+              "",
+          )
+
+          old_picker = '''            val dialog = BottomSheetMenu<Int>(requireContext(), header = getString(R.string.settings_custom_font_title)).setSelectedValue(
+                Preferences.customFont)
+            dialog.addItem(SettingsStringHelper.getCustomFontLabel(requireContext(), 0), 0)
+
+            if (Preferences.customFont == Constants.CUSTOM_FONT_GOOGLE_SANS) {
+                dialog.addItem(SettingsStringHelper.getCustomFontLabel(requireContext(), Constants.CUSTOM_FONT_GOOGLE_SANS), Constants.CUSTOM_FONT_GOOGLE_SANS)
+            }
+
+            if (Preferences.customFontFile != "") {
+                dialog.addItem(SettingsStringHelper.getCustomFontLabel(requireContext(), Preferences.customFont), Constants.CUSTOM_FONT_DOWNLOADED)
+            }
+'''
+          new_picker = '''            val selectedFont = if (
+                Preferences.customFont == Constants.CUSTOM_FONT_DOWNLOADED &&
+                Preferences.customFontFile.isNotEmpty()
+            ) Constants.CUSTOM_FONT_DOWNLOADED else Constants.CUSTOM_FONT_DEFAULT
+            val dialog = BottomSheetMenu<Int>(requireContext(), header = getString(R.string.settings_custom_font_title)).setSelectedValue(selectedFont)
+            dialog.addItem(SettingsStringHelper.getCustomFontLabel(requireContext(), Constants.CUSTOM_FONT_DEFAULT), Constants.CUSTOM_FONT_DEFAULT)
+
+            if (Preferences.customFontFile != "") {
+                dialog.addItem(SettingsStringHelper.getCustomFontLabel(requireContext(), Constants.CUSTOM_FONT_DOWNLOADED), Constants.CUSTOM_FONT_DOWNLOADED)
+            }
+'''
+          replace_once(
+              "app/src/main/java/com/tommasoberlose/anotherwidget/ui/fragments/tabs/TypographyFragment.kt",
+              old_picker,
+              new_picker,
+          )
+
+          string_pattern = re.compile(
+              r'^\s*<string name="custom_font_subtitle_1">.*?</string>\s*(?:\n|$)',
+              flags=re.MULTILINE,
+          )
+          removed_strings = 0
+          for p in sorted(Path("app/src/main/res").glob("values*/strings.xml")):
+              data = p.read_text(encoding="utf-8")
+              updated, count = string_pattern.subn("", data)
+              if count:
+                  p.write_text(updated, encoding="utf-8")
+                  removed_strings += count
+          if removed_strings != 12:
+              raise SystemExit(f"expected 12 retired font-label resources, removed {removed_strings}")
+
+          font_attr_pattern = re.compile(
+              r'^\s*android:fontFamily="@font/google_sans(?:_bold)?"\s*(?:\n|$)',
+              flags=re.MULTILINE,
+          )
+          removed_attrs = 0
+          for p in sorted(Path("app/src/main/res/layout").glob("*.xml")):
+              data = p.read_text(encoding="utf-8")
+              updated, count = font_attr_pattern.subn("", data)
+              if count:
+                  p.write_text(updated, encoding="utf-8")
+                  removed_attrs += count
+          if removed_attrs != 7:
+              raise SystemExit(f"expected 7 retired layout font attributes, removed {removed_attrs}")
+
+          source_text = "\n".join(
+              p.read_text(encoding="utf-8", errors="ignore")
+              for p in Path("app/src/main").rglob("*")
+              if p.is_file() and p.suffix in {".kt", ".java", ".xml", ".gradle", ".properties", ".json", ".md"}
+          )
+          forbidden = ["Google Sans", "google_sans_", "GoogleSans", "CUSTOM_FONT_GOOGLE_SANS", "custom_font_subtitle_1"]
+          leftovers = [token for token in forbidden if token in source_text]
+          if leftovers:
+              raise SystemExit(f"retired font residue remains: {leftovers}")
+
+          constants = Path("app/src/main/java/com/tommasoberlose/anotherwidget/global/Constants.kt").read_text(encoding="utf-8")
+          if "const val CUSTOM_FONT_DEFAULT = 0" not in constants or "const val CUSTOM_FONT_DOWNLOADED = 2" not in constants:
+              raise SystemExit("custom-font value contract was not preserved")
+          PY
+          git checkout HEAD^ -- .github/workflows/q2-build.yml
+          git diff --exit-code HEAD^ -- .github/workflows/q2-build.yml
+          if find app/src/main -type f \( -iname '*google_sans*' -o -iname '*googlesans*' \) -print -quit | grep -q .; then
+            echo "ERROR: retired font asset filename remains" >&2
+            exit 1
+          fi
+          if grep -R -n -E "@font/google_sans|Google Sans|google_sans_|GoogleSans|CUSTOM_FONT_GOOGLE_SANS|custom_font_subtitle_1" app/src/main \
+            --include='*.xml' --include='*.kt' --include='*.java' --include='*.gradle' \
+            --include='*.properties' --include='*.json' --include='*.md'; then
+            echo "ERROR: retired font source/UI residue remains" >&2
+            exit 1
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          echo "Cleanup commit paths:"
+          git diff --cached --name-only
+          git diff --cached --quiet && { echo "ERROR: cleanup produced no changes" >&2; exit 1; }
+          git commit -m "Q2: finish retired bundled font cleanup"
+          git push origin HEAD:q2-publication-hardening-api36
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
