@@ -153,6 +153,40 @@ jobs:
           grep -Fq "implementation 'com.squareup.okhttp3:logging-interceptor:4.9.2'" app/build.gradle
           ! grep -Fq "com.squareup.okhttp3:logging-interceptor:4.9.0" app/build.gradle
           echo "OkHttp logging interceptor is at the patched 4.9.2 floor."
+      - name: Widget PendingIntent compatibility must be durable source
+        shell: bash
+        run: |
+          set -euo pipefail
+          test ! -e tools/q1_widget_compat.py
+          ! grep -Fq 'q1_widget_compat.py' tools/q1_build.sh
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          files = [
+              Path('app/src/main/java/com/tommasoberlose/anotherwidget/ui/widgets/StandardWidget.kt'),
+              Path('app/src/main/java/com/tommasoberlose/anotherwidget/ui/widgets/AlignedWidget.kt'),
+          ]
+          for path in files:
+              text = path.read_text()
+              bad = re.findall(r'PendingIntent\.FLAG_UPDATE_CURRENT(?!\s+or\s+PendingIntent\.FLAG_IMMUTABLE)', text)
+              if bad:
+                  raise SystemExit(f'{path}: raw FLAG_UPDATE_CURRENT remains without FLAG_IMMUTABLE')
+              if 'PendingIntent.getBroadcast(context, widgetID, i, 0)' in text:
+                  raise SystemExit(f'{path}: legacy mutable weather token remains')
+              old_refresh = '''val refreshIntent = PendingIntent.getActivity(
+                  context,
+                  appWidgetId,
+                  IntentHelper.getWidgetUpdateIntent(context),'''
+              new_refresh = '''val refreshIntent = PendingIntent.getBroadcast(
+                  context,
+                  appWidgetId,
+                  IntentHelper.getWidgetUpdateIntent(context),'''
+              if old_refresh in text:
+                  raise SystemExit(f'{path}: widget refresh still uses Activity PendingIntent')
+              if text.count(new_refresh) != 1:
+                  raise SystemExit(f'{path}: expected exactly one broadcast widget refresh token')
+          print('Widget PendingIntent compatibility is durable shipping source; no build-time overlay remains.')
+          PY
       - name: Q2 deterministic build
         shell: bash
         run: bash tools/q1_build.sh
