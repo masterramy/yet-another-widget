@@ -3,7 +3,6 @@ package com.tommasoberlose.anotherwidget.network
 import android.content.Context
 import android.util.Log
 import com.chibatching.kotpref.Kotpref
-import com.google.gson.internal.LinkedTreeMap
 import com.haroldadmin.cnradapter.NetworkResponse
 import com.haroldadmin.cnradapter.executeWithRetry
 import com.kwabenaberko.openweathermaplib.constants.Units
@@ -98,7 +97,7 @@ class WeatherNetworkApi(val context: Context) {
         when (pointsResponse) {
             is NetworkResponse.Success -> {
                 try {
-                    val pp = pointsResponse.body["properties"] as LinkedTreeMap<*, *>
+                    val pp = pointsResponse.body["properties"] as Map<*, *>
                     val gridId = pp["gridId"] as String
                     val gridX = pp["gridX"] as Double
                     val gridY = pp["gridY"] as Double
@@ -112,9 +111,9 @@ class WeatherNetworkApi(val context: Context) {
                         is NetworkResponse.Success -> {
                             try {
                                 val props =
-                                    weatherResponse.body["properties"] as LinkedTreeMap<*, *>
+                                    weatherResponse.body["properties"] as Map<*, *>
                                 val periods = props["periods"] as List<*>
-                                val now = periods[0] as LinkedTreeMap<*, *>
+                                val now = periods[0] as Map<*, *>
 
                                 val temp = now["temperature"] as Double
                                 val fullIcon = now["icon"] as String
@@ -218,10 +217,10 @@ class WeatherNetworkApi(val context: Context) {
             when (val response = repository.getWeather()) {
                 is NetworkResponse.Success -> {
                     try {
-                        val data = response.body["data"] as List<LinkedTreeMap<String, Any>>?
+                        val data = response.body["data"] as List<Map<String, Any>>?
                         data?.first()?.let {
                             val temp = it["temp"] as Double
-                            val weatherInfo = it["weather"] as LinkedTreeMap<String, Any>
+                            val weatherInfo = it["weather"] as Map<String, Any>
                             val iconCode = weatherInfo["icon"] as String
 
                             Preferences.weatherTemp = temp.toFloat()
@@ -281,12 +280,12 @@ class WeatherNetworkApi(val context: Context) {
             when (val response = repository.getWeather()) {
                 is NetworkResponse.Success -> {
                     try {
-                        val current = response.body["current"] as LinkedTreeMap<String, Any>?
+                        val current = response.body["current"] as Map<String, Any>?
                         current?.let {
                             val tempC = current["temp_c"] as Double
                             val tempF = current["temp_f"] as Double
                             val isDay = current["is_day"] as Double
-                            val condition = current["condition"] as LinkedTreeMap<String, Any>
+                            val condition = current["condition"] as Map<String, Any>
                             val iconCode = condition["code"] as Double
 
                             Preferences.weatherTemp = if (Preferences.weatherTempUnit == "F") tempF.toFloat() else tempC.toFloat()
@@ -385,22 +384,22 @@ class WeatherNetworkApi(val context: Context) {
         when (val response = repository.getWeather()) {
             is NetworkResponse.Success -> {
                 try {
-                    val pp = response.body["properties"] as LinkedTreeMap<*, *>
-                    val data = pp["timeseries"] as List<LinkedTreeMap<String, Any>>?
+                    val pp = response.body["properties"] as Map<*, *>
+                    val data = pp["timeseries"] as List<Map<String, Any>>?
                     data?.let {
                         val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
                         for (item in data) {
                             val time = Calendar.getInstance().apply { time = format.parse(item["time"] as String)!! }
                             val now = Calendar.getInstance()
                             if (time.timeInMillis >= now.timeInMillis) {
-                                val dd = item["data"] as LinkedTreeMap<*, *>
-                                val instant = dd["instant"] as LinkedTreeMap<*, *>
-                                val next = dd["next_1_hours"] as LinkedTreeMap<*, *>
+                                val dd = item["data"] as Map<*, *>
+                                val instant = dd["instant"] as Map<*, *>
+                                val next = dd["next_1_hours"] as Map<*, *>
 
-                                val details = instant["details"] as LinkedTreeMap<*, *>
+                                val details = instant["details"] as Map<*, *>
                                 val temp = details["air_temperature"] as Double
 
-                                val summary = next["summary"] as LinkedTreeMap<*, *>
+                                val summary = next["summary"] as Map<*, *>
                                 val iconCode = summary["symbol_code"] as String
 
                                 Preferences.weatherTemp = temp.toFloat()
