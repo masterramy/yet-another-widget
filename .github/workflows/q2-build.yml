@@ -146,6 +146,13 @@ jobs:
           fi
           grep -Fq 'as Map<*, *>' app/src/main/java/com/tommasoberlose/anotherwidget/network/WeatherNetworkApi.kt
           echo "Gson 2.14.0 security patch and public Map parsing contract present."
+      - name: OkHttp security floor contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -Fq "implementation 'com.squareup.okhttp3:logging-interceptor:4.9.2'" app/build.gradle
+          ! grep -Fq "com.squareup.okhttp3:logging-interceptor:4.9.0" app/build.gradle
+          echo "OkHttp logging interceptor is at the patched 4.9.2 floor."
       - name: Q2 deterministic build
         shell: bash
         run: bash tools/q1_build.sh
