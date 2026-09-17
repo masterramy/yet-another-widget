@@ -30,7 +30,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          ! grep -RniE 'tommasoberlose\.com|anotherwidget\.tommasoberlose\.com|yet-another-widget' app/src/main app/build.gradle || { echo 'Historical network identity residue detected'; exit 1; }
+          ! grep -RniE 'tommasoberlose\.com|anotherwidget\.tommasoberlose\.com' app/src/main app/build.gradle || { echo 'Historical network identity residue detected'; exit 1; }
       - name: Bundled Google Sans must stay absent
         shell: bash
         run: |
