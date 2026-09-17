@@ -66,6 +66,23 @@ python3 tools/q1_widget_compat.py
 
 chmod +x ./gradlew
 ./gradlew --version
+
+# Q2 dependency-security contract. CVE-2022-2390 is fixed in play-services-basement 18.0.2.
+# Inspect the resolved runtime graph rather than assuming a top-level location version implies
+# a safe transitive floor. Fail closed if the resolved coordinate cannot be determined.
+BASEMENT_INSIGHT="$(./gradlew :app:dependencyInsight --dependency com.google.android.gms:play-services-basement --configuration debugRuntimeClasspath --no-daemon)"
+printf '%s\n' "$BASEMENT_INSIGHT"
+BASEMENT_VERSION="$(printf '%s\n' "$BASEMENT_INSIGHT" | sed -nE 's/^com\.google\.android\.gms:play-services-basement:([0-9]+\.[0-9]+\.[0-9]+).*$/\1/p' | head -n1)"
+test -n "$BASEMENT_VERSION"
+python3 - "$BASEMENT_VERSION" <<'PY'
+import sys
+version = tuple(int(part) for part in sys.argv[1].split('.'))
+minimum = (18, 0, 2)
+if version < minimum:
+    raise SystemExit(f"Resolved play-services-basement {sys.argv[1]} is below patched floor 18.0.2")
+print(f"Resolved play-services-basement {sys.argv[1]} satisfies patched floor >= 18.0.2")
+PY
+
 ./gradlew :app:assembleDebug :app:assembleDebugAndroidTest --stacktrace --no-daemon
 
 APK="$(find app/build/outputs/apk/debug -maxdepth 1 -type f -name '*.apk' | head -n1)"
