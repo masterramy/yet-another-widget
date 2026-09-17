@@ -54,11 +54,11 @@ class AlignedWidget(val context: Context, val rightAligned: Boolean = false) {
                 "setImageAlpha",
                 ColorHelper.getBackgroundAlpha(context.isDarkTheme())
             )
-            val refreshIntent = PendingIntent.getActivity(
+            val refreshIntent = PendingIntent.getBroadcast(
                 context,
                 appWidgetId,
                 IntentHelper.getWidgetUpdateIntent(context),
-                PendingIntent.FLAG_UPDATE_CURRENT
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
             views.setOnClickPendingIntent(R.id.widget_shape_background, refreshIntent)
         } catch (ex: Exception) {
@@ -100,7 +100,7 @@ class AlignedWidget(val context: Context, val rightAligned: Boolean = false) {
 
                 val i = Intent(context, WidgetClickListenerReceiver::class.java)
                 i.action = Actions.ACTION_OPEN_WEATHER_INTENT
-                val weatherPIntent = PendingIntent.getBroadcast(context, widgetID, i, 0)
+                val weatherPIntent = PendingIntent.getBroadcast(context, widgetID, i, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
 
                 views.setOnClickPendingIntent(R.id.weather_rect, weatherPIntent)
                 views.setOnClickPendingIntent(R.id.weather_sub_line_rect, weatherPIntent)
@@ -130,7 +130,7 @@ class AlignedWidget(val context: Context, val rightAligned: Boolean = false) {
                 context,
                 widgetID,
                 IntentHelper.getCalendarIntent(context),
-                PendingIntent.FLAG_UPDATE_CURRENT
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
             views.setOnClickPendingIntent(R.id.date_rect, calPIntent)
             views.setViewVisibility(R.id.first_line_rect, View.VISIBLE)
@@ -169,7 +169,7 @@ class AlignedWidget(val context: Context, val rightAligned: Boolean = false) {
                                 context,
                                 NewCalendarEventReceiver::class.java
                             ).apply { action = Actions.ACTION_GO_TO_NEXT_EVENT },
-                            PendingIntent.FLAG_UPDATE_CURRENT
+                            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
                         )
                     )
 
@@ -183,7 +183,7 @@ class AlignedWidget(val context: Context, val rightAligned: Boolean = false) {
                     context,
                     widgetID,
                     IntentHelper.getEventIntent(context, nextEvent),
-                    PendingIntent.FLAG_UPDATE_CURRENT
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
                 )
                 views.setOnClickPendingIntent(R.id.next_event_rect, eventIntent)
                 views.setImageViewBitmap(
@@ -220,7 +220,7 @@ class AlignedWidget(val context: Context, val rightAligned: Boolean = false) {
                         context,
                         widgetID,
                         IntentHelper.getGoogleMapsIntentFromAddress(context, nextEvent.address),
-                        PendingIntent.FLAG_UPDATE_CURRENT
+                        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
                     )
                     views.setOnClickPendingIntent(R.id.sub_line_rect, mapIntent)
                 } else {
@@ -232,7 +232,7 @@ class AlignedWidget(val context: Context, val rightAligned: Boolean = false) {
                             nextEvent,
                             forceEventDetails = true
                         ),
-                        PendingIntent.FLAG_UPDATE_CURRENT
+                        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
                     )
                     views.setOnClickPendingIntent(R.id.sub_line_rect, pIntentDetail)
                 }
@@ -255,7 +255,7 @@ class AlignedWidget(val context: Context, val rightAligned: Boolean = false) {
                                     context,
                                     widgetID,
                                     IntentHelper.getMusicIntent(context),
-                                    PendingIntent.FLAG_UPDATE_CURRENT
+                                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
                                 )
                                 views.setOnClickPendingIntent(R.id.sub_line_rect, musicIntent)
                                 showSomething = true
@@ -268,7 +268,7 @@ class AlignedWidget(val context: Context, val rightAligned: Boolean = false) {
                                     context,
                                     widgetID,
                                     IntentHelper.getClockIntent(context),
-                                    PendingIntent.FLAG_UPDATE_CURRENT
+                                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
                                 )
                                 views.setOnClickPendingIntent(R.id.sub_line_rect, alarmIntent)
                                 showSomething = true
@@ -283,7 +283,7 @@ class AlignedWidget(val context: Context, val rightAligned: Boolean = false) {
                                         context,
                                         widgetID,
                                         IntentHelper.getBatteryIntent(),
-                                        PendingIntent.FLAG_UPDATE_CURRENT
+                                        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
                                     )
                                     views.setOnClickPendingIntent(R.id.sub_line_rect, batteryIntent)
                                     showSomething = true
@@ -302,7 +302,7 @@ class AlignedWidget(val context: Context, val rightAligned: Boolean = false) {
                                     context,
                                     widgetID,
                                     IntentHelper.getFitIntent(context),
-                                    PendingIntent.FLAG_UPDATE_CURRENT
+                                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
                                 )
                                 views.setOnClickPendingIntent(R.id.sub_line_rect, fitIntent)
                                 showSomething = true
@@ -323,7 +323,7 @@ class AlignedWidget(val context: Context, val rightAligned: Boolean = false) {
                                         context,
                                         widgetID,
                                         IntentHelper.getNotificationIntent(context),
-                                        PendingIntent.FLAG_UPDATE_CURRENT
+                                        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
                                     )
                                     views.setOnClickPendingIntent(
                                         R.id.sub_line_rect,
@@ -351,7 +351,7 @@ class AlignedWidget(val context: Context, val rightAligned: Boolean = false) {
                                         nextEvent,
                                         forceEventDetails = true
                                     ),
-                                    PendingIntent.FLAG_UPDATE_CURRENT
+                                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
                                 )
                                 views.setOnClickPendingIntent(
                                     R.id.sub_line_rect,
