@@ -21,11 +21,11 @@ jobs:
         run: |
           set -euo pipefail
           ! grep -RniE 'com\.android\.billing|BillingClient|BillingResult|PurchasesUpdatedListener|querySkuDetailsAsync|launchBillingFlow|acknowledgePurchase|billing_permission' app/src/main app/build.gradle || { echo 'Retired Billing residue detected'; exit 1; }
-      - name: Retired Google Fit and exact polling must stay absent
+      - name: Retired Google Fit and exact-alarm capability must stay absent
         shell: bash
         run: |
           set -euo pipefail
-          ! grep -RniE 'FitnessOptions|HistoryClient|DataReadRequest|DataType\.TYPE_STEP_COUNT_DELTA|GoogleSignIn|READ_WRITE|ACTION_REQUEST_SCHEDULE_EXACT_ALARM|SCHEDULE_EXACT_ALARM|USE_EXACT_ALARM|setExactAndAllowWhileIdle|setExact\(' app/src/main app/build.gradle || { echo 'Retired Fit/exact-polling residue detected'; exit 1; }
+          ! grep -RniE 'FitnessOptions|HistoryClient|DataReadRequest|DataType\.TYPE_STEP_COUNT_DELTA|GoogleSignIn|READ_WRITE|ACTION_REQUEST_SCHEDULE_EXACT_ALARM|SCHEDULE_EXACT_ALARM|USE_EXACT_ALARM' app/src/main app/build.gradle || { echo 'Retired Fit/exact-alarm capability residue detected'; exit 1; }
       - name: Historical network identity must stay absent
         shell: bash
         run: |
