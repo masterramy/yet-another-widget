@@ -2,14 +2,14 @@
 
 ## SlimAdapter
 
-Yet Another Widget currently carries a compatibility-patched source snapshot of SlimAdapter during the Q2 restoration build.
+Yet Another Widget carries a compatibility-patched, vendored source snapshot of SlimAdapter in shipping source.
 
 - Upstream project: `linisme/SlimAdapter`
 - Pinned upstream commit: `3e00f876906019ac224e29159ff1a777c4a47d4b`
 - License: MIT
 - Upstream copyright: Copyright (c) 2017 IDIK
 
-The Q1/Q2 compatibility bridge removes the upstream `package-info.java` default-nullness annotation and narrows `SlimInjector`'s injector callback to the concrete `DefaultViewInjector` self type required by the modern Kotlin compiler. These restoration changes do not alter SlimAdapter's MIT license.
+The vendored compatibility patch removes the upstream `package-info.java` default-nullness annotation and narrows `SlimInjector`'s injector callback to the concrete `DefaultViewInjector` self type required by the modern Kotlin compiler. These restoration changes do not alter SlimAdapter's MIT license.
 
 The complete MIT license text for this dependency is preserved below.
 

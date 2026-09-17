@@ -22,42 +22,16 @@ if grep -RIn --exclude-dir=.git --exclude='*.md' -E 'FirebaseCrashlytics|io\.rea
   exit 3
 fi
 
-# Q1-only deterministic source bridge for the abandoned SlimAdapter dependency.
-# Pin the library to its upstream AndroidX migration commit; Q2 will either vendor or replace it before freeze.
-TMP_SLIM="$(mktemp -d)"
-trap 'rm -rf "$TMP_SLIM"' EXIT
-git -C "$TMP_SLIM" init -q
-git -C "$TMP_SLIM" remote add origin https://github.com/linisme/SlimAdapter.git
-git -C "$TMP_SLIM" fetch -q --depth 1 origin "$SLIMADAPTER_COMMIT"
-git -C "$TMP_SLIM" checkout -q --detach FETCH_HEAD
-test "$(git -C "$TMP_SLIM" rev-parse HEAD)" = "$SLIMADAPTER_COMMIT"
-rm -rf app/src/main/java/net/idik/lib/slimadapter
-mkdir -p app/src/main/java/net/idik/lib
-cp -R "$TMP_SLIM/slimadapter/src/main/java/net/idik/lib/slimadapter" app/src/main/java/net/idik/lib/
-
-# The library's package-info.java contains only a JSR-305 default-nullness annotation.
-# It has no runtime behavior and the annotation package is no longer otherwise required,
-# so Q1 strips this metadata-only source instead of adding an obsolete javax.annotation dependency.
-PACKAGE_INFO='app/src/main/java/net/idik/lib/slimadapter/package-info.java'
-test "$(cat "$PACKAGE_INFO")" = $'@javax.annotation.ParametersAreNonnullByDefault\npackage net.idik.lib.slimadapter;'
-rm "$PACKAGE_INFO"
-
-# SlimAdapter's historical callback exposes a raw IViewInjector. Kotlin 2 erases generic view
-# types on that raw receiver; using a star projection fixes only the first fluent call because
-# the self-type becomes unknown again. SlimViewHolder always constructs DefaultViewInjector,
-# so retain that concrete self type at the callback boundary without changing runtime behavior.
-python3 - <<'PY'
-from pathlib import Path
-p = Path('app/src/main/java/net/idik/lib/slimadapter/SlimInjector.java')
-s = p.read_text()
-old = 'void onInject(T data, IViewInjector injector);'
-new = 'void onInject(T data, IViewInjector<net.idik.lib.slimadapter.viewinjector.DefaultViewInjector> injector);'
-if s.count(old) != 1:
-    raise SystemExit('Unexpected SlimInjector signature; fail closed')
-p.write_text(s.replace(old, new))
-PY
-grep -F 'IViewInjector<net.idik.lib.slimadapter.viewinjector.DefaultViewInjector> injector' app/src/main/java/net/idik/lib/slimadapter/SlimInjector.java >/dev/null
-echo "SlimAdapter source: $SLIMADAPTER_COMMIT (Q1 metadata/generic bridges applied)"
+# Q2 absorbed the abandoned SlimAdapter bridge into ordinary shipping source.
+# The vendored snapshot is pinned to the same upstream AndroidX migration commit
+# previously fetched by this script. package-info.java remains intentionally omitted
+# because it only carried an obsolete JSR-305 default-nullness annotation.
+SLIM_ROOT='app/src/main/java/net/idik/lib/slimadapter'
+test -d "$SLIM_ROOT"
+test "$(find "$SLIM_ROOT" -type f -name '*.java' | wc -l | tr -d ' ')" = "15"
+test ! -e "$SLIM_ROOT/package-info.java"
+grep -F 'IViewInjector<net.idik.lib.slimadapter.viewinjector.DefaultViewInjector> injector' "$SLIM_ROOT/SlimInjector.java" >/dev/null
+echo "SlimAdapter source: vendored from $SLIMADAPTER_COMMIT (Q2 metadata/generic bridges absorbed)"
 
 chmod +x ./gradlew
 ./gradlew --version
