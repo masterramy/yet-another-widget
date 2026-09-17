@@ -165,6 +165,23 @@ jobs:
           grep -Fq "kapt 'com.github.bumptech.glide:compiler:4.12.0'" app/build.gradle
           ! grep -Fq "com.github.bumptech.glide:compiler:4.11.0" app/build.gradle
           echo "Glide runtime and annotation processor are aligned at 4.12.0."
+      - name: SlimAdapter must remain vendored durable source
+        shell: bash
+        run: |
+          set -euo pipefail
+          slim_root=app/src/main/java/net/idik/lib/slimadapter
+          test -d "$slim_root"
+          test "$(find "$slim_root" -type f -name '*.java' | wc -l | tr -d ' ')" = "15"
+          test ! -e "$slim_root/package-info.java"
+          grep -Fq 'IViewInjector<net.idik.lib.slimadapter.viewinjector.DefaultViewInjector> injector' "$slim_root/SlimInjector.java"
+          if grep -n -E 'curl|wget|raw\.githubusercontent\.com|github\.com/.*/SlimAdapter|SLIM_SRC_DIR|SLIM_SRC_ZIP' tools/q1_build.sh; then
+            echo "ERROR: build-time SlimAdapter network/source injection returned" >&2
+            exit 1
+          fi
+          grep -Fq 'SLIMADAPTER_COMMIT="3e00f876906019ac224e29159ff1a777c4a47d4b"' tools/q1_build.sh
+          grep -Fq 'SlimAdapter' THIRD_PARTY_NOTICES.md
+          grep -Fq '3e00f876906019ac224e29159ff1a777c4a47d4b' THIRD_PARTY_NOTICES.md
+          echo "SlimAdapter is pinned, vendored, provenance-documented durable shipping source."
       - name: Widget PendingIntent compatibility must be durable source
         shell: bash
         run: |
