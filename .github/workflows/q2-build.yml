@@ -157,6 +157,14 @@ jobs:
           grep -Fq "implementation 'com.squareup.okhttp3:logging-interceptor:4.9.2'" app/build.gradle
           ! grep -Fq "com.squareup.okhttp3:logging-interceptor:4.9.0" app/build.gradle
           echo "OkHttp logging interceptor is at the patched 4.9.2 floor."
+      - name: Glide runtime/compiler versions must stay aligned
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -Fq "implementation 'com.github.bumptech.glide:glide:4.12.0'" app/build.gradle
+          grep -Fq "kapt 'com.github.bumptech.glide:compiler:4.12.0'" app/build.gradle
+          ! grep -Fq "com.github.bumptech.glide:compiler:4.11.0" app/build.gradle
+          echo "Glide runtime and annotation processor are aligned at 4.12.0."
       - name: Widget PendingIntent compatibility must be durable source
         shell: bash
         run: |
