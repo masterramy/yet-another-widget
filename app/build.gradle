@@ -83,7 +83,8 @@ dependencies {
     implementation 'com.github.warkiz:IndicatorSeekBar:v2.1.1'
 
     implementation 'com.github.bumptech.glide:glide:4.12.0'
-    kapt 'com.github.bumptech.glide:compiler:4.11.0'
+    // Keep Glide's annotation processor in lockstep with its runtime library.
+    kapt 'com.github.bumptech.glide:compiler:4.12.0'
 
     implementation 'com.github.KwabenBerko:OpenWeatherMap-Android-Library:2.0.2'
     // 21.0.1 clears the CVE-2022-2390 vulnerable play-services-basement floor
