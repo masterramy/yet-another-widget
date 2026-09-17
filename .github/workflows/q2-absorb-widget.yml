@@ -1,0 +1,37 @@
+name: YAW Q2 Absorb Widget Compatibility
+
+on:
+  push:
+    branches:
+      - q2-publication-hardening-api36
+
+permissions:
+  contents: write
+
+jobs:
+  absorb:
+    if: "github.event.head_commit.message == 'Q2: stage guarded widget compatibility absorption'"
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Absorb exact proven renderer compatibility edits
+        shell: bash
+        env:
+          BASE_HEAD: 05e3be579275cef57cd68eb5447b8f764c0f8cee
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = "$BASE_HEAD"
+          unexpected="$(git diff --name-only "$BASE_HEAD" HEAD | grep -Ev '^\.github/workflows/q2-absorb-widget\.yml$' || true)"
+          test -z "$unexpected"
+          python3 tools/q1_widget_compat.py
+          git add app/src/main/java/com/tommasoberlose/anotherwidget/ui/widgets/StandardWidget.kt \
+                  app/src/main/java/com/tommasoberlose/anotherwidget/ui/widgets/AlignedWidget.kt
+          test "$(git diff --cached --name-only | wc -l | tr -d ' ')" = "2"
+          git diff --cached --check
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Q2: absorb widget compatibility into shipping source"
+          git push origin HEAD:q2-publication-hardening-api36
