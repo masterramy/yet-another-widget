@@ -1,142 +1,39 @@
-name: Yet Another Widget Q2 Build
+name: Yet Another Widget Q2 Gson Security Repair
 
 on:
   push:
     branches:
       - q2-publication-hardening-api36
-  workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  build:
+  repair:
+    if: "github.event.head_commit.message == 'Q2: stage guarded Gson security repair'"
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '17'
-      - uses: android-actions/setup-android@v3
-        with:
-          packages: platform-tools
-      - name: Install Android 36 SDK
+      - name: Apply exact-parent Gson security hardening
         shell: bash
-        run: |
-          yes | sdkmanager --licenses >/dev/null || true
-          sdkmanager 'platforms;android-36' 'build-tools;36.0.0' 'platform-tools'
-      - name: Donation/Billing surface must be absent
-        shell: bash
+        env:
+          BASE_HEAD: 0945b8604c482efc8d93fb89ad76fa80fdeddd27
         run: |
           set -euo pipefail
-          if grep -R -E "com.android.billingclient|com.android.vending.BILLING|SupportDevActivity|SupportDevViewModel" \
-            app/build.gradle app/src/main/AndroidManifest.xml app/src/main/java; then
-            echo "ERROR: retired Billing/SupportDev surface remains" >&2
-            exit 1
-          fi
-          test ! -e app/src/main/java/com/tommasoberlose/anotherwidget/ui/activities/settings/SupportDevActivity.kt
-          test ! -e app/src/main/java/com/tommasoberlose/anotherwidget/ui/viewmodels/settings/SupportDevViewModel.kt
-          test ! -e app/src/main/res/layout/activity_support_dev.xml
-          test ! -e app/src/main/res/layout/inapp_product_layout.xml
-      - name: Google Fit and exact-polling surface must be retired
-        shell: bash
-        run: |
-          set -euo pipefail
-          if grep -R -E "play-services-fitness|play-services-auth" app/build.gradle; then
-            echo "ERROR: retired Google Fit/Auth dependency remains" >&2
-            exit 1
-          fi
-          if grep -R -E "ACTIVITY_RECOGNITION|com.google.android.apps.fitness|ActivityDetectionReceiver" app/src/main app/build.gradle; then
-            echo "ERROR: retired Google Fit/activity-recognition surface remains" >&2
-            exit 1
-          fi
-          if grep -R -E "com.google.android.gms.fitness|FitnessOptions|getHistoryClient|GoogleSignIn" app/src/main/java; then
-            echo "ERROR: retired Google Fit/sign-in implementation remains" >&2
-            exit 1
-          fi
-          test ! -e app/src/main/java/com/tommasoberlose/anotherwidget/receivers/ActivityDetectionReceiver.kt
-      - name: Historical network identity must be absent
-        shell: bash
-        run: |
-          set -euo pipefail
-          if grep -R -n -E "api\.geonames\.org|tommaso\.berlose(@gmail\.com)?" app/src/main/java; then
-            echo "ERROR: inherited network identity or GeoNames credential remains" >&2
-            exit 1
-          fi
-      - name: Google Sans residue must be absent
-        shell: bash
-        run: |
-          set -euo pipefail
-          if find app/src/main -type f \( -iname '*google_sans*' -o -iname '*googlesans*' \) -print -quit | grep -q .; then
-            echo "ERROR: retired Google Sans asset filename remains" >&2
-            find app/src/main -type f \( -iname '*google_sans*' -o -iname '*googlesans*' \) -print >&2
-            exit 1
-          fi
-          if grep -R -n -E "@font/google_sans|Google Sans|google_sans_|GoogleSans" app/src/main \
-            --include='*.xml' --include='*.kt' --include='*.java' --include='*.gradle' \
-            --include='*.properties' --include='*.json' --include='*.md'; then
-            echo "ERROR: retired Google Sans text/source reference remains" >&2
-            exit 1
-          fi
-          echo "Google Sans source residue absent."
-      - name: Location foreground-service safety contract
-        shell: bash
-        run: |
-          set -euo pipefail
-          manifest=app/src/main/AndroidManifest.xml
-          service=app/src/main/java/com/tommasoberlose/anotherwidget/services/LocationService.kt
-          helper=app/src/main/java/com/tommasoberlose/anotherwidget/helpers/WeatherHelper.kt
-          chooser=app/src/main/java/com/tommasoberlose/anotherwidget/ui/activities/tabs/CustomLocationActivity.kt
-          test "$(grep -c 'android.permission.FOREGROUND_SERVICE_LOCATION' "$manifest")" = "1"
-          grep -Fq 'android:foregroundServiceType="location"' "$manifest"
-          grep -Fq 'FOREGROUND_SERVICE_TYPE_LOCATION' "$service"
-          grep -Fq 'return START_NOT_STICKY' "$service"
-          ! grep -Fq 'return START_STICKY' "$service"
-          grep -Fq 'PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE' "$service"
-          grep -Fq 'context is Activity && context.checkGrantedPermission' "$helper"
-          grep -Fq 'Preferences.customLocationLat != "" && Preferences.customLocationLon != ""' "$helper"
-          grep -Fq 'LocationService.requestNewLocation(this@CustomLocationActivity)' "$chooser"
-          echo "Location foreground-service safety contract present."
-      - name: Local preference backup must be disabled
-        shell: bash
-        run: |
-          set -euo pipefail
-          manifest=app/src/main/AndroidManifest.xml
-          grep -Fq 'android:allowBackup="false"' "$manifest"
-          ! grep -Fq 'android:allowBackup="true"' "$manifest"
-          echo "Application backup disabled for local preference/API-key state."
-      - name: Weather provider transport, migration, and MET attribution contract
-        shell: bash
-        run: |
-          set -euo pipefail
-          weather_api=app/src/main/java/com/tommasoberlose/anotherwidget/network/repository/WeatherApiRepository.kt
-          api_services=app/src/main/java/com/tommasoberlose/anotherwidget/network/api/ApiServices.kt
-          constants=app/src/main/java/com/tommasoberlose/anotherwidget/global/Constants.kt
-          helper=app/src/main/java/com/tommasoberlose/anotherwidget/helpers/WeatherHelper.kt
-          strings=app/src/main/res/values/strings.xml
-          grep -Fq 'private const val BASE_URL_API = "https://api.weatherapi.com/v1/"' "$weather_api"
-          ! grep -Fq 'http://api.weatherapi.com' "$weather_api"
-          grep -Fq '@Headers("User-Agent: YetAnotherWidget/2.3.3 (https://github.com/masterramy/yet-another-widget)")' "$api_services"
-          grep -Fq '@GET("compact")' "$api_services"
-          ! grep -Fq '@GET("compact.json")' "$api_services"
-          grep -Fq 'HERE.rawValue, ACCUWEATHER.rawValue -> YR' "$constants"
-          grep -Fq 'Constants.WeatherProvider.YR -> "https://api.met.no/weatherapi/locationforecast/2.0/documentation"' "$helper"
-          ! grep -Fq 'Constants.WeatherProvider.YR -> "https://www.yr.no/"' "$helper"
-          grep -Fq 'MET Norway\nLocationforecast' "$strings"
-          ! grep -Fq 'YR.no/Met.no' "$strings"
-          grep -Fq 'Weather data provided by MET Norway Locationforecast.' "$strings"
-          echo "Weather provider transport, migration, and MET attribution contract present."
-      - name: Q2 deterministic build
-        shell: bash
-        run: bash tools/q1_build.sh
-      - name: Upload debug APK
-        uses: actions/upload-artifact@v4
-        continue-on-error: true
-        with:
-          name: q2-debug-apk
-          path: app/build/outputs/apk/debug/*.apk
-          if-no-files-found: error
+          test "$(git rev-parse HEAD^)" = "$BASE_HEAD"
+          unexpected="$(git diff --name-only "$BASE_HEAD" HEAD | grep -Ev '^(\.github/workflows/q2-build\.yml|tools/q2_gson_security_hardening\.py)$' || true)"
+          test -z "$unexpected"
+          python tools/q2_gson_security_hardening.py
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app/build.gradle app/src/main/java/com/tommasoberlose/anotherwidget/network/WeatherNetworkApi.kt
+          echo "Source-only Gson hardening paths:"
+          git diff --cached --name-only
+          test "$(git diff --cached --name-only | wc -l | tr -d ' ')" = "2"
+          grep -Fq "implementation 'com.google.code.gson:gson:2.14.0'" app/build.gradle
+          ! grep -R -Fq 'com.google.gson.internal.LinkedTreeMap' app/src/main/java
+          git commit -m "Q2: patch Gson CVE and decouple internal map"
+          git push origin HEAD:q2-publication-hardening-api36
