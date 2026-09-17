@@ -86,7 +86,9 @@ dependencies {
     kapt 'com.github.bumptech.glide:compiler:4.11.0'
 
     implementation 'com.github.KwabenBerko:OpenWeatherMap-Android-Library:2.0.2'
-    implementation 'com.google.android.gms:play-services-location:18.0.0'
+    // 21.0.1 clears the CVE-2022-2390 vulnerable play-services-basement floor
+    // while preserving the FusedLocationProviderClient API used by the existing app.
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
 
     implementation 'androidx.core:core-ktx:1.3.2'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.3.1'
