@@ -307,6 +307,68 @@ jobs:
           grep -Fq 'android:allowBackup="false"' "$manifest"
           ! grep -Fq 'android:allowBackup="true"' "$manifest"
           echo "Application backup disabled for local preference state."
+      - name: WeatherAPI release surface must remain attribution-safe and key-safe
+        shell: bash
+        run: |
+          set -euo pipefail
+          key_layout=app/src/main/res/layout/weather_provider_settings_layout.xml
+          provider_ui=app/src/main/java/com/tommasoberlose/anotherwidget/ui/activities/tabs/WeatherProviderActivity.kt
+          standard_layout=app/src/main/res/layout/the_widget.xml
+          aligned_layout=app/src/main/res/layout/left_aligned_widget.xml
+          standard=app/src/main/java/com/tommasoberlose/anotherwidget/ui/widgets/StandardWidget.kt
+          aligned=app/src/main/java/com/tommasoberlose/anotherwidget/ui/widgets/AlignedWidget.kt
+          strings=app/src/main/res/values/strings.xml
+
+          ! grep -Fq 'android:inputType="textCapWords"' "$key_layout"
+          grep -Fq 'app:endIconMode="password_toggle"' "$key_layout"
+          grep -Fq 'android:inputType="textPassword"' "$key_layout"
+          grep -Fq 'android:importantForAutofill="no"' "$key_layout"
+          grep -Fq 'android:textDirection="ltr"' "$key_layout"
+
+          test "$(grep -c 'selectProvider(provider)' "$provider_ui")" = "2"
+          grep -Fq 'WeatherHelper.removeWeather(this)' "$provider_ui"
+          grep -Fq 'Preferences.weatherProvider = provider.rawValue' "$provider_ui"
+
+          grep -Fq '<string name="weatherapi_widget_credit" translatable="false"> · WeatherAPI.com</string>' "$strings"
+          test "$(grep -c 'android:id="@+id/weather_date_line_credit"' "$standard_layout")" = "1"
+          test "$(grep -c 'android:id="@+id/weather_sub_line_credit"' "$standard_layout")" = "1"
+          test "$(grep -c 'android:id="@+id/weather_date_line_credit"' "$aligned_layout")" = "1"
+          test "$(grep -c 'android:id="@+id/weather_sub_line_credit"' "$aligned_layout")" = "1"
+          for renderer in "$standard" "$aligned"; do
+            grep -Fq 'Constants.WeatherProvider.fromInt(Preferences.weatherProvider) == Constants.WeatherProvider.WEATHER_API' "$renderer"
+            grep -Fq 'bindingView.weatherDateLineCredit.isVisible = showWeatherApiCredit' "$renderer"
+            grep -Fq 'bindingView.weatherSubLineCredit.isVisible = showWeatherApiCredit' "$renderer"
+          done
+
+          for retired in \
+            settings_weather_provider_open_weather \
+            settings_weather_provider_weatherbit \
+            settings_weather_provider_here \
+            settings_weather_provider_accuweather \
+            settings_weather_provider_yr \
+            weather_provider_info_open_weather_title \
+            weather_provider_info_weatherbit_title \
+            weather_provider_info_here_title \
+            weather_provider_info_accuweather_title \
+            weather_provider_info_yr_title \
+            weather_provider_info_open_weather_subtitle \
+            weather_provider_info_weatherbit_subtitle \
+            weather_provider_info_here_subtitle \
+            weather_provider_info_accuweather_subtitle \
+            weather_provider_info_yr_subtitle \
+            celsius_only_message \
+            api_key_hint \
+            weather_warning \
+            weather_provider_activity_subtitle \
+            api_key_required_message \
+            weather_select_a_provider; do
+            if grep -R -n -F "name=\"$retired\"" app/src/main/res/values* --include='strings.xml'; then
+              echo "ERROR: retired weather-provider resource remains: $retired" >&2
+              exit 1
+            fi
+          done
+          echo "WeatherAPI key entry, provider switching, rendered attribution, and retired-provider resources are release-safe."
+
       - name: WeatherAPI current-condition cache must expire within 60 minutes
         shell: bash
         run: |
