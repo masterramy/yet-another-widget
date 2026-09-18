@@ -244,6 +244,27 @@ jobs:
           test ! -e app/src/main/java/com/tommasoberlose/anotherwidget/services/EventListenerJob.kt
           ! grep -R -n -F 'JobService' app/src/main/java/com/tommasoberlose/anotherwidget             --include='*.kt' --include='*.java'
           echo "Retired legacy JobService paths are absent."
+      - name: Retired location and GeoNames resource residue must stay absent
+        shell: bash
+        run: |
+          set -euo pipefail
+          strings=app/src/main/res/values/strings.xml
+          for token in \
+            background_location_warning \
+            location_access_notification_channel_id \
+            location_access_notification_channel_name \
+            location_access_notification_channel_description \
+            location_access_notification_title \
+            location_access_notification_subtitle \
+            geoname_credit; do
+            if grep -R -n -F "$token" app/src/main --include='*.xml' --include='*.kt' --include='*.java'; then
+              echo "ERROR: retired resource token remains: $token" >&2
+              exit 1
+            fi
+          done
+          ! grep -R -n -F 'http://www.geonames.org/' app/src/main
+          echo "Retired location-service/background-location/GeoNames resource residue is absent."
+
       - name: Location access must remain coarse, foreground-only, and service-free
         shell: bash
         run: |
