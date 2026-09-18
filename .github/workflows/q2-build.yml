@@ -164,6 +164,18 @@ jobs:
           grep -Fq 'if (Preferences.customFont == 1)' "$app"
           grep -Fq 'Preferences.customFont = Constants.CUSTOM_FONT_DEFAULT' "$app"
           echo "Legacy hidden weather providers and retired Google Sans preference normalize at startup."
+      - name: External source links must use HTTPS
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -R -n -F 'http://' app/src/main/java --include='*.kt' --include='*.java'; then
+            echo "ERROR: cleartext external link remains in app source" >&2
+            exit 1
+          fi
+          grep -Fq 'https://www.weather.gov/' app/src/main/java/com/tommasoberlose/anotherwidget/helpers/WeatherHelper.kt
+          grep -Fq 'https://www.google.com/maps/search/?api=1&query=' app/src/main/java/com/tommasoberlose/anotherwidget/helpers/IntentHelper.kt
+          grep -Fq 'https://tommasoberlose.com/' app/src/main/java/com/tommasoberlose/anotherwidget/ui/fragments/SettingsFragment.kt
+          echo "External app/source links are HTTPS-only."
       - name: Historical network identity must be absent
         shell: bash
         run: |
