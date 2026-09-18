@@ -40,6 +40,7 @@ import com.tommasoberlose.anotherwidget.ui.widgets.MainWidget
 import com.tommasoberlose.anotherwidget.utils.checkGrantedPermission
 import com.tommasoberlose.anotherwidget.utils.collapse
 import com.tommasoberlose.anotherwidget.utils.expand
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -134,10 +135,20 @@ class WeatherFragment : Fragment() {
         }
     }
 
+    private var locationRefreshJob: Job? = null
+
     private fun checkLocationPermission() {
         if (requireActivity().checkGrantedPermission(Manifest.permission.ACCESS_COARSE_LOCATION)) {
             binding.locationPermissionAlert.isVisible = false
-            WeatherReceiver.setUpdates(requireContext())
+            if (
+                Preferences.showWeather &&
+                Preferences.customLocationAdd == "" &&
+                (Preferences.customLocationLat == "" || Preferences.customLocationLon == "")
+            ) {
+                refreshDeviceLocationAndSchedule()
+            } else {
+                WeatherReceiver.setUpdates(requireContext())
+            }
         } else if (Preferences.showWeather && Preferences.customLocationAdd == "") {
             binding.locationPermissionAlert.isVisible = true
             binding.locationPermissionAlert.setOnClickListener {
@@ -145,6 +156,14 @@ class WeatherFragment : Fragment() {
             }
         } else {
             binding.locationPermissionAlert.isVisible = false
+        }
+    }
+
+    private fun refreshDeviceLocationAndSchedule() {
+        if (locationRefreshJob?.isActive == true) return
+        locationRefreshJob = viewLifecycleOwner.lifecycleScope.launch {
+            WeatherHelper.updateWeather(requireContext())
+            WeatherReceiver.setUpdates(requireContext())
         }
     }
 
@@ -225,7 +244,8 @@ class WeatherFragment : Fragment() {
                 override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
                     report?.let {
                         if (report.areAllPermissionsGranted()){
-                            checkLocationPermission()
+                            binding.locationPermissionAlert.isVisible = false
+                            refreshDeviceLocationAndSchedule()
                         }
                     }
                 }
