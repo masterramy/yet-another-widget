@@ -88,6 +88,13 @@ Android fused-location APIs. This notice does **not** characterize that Google S
 dependency as Apache-2.0; its use/distribution is governed by the applicable Google
 SDK/Google Play services terms.
 
+## OkHttp Public Suffix List data
+
+OkHttp ships a compiled Public Suffix List used for domain-boundary handling. Its packaged
+`okhttp3/internal/publicsuffix/NOTICE` identifies the Mozilla Public Suffix List data
+under the Mozilla Public License 2.0. That upstream NOTICE and data remain packaged in
+the APK/AAB and are not removed by this project.
+
 ## Build/test-only dependencies
 
 Test runners, JUnit, Android test libraries, annotation processors, and Android build

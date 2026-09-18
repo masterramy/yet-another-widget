@@ -114,14 +114,6 @@
     <string name="settings_weather_provider_api_key_subtitle_all_set">Il provider meteo è configurato correttamente</string>
     <string name="settings_weather_provider_api_key_subtitle_not_set">Devi configurare il provider meteo</string>
     <string name="default_weather_app">Meteo Google</string>
-    <string name="api_key_title_1">Registra un account su OpenWeather</string>
-    <string name="api_key_subtitle_1">Registra un account gratuito su OpenWeather, ci vorranno solo alcuni minuti.</string>
-    <string name="api_key_title_2">Copia la chiave API</string>
-    <string name="api_key_subtitle_2">Trova la chiave API nelle impostazioni del tuo nuovo account e copia la chiave di default.</string>
-    <string name="api_key_title_3">Inserisci la chiave nell\'app</string>
-    <string name="api_key_subtitle_3">Copia qui la chiave API e salva la nuova configurazione.</string>
-    <string name="action_open_provider">Apri OpenWeatherMap.com</string>
-    <string name="api_key_info_all_set">La chiave API potrebbe aver bisogno di più di 20 minuti per diventare attiva, aggiorneremo il meteo non appena sarà possibile.</string>
     <string name="settings_weather_icon_pack_title">Icon pack</string>
     <string name="settings_weather_icon_pack_default">Icon pack %d</string>
     <string name="settings_weather_provider_api">Provider meteo</string>

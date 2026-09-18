@@ -115,14 +115,6 @@
     <string name="settings_weather_provider_api_key_subtitle_all_set">El proveedor del clima está correctamente configurado</string>
     <string name="settings_weather_provider_api_key_subtitle_not_set">El proveedor del clima debe ser configurado</string>
     <string name="default_weather_app">Clima de Google</string>
-    <string name="api_key_title_1">Registrarse para obtener una cuenta de OpenWeather</string>
-    <string name="api_key_subtitle_1">Registra una cuenta gratis en OpenWeather. Solo tomará unos minutos.</string>
-    <string name="api_key_title_2">Copia tu clave de API</string>
-    <string name="api_key_subtitle_2">Encuentra el menu de claves API en los ajustes de tu cuenta y copia la clave predeterminada.</string>
-    <string name="api_key_title_3">Ingresa la clave a la app</string>
-    <string name="api_key_subtitle_3">Pega la clave en el campo de debajo y guárdalo. Una vez la clave sea activada el clima será visible.</string>
-    <string name="action_open_provider">Ir a OpenWeatherMap.com</string>
-    <string name="api_key_info_all_set">La activación de tu clave de API puede llegar a tomar unos diez minutos. El clima se actualizará tan pronto esté disponible.</string>
     <string name="settings_weather_icon_pack_title">Paquete de iconos</string>
     <string name="settings_weather_icon_pack_default">Paquete de iconos %d</string>
     <string name="settings_weather_provider_api">Proveedor del clima</string>
