@@ -63,6 +63,19 @@ jobs:
             exit 1
           fi
           test ! -e app/src/main/java/com/tommasoberlose/anotherwidget/receivers/ActivityDetectionReceiver.kt
+      - name: Notification timeout scheduling must not require exact-alarm access
+        shell: bash
+        run: |
+          set -euo pipefail
+          notification=app/src/main/java/com/tommasoberlose/anotherwidget/receivers/NotificationListener.kt
+          ! grep -Fq 'setExact(' "$notification"
+          grep -Fq 'private const val NOTIFICATION_TIMEOUT_REQUEST_CODE = 28943' "$notification"
+          grep -Fq 'NOTIFICATION_TIMEOUT_REQUEST_CODE,' "$notification"
+          grep -Fq 'PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE' "$notification"
+          grep -Fq 'cancel(timeoutIntent)' "$notification"
+          grep -Fq 'set(' "$notification"
+          grep -Fq 'timeoutIntent' "$notification"
+          echo "Notification timeout uses one immutable inexact-alarm token without exact-alarm special access."
       - name: Historical network identity must be absent
         shell: bash
         run: |
