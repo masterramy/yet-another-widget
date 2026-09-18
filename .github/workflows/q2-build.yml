@@ -307,6 +307,30 @@ jobs:
           grep -Fq 'android:allowBackup="false"' "$manifest"
           ! grep -Fq 'android:allowBackup="true"' "$manifest"
           echo "Application backup disabled for local preference state."
+      - name: WeatherAPI current-condition cache must expire within 60 minutes
+        shell: bash
+        run: |
+          set -euo pipefail
+          prefs=app/src/main/java/com/tommasoberlose/anotherwidget/global/Preferences.kt
+          helper=app/src/main/java/com/tommasoberlose/anotherwidget/helpers/WeatherHelper.kt
+          network=app/src/main/java/com/tommasoberlose/anotherwidget/network/WeatherNetworkApi.kt
+          receiver=app/src/main/java/com/tommasoberlose/anotherwidget/receivers/WeatherReceiver.kt
+          fragment=app/src/main/java/com/tommasoberlose/anotherwidget/ui/fragments/tabs/WeatherFragment.kt
+          standard=app/src/main/java/com/tommasoberlose/anotherwidget/ui/widgets/StandardWidget.kt
+          aligned=app/src/main/java/com/tommasoberlose/anotherwidget/ui/widgets/AlignedWidget.kt
+          grep -Fq 'var weatherUpdatedAt by longPref(key = "PREF_WEATHER_UPDATED_AT", default = 0L)' "$prefs"
+          grep -Fq 'private const val WEATHER_API_MAX_CACHE_AGE_MILLIS = 60 * 60 * 1000L' "$helper"
+          grep -Fq 'age >= WEATHER_API_MAX_CACHE_AGE_MILLIS' "$helper"
+          grep -Fq 'age < 0L' "$helper"
+          grep -Fq 'Preferences.weatherUpdatedAt = 0L' "$helper"
+          test "$(grep -c 'Preferences.weatherUpdatedAt = System.currentTimeMillis()' "$network")" = "2"
+          grep -Fq 'Preferences.weatherRefreshPeriod.coerceAtMost(1)' "$receiver"
+          grep -Fq 'Preferences.weatherRefreshPeriod = 1' "$fragment"
+          grep -Fq '== Constants.WeatherProvider.WEATHER_API) 1 else 5' "$fragment"
+          test "$(grep -c 'WeatherHelper.hasDisplayableWeather()' "$standard")" = "2"
+          test "$(grep -c 'WeatherHelper.hasDisplayableWeather()' "$aligned")" = "2"
+          echo "WeatherAPI current conditions cannot be scheduled or rendered as cached data beyond 60 minutes."
+
       - name: Shipping weather architecture must be NWS plus user-key WeatherAPI
         shell: bash
         run: |
