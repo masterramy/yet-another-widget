@@ -187,7 +187,7 @@ class SettingsFragment : Fragment() {
         }
 
         binding.actionWebsite.setOnClickListener {
-            requireActivity().openURI("http://tommasoberlose.com/")
+            requireActivity().openURI("https://tommasoberlose.com/")
         }
 
         binding.actionFeedback.setOnClickListener {
