@@ -140,7 +140,6 @@
     <string name="weather_warning">Google Awareness API er forældet. Der kræves nu en API nøgle fra en tredjepartsudbyder, for at vise vejret i widget\'en.</string>
     <string name="settings_weather_icon_pack_title">Ikonpakke</string>
     <string name="settings_weather_icon_pack_default">Ikonpakke %d</string>
-    <string name="background_location_warning">Når geolokation er aktiveret, indsamler vi placeringsdata for at opdatere vejrinformationer, selv når app\'en er lukket eller ikke er i brug.\nVi bruger ikke disse data på andre måder.</string>
     <string name="settings_weather_provider_api">Vejrudbyder</string>
 
     <string name="settings_weather_provider_open_weather" translatable="false">OpenWeatherMap.org</string>
@@ -181,11 +180,6 @@
     <string name="weather_select_a_provider">Vælg en udbyder</string>
     <string name="weather_provider_activity_subtitle">Vælg en vejrudbyder fra listen.\nEnkelte udbydere har brug for en gratis personlig konto,\nmen de er normalt mere nøjagtige.</string>
 
-    <string name="location_access_notification_channel_id" translatable="false">location-access</string>
-    <string name="location_access_notification_channel_name">Opdateringstjeneste til vejret</string>
-    <string name="location_access_notification_channel_description">Tjeneste som bruges til at opdatere vejret, baseret på brugerens nuværende lokation.</string>
-    <string name="location_access_notification_title">Opdaterer vejret…</string>
-    <string name="location_access_notification_subtitle">Vi opdaterer vejret baseret på din nuværnde lokation.</string>
 
     <!-- Clock -->
     <string name="settings_clock_title">Ur</string>
@@ -208,7 +202,6 @@
     <string name="settings_alt_timezone_title">Ekstra ur</string>
     <string name="no_time_zone_label">Ingen</string>
     <string name="time_zone_search_error_message">Fejl ved søgning efter tidszonen.</string>
-    <string name="geoname_credit">Tjeneste tilgængelig takket være <a href="http://www.geonames.org/">GeoName</a>.</string>
 
     <!-- Glance -->
     <string name="settings_show_next_alarm_title">Vis næste alarm</string>

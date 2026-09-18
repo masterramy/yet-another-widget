@@ -127,7 +127,6 @@
     <string name="api_key_info_all_set">La activación de tu clave de API puede llegar a tomar unos diez minutos. El clima se actualizará tan pronto esté disponible.</string>
     <string name="settings_weather_icon_pack_title">Paquete de iconos</string>
     <string name="settings_weather_icon_pack_default">Paquete de iconos %d</string>
-    <string name="background_location_warning">Cuando el GPS está encendido, recolectamos los datos de la ubicación para actualizar la información del clima cuando la app está cerrada o no está en uso.\nNo usaremos esos datos en caso contrario.</string>
     <string name="settings_weather_provider_api">Proveedor del clima</string>
 
     <string name="settings_weather_provider_open_weather" translatable="false">OpenWeatherMap.org</string>

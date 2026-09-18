@@ -135,7 +135,6 @@
     <string name="weather_warning">Google Awareness API 已被弃用。要在微件上显示天气，您需要从第三方来源获取 API 密钥。</string>
     <string name="settings_weather_icon_pack_title">天气图标</string>
     <string name="settings_weather_icon_pack_default">图标包 %d</string>
-    <string name="background_location_warning">选择地理定位后，即便应用未启动或在后台，我们也会收集您的定位数据来更新天气信息。\n这些数据不会用在其他地方。</string>
     <string name="settings_weather_provider_api">天气信息来源</string>
 
     <string name="settings_weather_provider_open_weather" translatable="false">OpenWeatherMap.org</string>
@@ -176,11 +175,6 @@
     <string name="weather_select_a_provider">选择信息来源</string>
     <string name="weather_provider_activity_subtitle">从列表中选择天气信息来源。\n部分来源需要注册免费个人账户，\n但它们通常也更精准。</string>
 
-    <string name="location_access_notification_channel_id" translatable="false">location-access</string>
-    <string name="location_access_notification_channel_name">天气更新服务</string>
-    <string name="location_access_notification_channel_description">基于用户当前位置更新天气信息。</string>
-    <string name="location_access_notification_title">正在更新天气……</string>
-    <string name="location_access_notification_subtitle">我们正在根据您的当前位置更新天气信息</string>
 
     <!-- Clock -->
     <string name="settings_clock_title">时间</string>

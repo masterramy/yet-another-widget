@@ -140,7 +140,6 @@
     <string name="weather_warning">La météo de Google Awareness est obsolète. Il faut désormais une clé API d\'un fournisseur tiers pour afficher la météo dans le widget.</string>
     <string name="settings_weather_icon_pack_title">Pack d\'icônes</string>
     <string name="settings_weather_icon_pack_default">Pack d\'icônes %d</string>
-    <string name="background_location_warning">Lorsque Géolocalisation est sélectionné, nous collectons les données de localisation pour actualiser la météo, même lorsque l\'app est fermée ou non utilisée.\nNous n\'utiliserons pas ces données autrement que mentionné.</string>
     <string name="settings_weather_provider_api">Fournisseur météo</string>
 
     <string name="settings_weather_provider_open_weather" translatable="false">OpenWeatherMap.org</string>
@@ -181,11 +180,6 @@
     <string name="weather_select_a_provider">Sélectionner un fournisseur</string>
     <string name="weather_provider_activity_subtitle">Sélectionnez un fournisseur météo dans la liste.\nCertains fournisseurs ont besoin d\'un\ncompte personnel gratuit pour fonctionner,\nmais ils sont généralement plus précis.</string>
 
-    <string name="location_access_notification_channel_id" translatable="false">location-access</string>
-    <string name="location_access_notification_channel_name">Service d\'actualisation de la météo</string>
-    <string name="location_access_notification_channel_description">Service utilisé pour actualiser la météo en fonction de l\'emplacement actuel de l\'utilisateur.</string>
-    <string name="location_access_notification_title">Actualisation de la météo...</string>
-    <string name="location_access_notification_subtitle">Nous actualisons la météo en fonction de votre emplacement actuel.</string>
 
     <!-- Clock -->
     <string name="settings_clock_title">Horloge</string>
@@ -208,7 +202,6 @@
     <string name="settings_alt_timezone_title">Horloges multiples</string>
     <string name="no_time_zone_label">Aucun</string>
     <string name="time_zone_search_error_message">Erreur de recherche du fuseau horaire.</string>
-    <string name="geoname_credit">Service disponible grâce à <a href="http://www.geonames.org/">GeoNames</a>.</string>
 
     <!-- Glance -->
     <string name="settings_show_next_alarm_title">Prochaine alarme</string>

@@ -119,7 +119,6 @@
     <string name="weather_warning">A API Google Awareness está depravada. Agora é necessário ter uma chave da API de um outro provedor para mostrar o clima no widget.</string>
     <string name="settings_weather_icon_pack_title">Pacote de ícones</string>
     <string name="settings_weather_icon_pack_default">Pacote de ícones %d</string>
-    <string name="background_location_warning">Quando a geolocalização está selecionada, nós coletamos os dados de localização para atualizar as informações sobre o clima mesmo quando o aplicativo está fechado ou fora de uso.\nNós não iremos usar esses dados de outra maneira.</string>
     <string name="settings_weather_provider_api">Provedor de clima</string>
 
     <string name="settings_weather_provider_open_weather" translatable="false">OpenWeatherMap.org</string>

@@ -114,7 +114,6 @@
     <string name="weather_warning">Google Awareness Wetter ist veraltet. Es wird nun ein API-Schlüssel von einem Drittanbieter benötigt, um das Wetter im Widget anzuzeigen.</string>
     <string name="settings_weather_icon_pack_title">Icon Pack</string>
     <string name="settings_weather_icon_pack_default">Icon Pack %d</string>
-    <string name="background_location_warning">Wenn GPS-Standort ausgewählt ist, sammeln wir Standortdaten, um die Wetterinformationen zu aktualisieren, auch wenn die App geschlossen oder nicht in Gebrauch ist.\nDie Daten werden nicht für andere Zwecke verwendet.</string>
     <string name="settings_weather_provider_api">Wetterdienst</string>
 
     <string name="weather_provider_info_open_weather_title">Dieser Wetteranbieter benötigt einen\nAPI-Schlüssel, um korrekt zu funktionieren.</string>
@@ -147,10 +146,6 @@
     <string name="weather_select_a_provider">Wählen einen Anbieter</string>
     <string name="weather_provider_activity_subtitle">Wählen Sie einen Wetterdienst aus der Liste aus.\nEinige Anbieter benötigen ein kostenloses\nBenutzerkonto, allerdings sind sie\ndafür in der Regel genauer.</string>
 
-    <string name="location_access_notification_channel_name">Wetter Aktualisierungsdienst</string>
-    <string name="location_access_notification_channel_description">Dienst zur Aktualisierung des Wetters anhand des aktuellen Standorts des Benutzers.</string>
-    <string name="location_access_notification_title">Wetter wird aktualisiert…</string>
-    <string name="location_access_notification_subtitle">Das Wetter wird basierend auf Ihrem aktuellen Standort aktualisiert.</string>
 
     <!-- Clock -->
     <string name="settings_clock_title">Uhr</string>
@@ -173,7 +168,6 @@
     <string name="settings_alt_timezone_title">Mehrere Uhren</string>
     <string name="no_time_zone_label">Keine</string>
     <string name="time_zone_search_error_message">Fehler beim Suchen der Zeitzone.</string>
-    <string name="geoname_credit">Service verfügbar dank <a href="http://www.geonames.org/">GeoName</a>.</string>
 
     <!-- Glance -->
     <string name="settings_show_next_alarm_title">Nächster Wecker</string>

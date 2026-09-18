@@ -135,7 +135,6 @@
     <string name="weather_warning">Google Awareness API został wycofany. Aby wyświetlać pogodę w widgecie, wymagane jest teraz posiadanie klucza API od zewnętrznego dostawcy.</string>
     <string name="settings_weather_icon_pack_title">Paczka ikon</string>
     <string name="settings_weather_icon_pack_default">Paczka ikon %d</string>
-    <string name="background_location_warning">Po wybraniu geolokalizacji zbieramy dane o lokalizacji, aby aktualizować informacje o pogodzie, nawet gdy aplikacja jest zamknięta lub nieużywana. \ NNie wykorzystamy tych danych w inny sposób.</string>
     <string name="settings_weather_provider_api">Dostawca pogody</string>
 
     <string name="settings_weather_provider_open_weather" translatable="false">OpenWeatherMap.org</string>
@@ -176,11 +175,6 @@
     <string name="weather_select_a_provider">Wybierz dostawcę</string>
     <string name="weather_provider_activity_subtitle">Wybierz dostawcę pogody z listy.\nNiektóre mogą wymagać darmowego konta,\nale zazwyczaj są dokładniejsze.</string>
 
-    <string name="location_access_notification_channel_id" translatable="false">location-access</string>
-    <string name="location_access_notification_channel_name">Usługa aktualizacji pogody</string>
-    <string name="location_access_notification_channel_description">Usługa używana do aktualizacji pogody opartej na lokalizacji użytkownika.</string>
-    <string name="location_access_notification_title">Aktualizowanie pogody…</string>
-    <string name="location_access_notification_subtitle">Aktualizujemy pogodę opierając się na twojeje lokalizacji.</string>
 
     <!-- Clock -->
     <string name="settings_clock_title">Zegar</string>
