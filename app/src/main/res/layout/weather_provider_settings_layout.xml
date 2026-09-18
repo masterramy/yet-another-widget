@@ -25,15 +25,17 @@
                 android:orientation="horizontal" android:descendantFocusability="beforeDescendants" android:focusable="true"
                 android:layout_marginTop="24dp" android:focusableInTouchMode="true" android:gravity="center_vertical">
                 <com.google.android.material.textfield.TextInputLayout android:id="@+id/api_key" android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:inputType="textCapWords" android:textStyle="bold"
+                    android:layout_height="wrap_content" android:textStyle="bold"
                     android:gravity="center_vertical|start" android:textColor="@color/colorPrimaryText"
                     app:boxBackgroundColor="@color/colorPrimaryDark" app:boxStrokeWidth="0dp" app:hintTextColor="@color/colorAccent"
+                    app:endIconMode="password_toggle"
                     android:hint="@string/settings_weather_provider_api_key_title" android:fontFamily="sans-serif"
                     android:textAlignment="viewStart" android:textDirection="locale"
                     style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox">
                     <com.google.android.material.textfield.TextInputEditText android:id="@+id/api_key_inner"
                         android:layout_width="match_parent" android:layout_height="wrap_content" android:textAlignment="viewStart"
-                        android:textDirection="locale" android:fontFamily="sans-serif" android:gravity="center_vertical|start" />
+                        android:inputType="textPassword" android:importantForAutofill="no" android:singleLine="true" android:maxLines="1"
+                        android:textDirection="ltr" android:fontFamily="monospace" android:gravity="center_vertical|start" />
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
             <com.google.android.material.button.MaterialButton android:id="@+id/action_save_key"

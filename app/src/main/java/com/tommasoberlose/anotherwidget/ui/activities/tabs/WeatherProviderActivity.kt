@@ -47,34 +47,10 @@ class WeatherProviderActivity : AppCompatActivity() {
                 injector
                     .text(R.id.text, WeatherHelper.getProviderName(this, provider))
                     .clicked(R.id.item) {
-                        if (Preferences.weatherProvider != provider.rawValue) {
-                            Preferences.weatherProviderError = "-"
-                            Preferences.weatherProviderLocationError = ""
-                        }
-                        val oldValue = Preferences.weatherProvider
-                        Preferences.weatherProvider = provider.rawValue
-                        updateListItem(oldValue)
-                        updateListItem()
-                        binding.loader.isVisible = true
-
-                        lifecycleScope.launch {
-                            WeatherHelper.updateWeather(this@WeatherProviderActivity)
-                        }
+                        selectProvider(provider)
                     }
                     .clicked(R.id.radioButton) {
-                        if (Preferences.weatherProvider != provider.rawValue) {
-                            Preferences.weatherProviderError = "-"
-                            Preferences.weatherProviderLocationError = ""
-                        }
-                        val oldValue = Preferences.weatherProvider
-                        Preferences.weatherProvider = provider.rawValue
-                        updateListItem(oldValue)
-                        updateListItem()
-                        binding.loader.isVisible = true
-
-                        lifecycleScope.launch {
-                            WeatherHelper.updateWeather(this@WeatherProviderActivity)
-                        }
+                        selectProvider(provider)
                     }
                     .checked(R.id.radioButton, provider.rawValue == Preferences.weatherProvider)
                     .with<TextView>(R.id.text2) {
@@ -117,6 +93,22 @@ class WeatherProviderActivity : AppCompatActivity() {
         subscribeUi(viewModel)
 
         setContentView(binding.root)
+    }
+
+    private fun selectProvider(provider: Constants.WeatherProvider) {
+        val oldValue = Preferences.weatherProvider
+        if (oldValue != provider.rawValue) {
+            Preferences.weatherProviderError = "-"
+            Preferences.weatherProviderLocationError = ""
+            WeatherHelper.removeWeather(this)
+            Preferences.weatherProvider = provider.rawValue
+            updateListItem(oldValue)
+        }
+        updateListItem()
+        binding.loader.isVisible = true
+        lifecycleScope.launch {
+            WeatherHelper.updateWeather(this@WeatherProviderActivity)
+        }
     }
 
     private fun subscribeUi(viewModel: WeatherProviderViewModel) {
