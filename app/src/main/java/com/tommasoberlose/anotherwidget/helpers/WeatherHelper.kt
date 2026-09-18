@@ -60,39 +60,37 @@ object WeatherHelper {
     fun getProviderName(
         context: Context,
         provider: Constants.WeatherProvider = Constants.WeatherProvider.fromInt(Preferences.weatherProvider)
-    ): String = context.getString(
-        when (provider) {
-            Constants.WeatherProvider.WEATHER_GOV -> R.string.settings_weather_provider_weather_gov
-            Constants.WeatherProvider.YR -> R.string.settings_weather_provider_yr
-        }
-    )
+    ): String = context.getString(when (provider) {
+        Constants.WeatherProvider.WEATHER_API -> R.string.settings_weather_provider_weather_api
+        Constants.WeatherProvider.WEATHER_GOV -> R.string.settings_weather_provider_weather_gov
+    })
 
     fun getProviderInfoTitle(
         context: Context,
         provider: Constants.WeatherProvider = Constants.WeatherProvider.fromInt(Preferences.weatherProvider)
-    ): String = context.getString(
-        when (provider) {
-            Constants.WeatherProvider.WEATHER_GOV -> R.string.weather_provider_info_weather_gov_title
-            Constants.WeatherProvider.YR -> R.string.nothing
-        }
-    )
+    ): String = context.getString(when (provider) {
+        Constants.WeatherProvider.WEATHER_API -> R.string.weather_provider_info_weatherapi_title
+        Constants.WeatherProvider.WEATHER_GOV -> R.string.weather_provider_info_weather_gov_title
+    })
 
     fun getProviderInfoSubtitle(
         context: Context,
         provider: Constants.WeatherProvider = Constants.WeatherProvider.fromInt(Preferences.weatherProvider)
-    ): String = context.getString(
-        when (provider) {
-            Constants.WeatherProvider.WEATHER_GOV -> R.string.weather_provider_info_weather_gov_subtitle
-            Constants.WeatherProvider.YR -> R.string.weather_provider_info_yr_subtitle
-        }
-    )
+    ): String = context.getString(when (provider) {
+        Constants.WeatherProvider.WEATHER_API -> R.string.weatherapi_compliance_notice
+        Constants.WeatherProvider.WEATHER_GOV -> R.string.weather_provider_info_weather_gov_subtitle
+    })
 
     fun getProviderLink(
         provider: Constants.WeatherProvider = Constants.WeatherProvider.fromInt(Preferences.weatherProvider)
     ): String = when (provider) {
+        Constants.WeatherProvider.WEATHER_API -> "https://www.weatherapi.com/"
         Constants.WeatherProvider.WEATHER_GOV -> "https://www.weather.gov/"
-        Constants.WeatherProvider.YR -> "https://api.met.no/weatherapi/locationforecast/2.0/documentation"
     }
+
+    fun isKeyRequired(
+        provider: Constants.WeatherProvider = Constants.WeatherProvider.fromInt(Preferences.weatherProvider)
+    ): Boolean = provider == Constants.WeatherProvider.WEATHER_API
 
     fun getWeatherIconResource(context: Context, icon: String, style: Int = Preferences.weatherIconPack): Int {
         return when (icon) {
@@ -378,6 +376,17 @@ object WeatherHelper {
         iconCode.contains("snowshowers") -> "13"
         iconCode.contains("snowshowersandthunder") -> "13"
         else -> ""
+    } + if (isDaytime) "d" else "n"
+
+
+    fun getWeatherApiIcon(icon: Int, isDaytime: Boolean): String = when(icon) {
+        1000 -> "01"; 1003 -> "02"; 1006 -> "03"; 1009 -> "04"; 1030 -> "82"
+        1063 -> "10"; 1066 -> "13"; 1069 -> "13"; 1072 -> "81"; 1087 -> "11"
+        1114 -> "13"; 1117 -> "09"; 1135 -> "82"; 1147 -> "82"
+        1150, 1153, 1168, 1171, 1180, 1183, 1186, 1189, 1192, 1195 -> "10"
+        1198, 1201 -> "81"; 1204, 1207, 1210, 1213, 1216, 1219, 1222, 1225, 1237 -> "13"
+        1240, 1243, 1246 -> "10"; 1249, 1252, 1255, 1258, 1261, 1264 -> "13"
+        1273, 1276 -> "09"; 1279, 1282 -> "13"; else -> ""
     } + if (isDaytime) "d" else "n"
 
 }

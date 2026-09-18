@@ -88,6 +88,18 @@
                     android:text="@string/weather_provider_error_missing_key"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
                     app:textAllCaps="false" />
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/weather_api_compliance_notice"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="64dp"
+                    android:paddingEnd="16dp"
+                    android:paddingBottom="12dp"
+                    android:text="@string/weatherapi_compliance_notice"
+                    android:textAppearance="@style/AnotherWidget.Settings.Subtitle"
+                    android:autoLink="web"
+                    android:linksClickable="true"
+                    android:visibility="gone" />
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

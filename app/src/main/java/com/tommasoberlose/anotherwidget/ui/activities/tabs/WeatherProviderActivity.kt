@@ -78,15 +78,18 @@ class WeatherProviderActivity : AppCompatActivity() {
                     }
                     .checked(R.id.radioButton, provider.rawValue == Preferences.weatherProvider)
                     .with<TextView>(R.id.text2) {
-                        it.text =
-                            if (provider == Constants.WeatherProvider.WEATHER_GOV) {
-                                getString(R.string.us_only_message)
-                            } else {
-                                ""
-                            }
+                        it.text = when (provider) {
+                            Constants.WeatherProvider.WEATHER_API -> getString(R.string.weatherapi_provider_list_credit)
+                            Constants.WeatherProvider.WEATHER_GOV -> getString(R.string.us_only_message)
+                        }
                     }
                     .clicked(R.id.action_configure) {
-                        BottomSheetWeatherProviderSettings(this).show()
+                        BottomSheetWeatherProviderSettings(this) {
+                            lifecycleScope.launch {
+                                binding.loader.isVisible = true
+                                WeatherHelper.updateWeather(this@WeatherProviderActivity)
+                            }
+                        }.show()
                     }
                     .visibility(R.id.action_configure, if (/*WeatherHelper.isKeyRequired(provider) && */provider.rawValue == Preferences.weatherProvider) View.VISIBLE else View.GONE)
                     .with<TextView>(R.id.provider_error) {
@@ -100,13 +103,13 @@ class WeatherProviderActivity : AppCompatActivity() {
                             it.isVisible = false
                         }
                     }
-                    .image(R.id.action_configure, ContextCompat.getDrawable(this, R.drawable.outline_info_24))
+                    .image(R.id.action_configure, ContextCompat.getDrawable(this, if (WeatherHelper.isKeyRequired(provider)) R.drawable.round_settings_24 else R.drawable.outline_info_24))
             }.attachTo(binding.listView)
 
         adapter.updateData(
             listOf(
                 Constants.WeatherProvider.WEATHER_GOV,
-                Constants.WeatherProvider.YR
+                Constants.WeatherProvider.WEATHER_API
             )
         )
 

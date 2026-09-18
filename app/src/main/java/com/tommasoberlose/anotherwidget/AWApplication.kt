@@ -17,17 +17,16 @@ class AWApplication : Application() {
 
     private fun migrateLegacyPreferences() {
         if (
-            Preferences.weatherProvider != Constants.WeatherProvider.WEATHER_GOV.rawValue &&
-            Preferences.weatherProvider != Constants.WeatherProvider.YR.rawValue
+            Preferences.weatherProvider != Constants.WeatherProvider.WEATHER_API.rawValue &&
+            Preferences.weatherProvider != Constants.WeatherProvider.WEATHER_GOV.rawValue
         ) {
-            Preferences.weatherProvider = Constants.WeatherProvider.YR.rawValue
+            Preferences.weatherProvider = Constants.WeatherProvider.WEATHER_API.rawValue
         }
 
-        // Retired key-based weather providers no longer ship. Scrub any keys left
-        // by an upgraded historical install instead of retaining unused credentials.
+        // Providers other than WeatherAPI.com and NWS are retired. Preserve a user's
+        // WeatherAPI.com key, but scrub credentials belonging to providers no longer shipped.
         Preferences.weatherProviderApiOpen = ""
         Preferences.weatherProviderApiWeatherBit = ""
-        Preferences.weatherProviderApiWeatherApi = ""
         Preferences.weatherProviderApiHere = ""
         Preferences.weatherProviderApiAccuweather = ""
 

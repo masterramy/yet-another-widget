@@ -15,6 +15,10 @@ object Preferences : KotprefModel() {
         ConfigurationCompat.getLocales(context.resources.configuration)[0]?.isMetric()
             ?: Locale.getDefault().isMetric()
 
+    private fun isUnitedStates(): Boolean =
+        (ConfigurationCompat.getLocales(context.resources.configuration)[0]?.country
+            ?: Locale.getDefault().country).equals("US", ignoreCase = true)
+
     var darkThemePreference by intPref(default = MODE_NIGHT_FOLLOW_SYSTEM)
 
     // Calendar and weather
@@ -51,7 +55,13 @@ object Preferences : KotprefModel() {
     var weatherProviderApiWeatherApi by stringPref(default = "")
     var weatherProviderApiWeatherBit by stringPref(default = "")
     var weatherProviderApiAccuweather by stringPref(default = "")
-    var weatherProvider by intPref(default = if (usesMetric()) Constants.WeatherProvider.YR.rawValue else Constants.WeatherProvider.WEATHER_GOV.rawValue)
+    var weatherProvider by intPref(
+        default = if (isUnitedStates()) {
+            Constants.WeatherProvider.WEATHER_GOV.rawValue
+        } else {
+            Constants.WeatherProvider.WEATHER_API.rawValue
+        }
+    )
     var weatherProviderError by stringPref(default = "")
     var weatherProviderLocationError by stringPref(default = "")
     var eventAppName by stringPref(key = "PREF_EVENT_APP_NAME", default = "")

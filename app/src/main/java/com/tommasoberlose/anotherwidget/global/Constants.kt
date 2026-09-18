@@ -38,13 +38,13 @@ object Constants {
     }
 
     enum class WeatherProvider(val rawValue: Int) {
-        WEATHER_GOV(5),
-        YR(6);
+        WEATHER_API(2),
+        WEATHER_GOV(5);
 
         companion object {
             fun fromInt(type: Int): WeatherProvider = when (type) {
                 WEATHER_GOV.rawValue -> WEATHER_GOV
-                else -> YR
+                else -> WEATHER_API
             }
         }
     }

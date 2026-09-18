@@ -170,20 +170,16 @@ jobs:
         run: |
           set -euo pipefail
           app=app/src/main/java/com/tommasoberlose/anotherwidget/AWApplication.kt
-          constants=app/src/main/java/com/tommasoberlose/anotherwidget/global/Constants.kt
-          grep -Fq 'migrateLegacyPreferences()' "$app"
+          grep -Fq 'Preferences.weatherProvider != Constants.WeatherProvider.WEATHER_API.rawValue' "$app"
           grep -Fq 'Preferences.weatherProvider != Constants.WeatherProvider.WEATHER_GOV.rawValue' "$app"
-          grep -Fq 'Preferences.weatherProvider != Constants.WeatherProvider.YR.rawValue' "$app"
-          grep -Fq 'Preferences.weatherProvider = Constants.WeatherProvider.YR.rawValue' "$app"
-          grep -Fq 'WEATHER_GOV.rawValue -> WEATHER_GOV' "$constants"
-          grep -Fq 'YR(6)' "$constants"
-          grep -Fq 'else -> YR' "$constants"
-          for key in weatherProviderApiOpen weatherProviderApiWeatherBit weatherProviderApiWeatherApi weatherProviderApiHere weatherProviderApiAccuweather; do
+          grep -Fq 'Preferences.weatherProvider = Constants.WeatherProvider.WEATHER_API.rawValue' "$app"
+          ! grep -Fq 'Preferences.weatherProviderApiWeatherApi = ""' "$app"
+          for key in weatherProviderApiOpen weatherProviderApiWeatherBit weatherProviderApiHere weatherProviderApiAccuweather; do
             grep -Fq "Preferences.$key = \"\"" "$app"
           done
           grep -Fq 'if (Preferences.customFont == 1)' "$app"
           grep -Fq 'Preferences.customFont = Constants.CUSTOM_FONT_DEFAULT' "$app"
-          echo "All retired weather-provider selections/keys and retired font preference normalize durably at startup."
+          echo "Retired provider selections/credentials normalize to WeatherAPI while preserving an existing WeatherAPI key."
       - name: External source links must use HTTPS and current project ownership
         shell: bash
         run: |
@@ -194,6 +190,7 @@ jobs:
             exit 1
           fi
           grep -Fq 'https://www.weather.gov/' app/src/main/java/com/tommasoberlose/anotherwidget/helpers/WeatherHelper.kt
+          grep -Fq 'https://www.weatherapi.com/' app/src/main/java/com/tommasoberlose/anotherwidget/helpers/WeatherHelper.kt
           grep -Fq 'https://www.google.com/maps/search/?api=1&query=' app/src/main/java/com/tommasoberlose/anotherwidget/helpers/IntentHelper.kt
           grep -Fq 'https://github.com/masterramy/yet-another-widget/blob/main/app/src/main/res/values/strings.xml' "$settings"
           grep -Fq 'https://github.com/masterramy/yet-another-widget/issues' "$settings"
@@ -310,82 +307,51 @@ jobs:
           grep -Fq 'android:allowBackup="false"' "$manifest"
           ! grep -Fq 'android:allowBackup="true"' "$manifest"
           echo "Application backup disabled for local preference state."
-      - name: Retired credentialed weather implementations must remain absent
-        shell: bash
-        run: |
-          set -euo pipefail
-          network=app/src/main/java/com/tommasoberlose/anotherwidget/network/WeatherNetworkApi.kt
-          helper=app/src/main/java/com/tommasoberlose/anotherwidget/helpers/WeatherHelper.kt
-          services=app/src/main/java/com/tommasoberlose/anotherwidget/network/api/ApiServices.kt
-          build=app/build.gradle
-          for file in \
-            app/src/main/java/com/tommasoberlose/anotherwidget/network/repository/AccuweatherRepository.kt \
-            app/src/main/java/com/tommasoberlose/anotherwidget/network/repository/HereRepository.kt \
-            app/src/main/java/com/tommasoberlose/anotherwidget/network/repository/WeatherApiRepository.kt \
-            app/src/main/java/com/tommasoberlose/anotherwidget/network/repository/WeatherbitRepository.kt; do
-            test ! -e "$file"
-          done
-          ! grep -Fq 'OpenWeatherMap-Android-Library' "$build"
-          ! grep -Eq 'use(OpenWeatherMap|WeatherBitProvider|WeatherApiProvider|HereProvider|AccuweatherProvider)' "$network"
-          ! grep -Eq 'OpenWeatherMapHelper|CurrentWeatherCallback|openweathermaplib' "$network"
-          ! grep -Eq 'WeatherBitService|WeatherApiService|HereService|AccuweatherService' "$services"
-          ! grep -Eq 'getWeatherBitIcon|getWeatherApiIcon|isKeyRequired|getApiKey' "$helper"
-          ! grep -Eq 'OPEN_WEATHER|WEATHER_BIT|WEATHER_API|HERE|ACCUWEATHER' app/src/main/java/com/tommasoberlose/anotherwidget/global/Constants.kt
-          echo "Retired credentialed weather provider implementations and dependency are absent."
-
-      - name: Shipping weather providers must be account-free MET and NWS only
+      - name: Shipping weather architecture must be NWS plus user-key WeatherAPI
         shell: bash
         run: |
           set -euo pipefail
           constants=app/src/main/java/com/tommasoberlose/anotherwidget/global/Constants.kt
-          application=app/src/main/java/com/tommasoberlose/anotherwidget/AWApplication.kt
-          provider_ui=app/src/main/java/com/tommasoberlose/anotherwidget/ui/activities/tabs/WeatherProviderActivity.kt
-          provider_layout=app/src/main/res/layout/activity_weather_provider.xml
+          prefs=app/src/main/java/com/tommasoberlose/anotherwidget/global/Preferences.kt
+          app=app/src/main/java/com/tommasoberlose/anotherwidget/AWApplication.kt
           network=app/src/main/java/com/tommasoberlose/anotherwidget/network/WeatherNetworkApi.kt
+          services=app/src/main/java/com/tommasoberlose/anotherwidget/network/api/ApiServices.kt
+          helper=app/src/main/java/com/tommasoberlose/anotherwidget/helpers/WeatherHelper.kt
+          sheet=app/src/main/java/com/tommasoberlose/anotherwidget/components/BottomSheetWeatherProviderSettings.kt
+          weather_ui=app/src/main/java/com/tommasoberlose/anotherwidget/ui/fragments/tabs/WeatherFragment.kt
+          strings=app/src/main/res/values/strings.xml
           privacy=privacy-policy.md
+          weatherapi_repo=app/src/main/java/com/tommasoberlose/anotherwidget/network/repository/WeatherApiRepository.kt
+          test ! -e app/src/main/java/com/tommasoberlose/anotherwidget/network/repository/YrRepository.kt
+          test ! -e app/src/main/java/com/tommasoberlose/anotherwidget/network/repository/WeatherbitRepository.kt
+          test ! -e app/src/main/java/com/tommasoberlose/anotherwidget/network/repository/HereRepository.kt
+          test ! -e app/src/main/java/com/tommasoberlose/anotherwidget/network/repository/AccuweatherRepository.kt
+          grep -Fq 'WEATHER_API(2)' "$constants"
           grep -Fq 'WEATHER_GOV(5)' "$constants"
-          grep -Fq 'YR(6)' "$constants"
-          grep -Fq 'WEATHER_GOV.rawValue -> WEATHER_GOV' "$constants"
-          grep -Fq 'else -> YR' "$constants"
-          grep -Fq 'Preferences.weatherProvider != Constants.WeatherProvider.WEATHER_GOV.rawValue' "$application"
-          grep -Fq 'Preferences.weatherProvider != Constants.WeatherProvider.YR.rawValue' "$application"
-          for key in weatherProviderApiOpen weatherProviderApiWeatherBit weatherProviderApiWeatherApi weatherProviderApiHere weatherProviderApiAccuweather; do
-            grep -Fq "Preferences.$key = \"\"" "$application"
-          done
-          grep -Fq 'listOf(' "$provider_ui"
-          grep -Fq 'Constants.WeatherProvider.WEATHER_GOV' "$provider_ui"
-          grep -Fq 'Constants.WeatherProvider.YR' "$provider_ui"
-          ! grep -Fq '@string/weather_provider_activity_subtitle' "$provider_layout"
-          grep -Fq 'if (Preferences.weatherTempUnit == "F")' "$network"
-          grep -Fq '(temp * 9.0 / 5.0 + 32.0).toFloat()' "$network"
-          ! grep -Fq 'Preferences.weatherTempUnit = "C"' "$network"
-          grep -Fq 'supports MET Norway Locationforecast for global weather and the U.S. National Weather Service' "$privacy"
-          ! grep -Fq 'user-supplied weather API keys' "$privacy"
-          echo "Shipping weather selection is account-free MET/NWS only; retired choices migrate to MET."
+          ! grep -Eq 'OPEN_WEATHER|WEATHER_BIT|HERE|ACCUWEATHER|YR' "$constants"
+          grep -Fq 'isUnitedStates()' "$prefs"
+          grep -Fq 'Preferences.weatherProviderApiWeatherApi' "$sheet"
+          grep -Fq 'Constants.WeatherProvider.WEATHER_API -> useWeatherApiProvider(context)' "$network"
+          grep -Fq 'interface WeatherApiService' "$services"
+          grep -Fq '@GET("current.json")' "$services"
+          grep -Fq 'private const val BASE_URL_API = "https://api.weatherapi.com/v1/"' "$weatherapi_repo"
+          grep -Fq 'Weather data by WeatherAPI.com' "$strings"
+          grep -Fq 'safety-critical decisions' "$strings"
+          grep -Fq 'binding.weatherApiComplianceNotice.isVisible' "$weather_ui"
+          grep -Fq 'The app does not ship or share a common WeatherAPI.com key.' "$privacy"
+          echo "Shipping weather is NWS plus globally available user-key WeatherAPI with persistent attribution/disclaimer."
 
-      - name: MET and NWS transport, identification, and attribution contract
+      - name: NWS transport must remain HTTPS and identified
         shell: bash
         run: |
           set -euo pipefail
           gov=app/src/main/java/com/tommasoberlose/anotherwidget/network/repository/WeatherGovRepository.kt
-          yr=app/src/main/java/com/tommasoberlose/anotherwidget/network/repository/YrRepository.kt
-          api_services=app/src/main/java/com/tommasoberlose/anotherwidget/network/api/ApiServices.kt
-          helper=app/src/main/java/com/tommasoberlose/anotherwidget/helpers/WeatherHelper.kt
-          strings=app/src/main/res/values/strings.xml
+          services=app/src/main/java/com/tommasoberlose/anotherwidget/network/api/ApiServices.kt
           grep -Fq 'private const val BASE_URL_GOV = "https://api.weather.gov/"' "$gov"
-          grep -Fq 'private const val BASE_URL_YR = "https://api.met.no/weatherapi/locationforecast/2.0/"' "$yr"
-          test "$(grep -c '@Headers("User-Agent: YetAnotherWidget/2.3.3 (https://github.com/masterramy/yet-another-widget)")' "$api_services")" = "3"
-          grep -Fq '@GET("points/{latitude},{longitude}")' "$api_services"
-          grep -Fq '@GET("gridpoints/{gridId}/{gridX},{gridY}/forecast")' "$api_services"
-          grep -Fq '@GET("compact")' "$api_services"
-          ! grep -Fq '@GET("compact.json")' "$api_services"
-          grep -Fq 'Constants.WeatherProvider.WEATHER_GOV -> "https://www.weather.gov/"' "$helper"
-          grep -Fq 'Constants.WeatherProvider.YR -> "https://api.met.no/weatherapi/locationforecast/2.0/documentation"' "$helper"
-          ! grep -Fq 'Constants.WeatherProvider.YR -> "https://www.yr.no/"' "$helper"
-          grep -Fq 'MET Norway\nLocationforecast' "$strings"
-          ! grep -Fq 'YR.no/Met.no' "$strings"
-          grep -Fq 'Weather data provided by MET Norway Locationforecast.' "$strings"
-          echo "MET/NWS weather transport is HTTPS, identified, and attribution-safe."
+          test "$(grep -c '@Headers("User-Agent: YetAnotherWidget/2.3.3 (https://github.com/masterramy/yet-another-widget)")' "$services")" = "2"
+          grep -Fq '@GET("points/{latitude},{longitude}")' "$services"
+          grep -Fq '@GET("gridpoints/{gridId}/{gridX},{gridY}/forecast")' "$services"
+          echo "NWS transport remains HTTPS and identified."
 
       - name: Gson security and public-map contract
         shell: bash

@@ -91,7 +91,10 @@ class WeatherFragment : Fragment() {
 
         viewModel.weatherProvider.observe(viewLifecycleOwner) {
             maintainScrollPosition {
-                binding.labelWeatherProvider.text = WeatherHelper.getProviderName(requireContext(), Constants.WeatherProvider.fromInt(it)!!)
+                val provider = Constants.WeatherProvider.fromInt(it)
+                binding.labelWeatherProvider.text = WeatherHelper.getProviderName(requireContext(), provider)
+                binding.weatherApiComplianceNotice.isVisible =
+                    Preferences.showWeather && provider == Constants.WeatherProvider.WEATHER_API
                 checkWeatherProviderConfig()
             }
         }

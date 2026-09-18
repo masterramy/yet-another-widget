@@ -16,7 +16,7 @@ If the user enables calendar events and grants calendar permission, the app read
 
 If the user chooses device geolocation for weather and grants location permission, the app requests **approximate (coarse) location only while an app Activity is visible**. The last latitude and longitude are stored locally so scheduled weather refreshes can reuse them without reacquiring device location while the app is closed or not in use.
 
-Weather requests send the saved location to the weather provider selected by the user. The release candidate supports MET Norway Locationforecast for global weather and the U.S. National Weather Service (weather.gov) for U.S. locations. Neither path requires the user to create a weather-provider account or supply an API key. Those third parties process requests under their own terms and privacy practices.
+Weather requests send the saved location to the weather provider selected by the user. The release candidate supports the U.S. National Weather Service (weather.gov) for U.S. locations and WeatherAPI.com for global weather. WeatherAPI.com requires the user to create a provider account and enter their own API key; the app stores that key locally and sends it only to WeatherAPI.com when making that user's weather requests. The app does not ship or share a common WeatherAPI.com key. These third parties process requests under their own terms and privacy practices.
 
 When the user searches for a custom place, the app uses Android's Geocoder implementation. The implementation and any network processing behind it can vary by device and Android service provider.
 
@@ -30,7 +30,7 @@ On Android 12L and earlier only, the optional in-app widget preview can request 
 
 ## Local storage and retention
 
-Preferences, saved weather coordinates, widget configuration, cached calendar events, and enabled notification/media metadata are stored locally in the app's private data. Android backup is disabled for the application. Data remains until it is replaced, cleared by app behavior, removed through Android app-data controls, or deleted when the app is uninstalled.
+Preferences, the user's WeatherAPI.com API key (if configured), saved weather coordinates, widget configuration, cached calendar events, and enabled notification/media metadata are stored locally in the app's private data. Android backup is disabled for the application. Data remains until it is replaced, cleared by app behavior, removed through Android app-data controls, or deleted when the app is uninstalled.
 
 ## Internet access and external services
 
