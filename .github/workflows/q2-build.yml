@@ -457,9 +457,42 @@ jobs:
                   raise SystemExit(f'{path}: expected exactly one broadcast widget refresh token')
           print('Widget PendingIntent compatibility is durable shipping source; no build-time overlay remains.')
           PY
+      - name: Bundled redistribution license sources must be complete
+        shell: bash
+        run: |
+          set -euo pipefail
+          root=app/src/main/assets/licenses
+          for file in ORIGINAL_APP_LICENSE.txt THIRD_PARTY_NOTICES.md APACHE-2.0.txt GLIDE_LICENSE.txt; do
+            test -s "$root/$file"
+          done
+          cmp -s LICENSE "$root/ORIGINAL_APP_LICENSE.txt"
+          cmp -s THIRD_PARTY_NOTICES.md "$root/THIRD_PARTY_NOTICES.md"
+          grep -Fq 'Copyright (c) 2020 Tommaso Berlose' "$root/ORIGINAL_APP_LICENSE.txt"
+          grep -Fq 'Version 2.0, January 2004' "$root/APACHE-2.0.txt"
+          grep -Fq 'Copyright 2014 Google, Inc. All rights reserved.' "$root/GLIDE_LICENSE.txt"
+          grep -Fq 'Pinned upstream commit: `3e00f876906019ac224e29159ff1a777c4a47d4b`' "$root/THIRD_PARTY_NOTICES.md"
+          grep -Fq 'play-services-location:21.0.1' "$root/THIRD_PARTY_NOTICES.md"
+          echo "Deterministic redistribution license sources are present."
+
       - name: Q2 deterministic build
         shell: bash
         run: bash tools/q1_build.sh
+      - name: Built APK must contain redistribution license bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          apk="$(find app/build/outputs/apk/debug -type f -name '*.apk' -print -quit)"
+          test -n "$apk"
+          root=app/src/main/assets/licenses
+          for file in ORIGINAL_APP_LICENSE.txt THIRD_PARTY_NOTICES.md APACHE-2.0.txt GLIDE_LICENSE.txt; do
+            packaged="assets/licenses/$file"
+            unzip -Z1 "$apk" | grep -Fxq "$packaged"
+            expected="$(sha256sum "$root/$file" | awk '{print $1}')"
+            actual="$(unzip -p "$apk" "$packaged" | sha256sum | awk '{print $1}')"
+            test "$expected" = "$actual"
+          done
+          echo "Exact redistribution license bundle is present in the built APK."
+
       - name: Upload debug APK
         uses: actions/upload-artifact@v7
         continue-on-error: true
