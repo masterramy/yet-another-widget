@@ -76,6 +76,26 @@ jobs:
           grep -Fq 'set(' "$notification"
           grep -Fq 'timeoutIntent' "$notification"
           echo "Notification timeout uses one immutable inexact-alarm token without exact-alarm special access."
+      - name: BroadcastReceiver background work must be durable
+        shell: bash
+        run: |
+          set -euo pipefail
+          receivers=app/src/main/java/com/tommasoberlose/anotherwidget/receivers
+          worker=app/src/main/java/com/tommasoberlose/anotherwidget/services/UpdateWeatherWorker.kt
+          if grep -R -n -F 'GlobalScope' "$receivers"; then
+            echo "ERROR: BroadcastReceiver source must not launch unowned GlobalScope work" >&2
+            exit 1
+          fi
+          test -f "$worker"
+          grep -Fq 'class UpdateWeatherWorker' "$worker"
+          grep -Fq ': CoroutineWorker(context, params)' "$worker"
+          grep -Fq 'enqueueUniqueWork(' "$worker"
+          grep -Fq '"updateWeather",' "$worker"
+          grep -Fq 'ExistingWorkPolicy.KEEP,' "$worker"
+          grep -Fq 'OneTimeWorkRequestBuilder<UpdateWeatherWorker>().build()' "$worker"
+          grep -Fq 'UpdateWeatherWorker.enqueue(context)' "$receivers/WeatherReceiver.kt"
+          grep -Fq 'UpdateWeatherWorker.enqueue(context)' "$receivers/UpdatesReceiver.kt"
+          echo "BroadcastReceiver weather refresh is routed through durable WorkManager work."
       - name: Historical network identity must be absent
         shell: bash
         run: |
