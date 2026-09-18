@@ -114,9 +114,7 @@
     <string name="settings_weather_provider_api_key_title">Clave de API del clima</string>
     <string name="settings_weather_provider_api_key_subtitle_all_set">El proveedor del clima está correctamente configurado</string>
     <string name="settings_weather_provider_api_key_subtitle_not_set">El proveedor del clima debe ser configurado</string>
-    <string name="api_key_hint">Clave de API de OpenWeather</string>
     <string name="default_weather_app">Clima de Google</string>
-    <string name="weather_warning">El clima de Google Awareness está obsoleto. ahora se requiere de una clave de API de OpenWeather para mostrar el clima en el widget.</string>
     <string name="api_key_title_1">Registrarse para obtener una cuenta de OpenWeather</string>
     <string name="api_key_subtitle_1">Registra una cuenta gratis en OpenWeather. Solo tomará unos minutos.</string>
     <string name="api_key_title_2">Copia tu clave de API</string>
@@ -129,29 +127,14 @@
     <string name="settings_weather_icon_pack_default">Paquete de iconos %d</string>
     <string name="settings_weather_provider_api">Proveedor del clima</string>
 
-    <string name="settings_weather_provider_open_weather" translatable="false">OpenWeatherMap.org</string>
-    <string name="settings_weather_provider_weatherbit" translatable="false">Weatherbit.io</string>
     <string name="settings_weather_provider_weather_api" translatable="false">WeatherAPI.com</string>
-    <string name="settings_weather_provider_here" translatable="false">HERE.com</string>
-    <string name="settings_weather_provider_accuweather" translatable="false">AccuWeather.com</string>
     <string name="settings_weather_provider_weather_gov" translatable="false">Weather.gov (USA)\nby National Weather Services</string>
-    <string name="settings_weather_provider_yr" translatable="false">YR.no/Met.no\nby Meteorologisk Institutt</string>
 
-    <string name="weather_provider_info_open_weather_title">Este proveedor del clima necesita\nuna clave de API para funcionar correctamente.</string>
-    <string name="weather_provider_info_weatherbit_title">Este proveedor del clima necesita\nuna clave de API para funcionar correctamente.</string>
     <string name="weather_provider_info_weatherapi_title">Este proveedor del clima necesita\nuna clave de API para funcionar correctamente.</string>
-    <string name="weather_provider_info_here_title">Este proveedor del clima necesita\nuna clave de API para funcionar correctamente.</string>
-    <string name="weather_provider_info_accuweather_title">Este proveedor del clima necesita\nuna clave de API para funcionar correctamente.</string>
     <string name="weather_provider_info_weather_gov_title">Este proveedor del clima solo funciona\npara ubicaciones dentro de EEUU.</string>
-    <string name="weather_provider_info_yr_title">Este proveedor del clima solo permite\nla unidad de temperatura Celsius.</string>
 
-    <string name="weather_provider_info_open_weather_subtitle">Abre el sitio web del proveedor, crea una cuenta personal y copia aquí la clave predeterminada.</string>
-    <string name="weather_provider_info_weatherbit_subtitle">Abre el sitio web del proveedor, crea una cuenta personal y copia aquí la clave predeterminada.</string>
     <string name="weather_provider_info_weatherapi_subtitle">Abre el sitio web del proveedor, crea una cuenta personal y copia aquí la clave predeterminada.</string>
-    <string name="weather_provider_info_here_subtitle">Abre el sitio web del proveedor, crea una cuenta personal y copia aquí la clave predeterminada.</string>
-    <string name="weather_provider_info_accuweather_subtitle">Abre el sitio web del proveedor, crea una cuenta personal y copia aquí la clave predeterminada.</string>
     <string name="weather_provider_info_weather_gov_subtitle">\n</string>
-    <string name="weather_provider_info_yr_subtitle">\n</string>
 
     <string name="weather_provider_error_missing_key">El proveedor del clima que has seleccionado requiere de una clave de API.</string>
     <string name="weather_provider_error_wrong_location">La ubicación actual no está soportada.</string>
@@ -161,11 +144,7 @@
     <string name="weather_provider_error_misconfigured">El proveedor del clima está mal configurado.</string>
     <string name="weather_provider_error_connection">Error de conexión.</string>
     <string name="weather_provider_error_generic">Algo salió mal, verifica la configuración del proveedor del clima.</string>
-    <string name="api_key_required_message">Cuenta requerida</string>
     <string name="us_only_message">Solo EEUU</string>
-    <string name="celsius_only_message">Solo Unidad Métrica</string>
-    <string name="weather_select_a_provider">Seleccionar un proveedor</string>
-    <string name="weather_provider_activity_subtitle">Elige un proveedor del clima de la lista.\nAlgunos proveedores necesitan una cuenta personal gratuita,\npero suelen ser más precisos.</string>
 
     <!-- Clock -->
     <string name="settings_clock_title">Reloj</string>

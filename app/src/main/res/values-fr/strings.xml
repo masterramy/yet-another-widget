@@ -135,36 +135,19 @@
     <string name="settings_weather_provider_api_key_title">Clé API pour la météo</string>
     <string name="settings_weather_provider_api_key_subtitle_all_set">Fournisseur météo correctement configuré.</string>
     <string name="settings_weather_provider_api_key_subtitle_not_set">Le fournisseur météo doit être configuré.</string>
-    <string name="api_key_hint">Clé API OpenWeatherMap</string>
     <string name="default_weather_app">Google Weather</string>
-    <string name="weather_warning">La météo de Google Awareness est obsolète. Il faut désormais une clé API d\'un fournisseur tiers pour afficher la météo dans le widget.</string>
     <string name="settings_weather_icon_pack_title">Pack d\'icônes</string>
     <string name="settings_weather_icon_pack_default">Pack d\'icônes %d</string>
     <string name="settings_weather_provider_api">Fournisseur météo</string>
 
-    <string name="settings_weather_provider_open_weather" translatable="false">OpenWeatherMap.org</string>
-    <string name="settings_weather_provider_weatherbit" translatable="false">Weatherbit.io</string>
     <string name="settings_weather_provider_weather_api" translatable="false">WeatherAPI.com</string>
-    <string name="settings_weather_provider_here" translatable="false">HERE.com</string>
-    <string name="settings_weather_provider_accuweather" translatable="false">AccuWeather.com</string>
     <string name="settings_weather_provider_weather_gov" translatable="false">Weather.gov (USA)\nby National Weather Services</string>
-    <string name="settings_weather_provider_yr" translatable="false">YR.no/Met.no\nby Meteorologisk Institutt</string>
 
-    <string name="weather_provider_info_open_weather_title">Ce fournisseur météo a besoin d\'une\nclé API pour fonctionner correctement.</string>
-    <string name="weather_provider_info_weatherbit_title">Ce fournisseur météo a besoin d\'une\nclé API pour fonctionner correctement.</string>
     <string name="weather_provider_info_weatherapi_title">Ce fournisseur météo a besoin d\'une\nclé API pour fonctionner correctement.</string>
-    <string name="weather_provider_info_here_title">Ce fournisseur météo a besoin d\'une\nclé API pour fonctionner correctement.</string>
-    <string name="weather_provider_info_accuweather_title">Ce fournisseur météo a besoin d\'une\nclé API pour fonctionner correctement.</string>
     <string name="weather_provider_info_weather_gov_title">Ce fournisseur météo ne fonctionne que\npour les emplacements aux États-Unis.</string>
-    <string name="weather_provider_info_yr_title">Ce fournisseur météo n\'autorise que\nles températures en unité Celsius.</string>
 
-    <string name="weather_provider_info_open_weather_subtitle">Ouvrez le site web du fournisseur, créez un compte et copiez ici la clé par défaut.</string>
-    <string name="weather_provider_info_weatherbit_subtitle">Ouvrez le site web du fournisseur, créez un compte et copiez ici la clé par défaut.</string>
     <string name="weather_provider_info_weatherapi_subtitle">Ouvrez le site web du fournisseur, créez un compte et copiez ici la clé par défaut.</string>
-    <string name="weather_provider_info_here_subtitle">Ouvrez le site web du fournisseur, créez un compte et copiez ici la clé par défaut.</string>
-    <string name="weather_provider_info_accuweather_subtitle">Ouvrez le site web du fournisseur, créez un compte et copiez ici la clé par défaut.</string>
     <string name="weather_provider_info_weather_gov_subtitle">\n</string>
-    <string name="weather_provider_info_yr_subtitle">\n</string>
 
     <string name="weather_provider_error_missing_key">Le fournisseur météo que vous avez sélectionné nécessite une clé API.</string>
     <string name="weather_provider_error_wrong_location">Localisation actuelle non supportée.</string>
@@ -174,11 +157,7 @@
     <string name="weather_provider_error_misconfigured">Le fournisseur météo est mal configuré.</string>
     <string name="weather_provider_error_connection">Erreur de connexion.</string>
     <string name="weather_provider_error_generic">Erreur. Vérifiez la configuration du fournisseur météo.</string>
-    <string name="api_key_required_message">Compte requis</string>
     <string name="us_only_message">USA uniquement</string>
-    <string name="celsius_only_message">Unité Celsius uniquement</string>
-    <string name="weather_select_a_provider">Sélectionner un fournisseur</string>
-    <string name="weather_provider_activity_subtitle">Sélectionnez un fournisseur météo dans la liste.\nCertains fournisseurs ont besoin d\'un\ncompte personnel gratuit pour fonctionner,\nmais ils sont généralement plus précis.</string>
 
 
     <!-- Clock -->

@@ -93,9 +93,7 @@
     <string name="settings_weather_provider_api_key_title">Kunci API cuaca</string>
     <string name="settings_weather_provider_api_key_subtitle_all_set">Penyedia layanan cuaca dikonfigurasi dengan benar</string>
     <string name="settings_weather_provider_api_key_subtitle_not_set">Penyedia layanan cuaca harus dikonfigurasi</string>
-    <string name="api_key_hint">Kunci API OpenWeather</string>
     <string name="default_weather_app">Google Weather</string>
-    <string name="weather_warning">Layanan cuaca Google Awareness telah ditutup. Sekarang membutuhkan Kunci API OpenWeather untuk menampilkan cuaca di widget.</string>
     <string name="api_key_title_1">Daftar akun OpenWeather</string>
     <string name="api_key_subtitle_1">Daftar akun gratis pada situs OpenWeather. Hanya akan membutuhkan waktu beberapa menit saja.</string>
     <string name="api_key_title_2">Salin Kunci API anda</string>
