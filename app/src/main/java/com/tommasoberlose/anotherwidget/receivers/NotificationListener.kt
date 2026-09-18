@@ -21,6 +21,10 @@ import java.util.*
 
 
 class NotificationListener : NotificationListenerService() {
+
+    companion object {
+        private const val NOTIFICATION_TIMEOUT_REQUEST_CODE = 28943
+    }
     override fun onListenerConnected() {
         MediaPlayerHelper.updatePlayingMediaInfo(this)
         MainWidget.updateWidget(this)
@@ -76,10 +80,16 @@ class NotificationListener : NotificationListenerService() {
             val intent = Intent(context, UpdatesReceiver::class.java).apply {
                 action = Actions.ACTION_CLEAR_NOTIFICATION
             }
-            cancel(PendingIntent.getBroadcast(context, 28943, intent, 0))
+            val timeoutIntent = PendingIntent.getBroadcast(
+                context,
+                NOTIFICATION_TIMEOUT_REQUEST_CODE,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+            cancel(timeoutIntent)
             val timeoutPref = Constants.GlanceNotificationTimer.fromInt(Preferences.hideNotificationAfter)
             if (timeoutPref != Constants.GlanceNotificationTimer.WHEN_DISMISSED) {
-                setExact(
+                set(
                     AlarmManager.RTC,
                     Calendar.getInstance().timeInMillis + when (timeoutPref) {
                         Constants.GlanceNotificationTimer.HALF_MINUTE -> 30 * 1000
@@ -87,14 +97,9 @@ class NotificationListener : NotificationListenerService() {
                         Constants.GlanceNotificationTimer.FIVE_MINUTES -> 5 * 60 * 1000
                         Constants.GlanceNotificationTimer.TEN_MINUTES -> 10 * 60 * 1000
                         Constants.GlanceNotificationTimer.FIFTEEN_MINUTES -> 15 * 60 * 1000
-                        else -> 0
+                        Constants.GlanceNotificationTimer.WHEN_DISMISSED -> 0
                     },
-                    PendingIntent.getBroadcast(
-                        context,
-                        5,
-                        intent,
-                        0
-                    )
+                    timeoutIntent
                 )
             }
         }
