@@ -52,7 +52,7 @@ object IntentHelper {
         return if (mapIntent.resolveActivity(context.packageManager) != null) {
             mapIntent
         } else {
-            val map = "http://maps.google.co.in/maps?q=$address"
+            val map = "https://www.google.com/maps/search/?api=1&query=${Uri.encode(address)}"
             val i = Intent(Intent.ACTION_VIEW, Uri.parse(map));
             i
         }
