@@ -29,6 +29,19 @@ jobs:
         run: |
           yes | sdkmanager --licenses >/dev/null || true
           sdkmanager 'platforms;android-36' 'build-tools;36.0.0' 'platform-tools'
+      - name: Wallpaper preview permission compatibility contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          manifest=app/src/main/AndroidManifest.xml
+          settings=app/src/main/java/com/tommasoberlose/anotherwidget/ui/fragments/SettingsFragment.kt
+          grep -Fq 'android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32"' "$manifest"
+          grep -Fq 'Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2' "$settings"
+          grep -Fq 'binding.actionShowWallpaper.visibility = if (wallpaperPreviewSupported) View.VISIBLE else View.GONE' "$settings"
+          grep -Fq 'if (Build.VERSION.SDK_INT > Build.VERSION_CODES.S_V2)' "$settings"
+          ! grep -Fq 'MANAGE_EXTERNAL_STORAGE' "$manifest"
+          echo "Wallpaper preview is constrained to Android versions where legacy access remains valid."
+
       - name: Donation/Billing surface must be absent
         shell: bash
         run: |

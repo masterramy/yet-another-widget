@@ -82,7 +82,16 @@ class SettingsFragment : Fragment() {
         }
 
         binding.showWidgetPreviewToggle.setCheckedImmediatelyNoEvent(Preferences.showPreview)
-        binding.showWallpaperToggle.setCheckedImmediatelyNoEvent(Preferences.showWallpaper)
+        val wallpaperPreviewSupported = Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2
+        if (!wallpaperPreviewSupported) {
+            Preferences.showWallpaper = false
+        }
+        binding.actionShowWallpaper.visibility = if (wallpaperPreviewSupported) View.VISIBLE else View.GONE
+        binding.showWallpaperToggle.setCheckedImmediatelyNoEvent(
+            wallpaperPreviewSupported &&
+                Preferences.showWallpaper &&
+                requireActivity().checkGrantedPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+        )
         // Paid-upfront release: the legacy donation/IAP entry point is intentionally unavailable.
         binding.actionHelpDev.visibility = View.GONE
 
@@ -229,10 +238,20 @@ class SettingsFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        binding.showWallpaperToggle.setCheckedNoEvent(Preferences.showWallpaper && requireActivity().checkGrantedPermission(Manifest.permission.READ_EXTERNAL_STORAGE))
+        val wallpaperPreviewSupported = Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2
+        binding.showWallpaperToggle.setCheckedNoEvent(
+            wallpaperPreviewSupported &&
+                Preferences.showWallpaper &&
+                requireActivity().checkGrantedPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+        )
     }
 
     private fun requirePermission() {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.S_V2) {
+            Preferences.showWallpaper = false
+            binding.showWallpaperToggle.setCheckedNoEvent(false)
+            return
+        }
         Dexter.withContext(requireContext())
             .withPermissions(
                 Manifest.permission.READ_EXTERNAL_STORAGE
