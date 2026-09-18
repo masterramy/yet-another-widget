@@ -4,6 +4,7 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.text.format.DateFormat
 import android.util.Log
 import com.tommasoberlose.anotherwidget.global.Actions
@@ -43,17 +44,20 @@ object AlarmHelper {
             val intent = Intent(context, UpdatesReceiver::class.java).apply {
                 action = Actions.ACTION_ALARM_UPDATE
             }
-            cancel(PendingIntent.getBroadcast(context, ALARM_UPDATE_ID, intent, 0))
-            setExact(
-                AlarmManager.RTC,
-                trigger,
-                PendingIntent.getBroadcast(
-                    context,
-                    ALARM_UPDATE_ID,
-                    intent,
-                    0
-                )
+            val operation = PendingIntent.getBroadcast(
+                context,
+                ALARM_UPDATE_ID,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
+            cancel(operation)
+            when {
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && canScheduleExactAlarms() ->
+                    setExact(AlarmManager.RTC, trigger, operation)
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ->
+                    setAndAllowWhileIdle(AlarmManager.RTC, trigger, operation)
+                else -> set(AlarmManager.RTC, trigger, operation)
+            }
         }
     }
 
