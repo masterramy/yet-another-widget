@@ -200,6 +200,14 @@ jobs:
             exit 1
           fi
           echo "Google Sans source residue absent."
+      - name: Retired JobService paths must remain absent
+        shell: bash
+        run: |
+          set -euo pipefail
+          test ! -e app/src/main/java/com/tommasoberlose/anotherwidget/services/BatteryListenerJob.kt
+          test ! -e app/src/main/java/com/tommasoberlose/anotherwidget/services/EventListenerJob.kt
+          ! grep -R -n -F 'JobService' app/src/main/java/com/tommasoberlose/anotherwidget             --include='*.kt' --include='*.java'
+          echo "Retired legacy JobService paths are absent."
       - name: Location foreground-service and lifecycle ownership contract
         shell: bash
         run: |
