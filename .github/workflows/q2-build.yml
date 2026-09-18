@@ -119,6 +119,19 @@ jobs:
           grep -Fq 'Handler(Looper.getMainLooper())' "$widget_helper"
           grep -Fq 'context.applicationContext' "$widget_helper"
           echo "Dialog coroutines, greeting alarms, night greetings, and custom-font callback lifetime are hardened."
+      - name: Event refresh scheduling must use relative millisecond durations
+        shell: bash
+        run: |
+          set -euo pipefail
+          updates=app/src/main/java/com/tommasoberlose/anotherwidget/receivers/UpdatesReceiver.kt
+          grep -Fq 'private const val MINUTE_MILLIS = 60_000L' "$updates"
+          grep -Fq 'private const val HALF_HOUR_MILLIS = 30 * MINUTE_MILLIS' "$updates"
+          grep -Fq 'val remaining = event.startDate - now.timeInMillis' "$updates"
+          grep -Fq 'if (remaining <= limit)' "$updates"
+          grep -Fq 'if (diff.minutes > 30) -HALF_HOUR_MILLIS else HALF_HOUR_MILLIS' "$updates"
+          ! grep -Fq 'if (event.startDate <= limit)' "$updates"
+          ! grep -Fq 'if (diff.minutes > 30) (-30) else (+30)' "$updates"
+          echo "Event refresh timing compares like units and updates at intended half-hour boundaries."
       - name: BroadcastReceiver background work must be durable
         shell: bash
         run: |

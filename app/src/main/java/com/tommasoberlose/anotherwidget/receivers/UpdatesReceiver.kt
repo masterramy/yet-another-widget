@@ -56,6 +56,10 @@ class UpdatesReceiver : BroadcastReceiver() {
 
     companion object {
         const val EVENT_ID = "EVENT_ID"
+        private const val MINUTE_MILLIS = 60_000L
+        private const val HOUR_MILLIS = 60 * MINUTE_MILLIS
+        private const val HALF_HOUR_MILLIS = 30 * MINUTE_MILLIS
+        private const val TWO_MINUTES_MILLIS = 2 * MINUTE_MILLIS
 
         private fun AlarmManager.scheduleBestEffort(type: Int, triggerAtMillis: Long, operation: PendingIntent) {
             when {
@@ -83,18 +87,19 @@ class UpdatesReceiver : BroadcastReceiver() {
                     set(Calendar.MILLISECOND, 0)
                 }
                 val diff = Period(now.timeInMillis, event.startDate)
+                val remaining = event.startDate - now.timeInMillis
                 val limit = when (Preferences.showUntil) {
-                    0 -> 1000 * 60 * 60 * 3
-                    1 -> 1000 * 60 * 60 * 6
-                    2 -> 1000 * 60 * 60 * 12
-                    3 -> 1000 * 60 * 60 * 24
-                    4 -> 1000 * 60 * 60 * 24 * 3
-                    5 -> 1000 * 60 * 60 * 24 * 7
-                    6 -> 1000 * 60 * 30
-                    7 -> 1000 * 60 * 60
-                    else -> 1000 * 60 * 60 * 6
+                    0 -> HOUR_MILLIS * 3
+                    1 -> HOUR_MILLIS * 6
+                    2 -> HOUR_MILLIS * 12
+                    3 -> HOUR_MILLIS * 24
+                    4 -> HOUR_MILLIS * 24 * 3
+                    5 -> HOUR_MILLIS * 24 * 7
+                    6 -> MINUTE_MILLIS * 30
+                    7 -> HOUR_MILLIS
+                    else -> HOUR_MILLIS * 6
                 }
-                if (event.startDate <= limit) {
+                if (remaining <= limit) {
                     if (event.startDate > now.timeInMillis) {
                         if (diff.hours == 0) {
                             var minutes = 0
@@ -111,7 +116,7 @@ class UpdatesReceiver : BroadcastReceiver() {
                             }
                             scheduleBestEffort(
                                 AlarmManager.RTC,
-                                if (event.startDate - minutes * 1000 * 60 > (now.timeInMillis + 120 * 1000)) event.startDate - 60 * 1000 * minutes else now.timeInMillis + 120000,
+                                if (event.startDate - minutes * MINUTE_MILLIS > (now.timeInMillis + TWO_MINUTES_MILLIS)) event.startDate - MINUTE_MILLIS * minutes else now.timeInMillis + TWO_MINUTES_MILLIS,
                                 PendingIntent.getBroadcast(
                                     context,
                                     event.eventID.toInt(),
@@ -125,7 +130,7 @@ class UpdatesReceiver : BroadcastReceiver() {
                         } else {
                             scheduleBestEffort(
                                 AlarmManager.RTC,
-                                event.startDate - diff.hours * 1000 * 60 * 60 + if (diff.minutes > 30) (-30) else (+30),
+                                event.startDate - diff.hours * HOUR_MILLIS + if (diff.minutes > 30) -HALF_HOUR_MILLIS else HALF_HOUR_MILLIS,
                                 PendingIntent.getBroadcast(
                                     context,
                                     event.eventID.toInt(),
@@ -138,7 +143,7 @@ class UpdatesReceiver : BroadcastReceiver() {
                             )
                         }
                     } else {
-                        val fireTime = if (event.endDate > now.timeInMillis + 120 * 1000) event.endDate else now.timeInMillis + 120000
+                        val fireTime = if (event.endDate > now.timeInMillis + TWO_MINUTES_MILLIS) event.endDate else now.timeInMillis + TWO_MINUTES_MILLIS
                         scheduleBestEffort(
                             AlarmManager.RTC,
                             fireTime,
@@ -153,7 +158,7 @@ class UpdatesReceiver : BroadcastReceiver() {
                 } else {
                     scheduleBestEffort(
                         AlarmManager.RTC,
-                        if (event.startDate - limit > now.timeInMillis + 120 * 1000) event.startDate - limit else now.timeInMillis + 120000,
+                        if (event.startDate - limit > now.timeInMillis + TWO_MINUTES_MILLIS) event.startDate - limit else now.timeInMillis + TWO_MINUTES_MILLIS,
                         PendingIntent.getBroadcast(
                             context,
                             event.eventID.toInt(),
