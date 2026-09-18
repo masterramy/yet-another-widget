@@ -97,7 +97,7 @@ class StandardWidget(val context: Context) {
             eventRepository.close()
 
             // Weather
-            if (Preferences.showWeather && Preferences.weatherIcon != "") {
+            if (WeatherHelper.hasDisplayableWeather()) {
                 views.setViewVisibility(R.id.weather_rect, View.VISIBLE)
                 views.setViewVisibility(R.id.weather_sub_line, View.GONE)
 
@@ -444,7 +444,7 @@ class StandardWidget(val context: Context) {
             bindingView.loader.isVisible = false
 
             // Weather
-            if (Preferences.showWeather && Preferences.weatherIcon != "") {
+            if (WeatherHelper.hasDisplayableWeather()) {
                 bindingView.weatherDateLine.isVisible = true
                 val currentTemp = String.format(
                     Locale.getDefault(),

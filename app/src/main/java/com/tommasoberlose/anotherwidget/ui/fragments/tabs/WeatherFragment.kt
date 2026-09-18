@@ -95,6 +95,10 @@ class WeatherFragment : Fragment() {
                 binding.labelWeatherProvider.text = WeatherHelper.getProviderName(requireContext(), provider)
                 binding.weatherApiComplianceNotice.isVisible =
                     Preferences.showWeather && provider == Constants.WeatherProvider.WEATHER_API
+                if (provider == Constants.WeatherProvider.WEATHER_API && Preferences.weatherRefreshPeriod > 1) {
+                    Preferences.weatherRefreshPeriod = 1
+                    WeatherReceiver.setUpdates(requireContext())
+                }
                 checkWeatherProviderConfig()
             }
         }
@@ -210,7 +214,9 @@ class WeatherFragment : Fragment() {
         binding.actionWeatherRefreshPeriod.setOnClickListener {
             val dialog =
                 BottomSheetMenu<Int>(requireContext(), header = getString(R.string.settings_weather_refresh_period_title)).setSelectedValue(Preferences.weatherRefreshPeriod)
-            (5 downTo 0).forEach {
+            val maxPeriod =
+                if (Constants.WeatherProvider.fromInt(Preferences.weatherProvider) == Constants.WeatherProvider.WEATHER_API) 1 else 5
+            (maxPeriod downTo 0).forEach {
                 dialog.addItem(getString(SettingsStringHelper.getRefreshPeriodString(it)), it)
             }
             dialog
