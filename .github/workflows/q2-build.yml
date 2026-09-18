@@ -616,7 +616,369 @@ jobs:
             aab_hash="$(unzip -p "$aab" "$aab_path" | sha256sum | awk '{print $1}')"
             test "$expected" = "$aab_hash"
           done
-          unzip -Z1 "$apk" | grep -Eq '(^|/)okhttp3/internal/publicsuffix/NOTICE
+          unzip -Z1 "$apk" | grep -Eq '(^|/)okhttp3/internal/publicsuffix/NOTICE          unzip -Z1 "$apk" | grep -Eq '(^|/)okhttp3/internal/publicsuffix/publicsuffixes\.gz          unzip -Z1 "$aab" | grep -Eq '(^|/)okhttp3/internal/publicsuffix/NOTICE          unzip -Z1 "$aab" | grep -Eq '(^|/)okhttp3/internal/publicsuffix/publicsuffixes\.gz          echo "Release APK/AAB preserve the deliberate license bundle and OkHttp PSL notice/data."
+
+      - name: Upload debug APK
+        if: always()
+        uses: actions/upload-artifact@v7
+        continue-on-error: true
+        with:
+          name: q2-debug-apk
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+
+      - name: Upload unsigned release evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        continue-on-error: true
+        with:
+          name: q3-unsigned-release-candidate
+          path: |
+            app/build/outputs/apk/release/*.apk
+            app/build/outputs/bundle/release/*.aab
+          if-no-files-found: error
+
+          unzip -Z1 "$apk" | grep -Eq '(^|/)okhttp3/internal/publicsuffix/publicsuffixes\.gz
+
+          unzip -Z1 "$aab" | grep -Eq '(^|/)okhttp3/internal/publicsuffix/NOTICE
+
+          unzip -Z1 "$aab" | grep -Eq '(^|/)okhttp3/internal/publicsuffix/publicsuffixes\.gz
+
+          echo "Release APK/AAB preserve the deliberate license bundle and OkHttp PSL notice/data."
+
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v7
+        continue-on-error: true
+        with:
+          name: q2-debug-apk
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+
+      - name: Upload unsigned release evidence
+        uses: actions/upload-artifact@v7
+        continue-on-error: true
+        with:
+          name: q3-unsigned-release-candidate
+          path: |
+            app/build/outputs/apk/release/*.apk
+            app/build/outputs/bundle/release/*.aab
+          if-no-files-found: error
+
+          unzip -Z1 "$aab" | grep -Eq '(^|/)okhttp3/internal/publicsuffix/NOTICE
+
+          unzip -Z1 "$aab" | grep -Eq '(^|/)okhttp3/internal/publicsuffix/publicsuffixes\.gz
+
+          echo "Release APK/AAB preserve the deliberate license bundle and OkHttp PSL notice/data."
+
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v7
+        continue-on-error: true
+        with:
+          name: q2-debug-apk
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+
+      - name: Upload unsigned release evidence
+        uses: actions/upload-artifact@v7
+        continue-on-error: true
+        with:
+          name: q3-unsigned-release-candidate
+          path: |
+            app/build/outputs/apk/release/*.apk
+            app/build/outputs/bundle/release/*.aab
+          if-no-files-found: error
+
+          unzip -Z1 "$apk" | grep -Eq '(^|/)okhttp3/internal/publicsuffix/publicsuffixes\.gz
+
+          unzip -Z1 "$aab" | grep -Eq '(^|/)okhttp3/internal/publicsuffix/NOTICE
+
+          unzip -Z1 "$aab" | grep -Eq '(^|/)okhttp3/internal/publicsuffix/publicsuffixes\.gz
+
+          echo "Release APK/AAB preserve the deliberate license bundle and OkHttp PSL notice/data."
+
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v7
+        continue-on-error: true
+        with:
+          name: q2-debug-apk
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+
+      - name: Upload unsigned release evidence
+        uses: actions/upload-artifact@v7
+        continue-on-error: true
+        with:
+          name: q3-unsigned-release-candidate
+          path: |
+            app/build/outputs/apk/release/*.apk
+            app/build/outputs/bundle/release/*.aab
+          if-no-files-found: error
+
+          unzip -Z1 "$aab" | grep -Eq '(^|/)okhttp3/internal/publicsuffix/publicsuffixes\.gz
+
+          echo "Release APK/AAB preserve the deliberate license bundle and OkHttp PSL notice/data."
+
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v7
+        continue-on-error: true
+        with:
+          name: q2-debug-apk
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+
+      - name: Upload unsigned release evidence
+        uses: actions/upload-artifact@v7
+        continue-on-error: true
+        with:
+          name: q3-unsigned-release-candidate
+          path: |
+            app/build/outputs/apk/release/*.apk
+            app/build/outputs/bundle/release/*.aab
+          if-no-files-found: error
+
+          unzip -Z1 "$apk" | grep -Eq '(^|/)okhttp3/internal/publicsuffix/publicsuffixes\.gz
+
+          unzip -Z1 "$aab" | grep -Eq '(^|/)okhttp3/internal/publicsuffix/NOTICE
+
+          unzip -Z1 "$aab" | grep -Eq '(^|/)okhttp3/internal/publicsuffix/publicsuffixes\.gz
+
+          echo "Release APK/AAB preserve the deliberate license bundle and OkHttp PSL notice/data."
+
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v7
+        continue-on-error: true
+        with:
+          name: q2-debug-apk
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+
+      - name: Upload unsigned release evidence
+        uses: actions/upload-artifact@v7
+        continue-on-error: true
+        with:
+          name: q3-unsigned-release-candidate
+          path: |
+            app/build/outputs/apk/release/*.apk
+            app/build/outputs/bundle/release/*.aab
+          if-no-files-found: error
+
+          unzip -Z1 "$aab" | grep -Eq '(^|/)okhttp3/internal/publicsuffix/NOTICE
+
+          unzip -Z1 "$aab" | grep -Eq '(^|/)okhttp3/internal/publicsuffix/publicsuffixes\.gz
+
+          echo "Release APK/AAB preserve the deliberate license bundle and OkHttp PSL notice/data."
+
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v7
+        continue-on-error: true
+        with:
+          name: q2-debug-apk
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+
+      - name: Upload unsigned release evidence
+        uses: actions/upload-artifact@v7
+        continue-on-error: true
+        with:
+          name: q3-unsigned-release-candidate
+          path: |
+            app/build/outputs/apk/release/*.apk
+            app/build/outputs/bundle/release/*.aab
+          if-no-files-found: error
+
+          unzip -Z1 "$apk" | grep -Eq '(^|/)okhttp3/internal/publicsuffix/publicsuffixes\.gz
+
+          unzip -Z1 "$aab" | grep -Eq '(^|/)okhttp3/internal/publicsuffix/NOTICE
+
+          unzip -Z1 "$aab" | grep -Eq '(^|/)okhttp3/internal/publicsuffix/publicsuffixes\.gz
+
+          echo "Release APK/AAB preserve the deliberate license bundle and OkHttp PSL notice/data."
+
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v7
+        continue-on-error: true
+        with:
+          name: q2-debug-apk
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+
+      - name: Upload unsigned release evidence
+        uses: actions/upload-artifact@v7
+        continue-on-error: true
+        with:
+          name: q3-unsigned-release-candidate
+          path: |
+            app/build/outputs/apk/release/*.apk
+            app/build/outputs/bundle/release/*.aab
+          if-no-files-found: error
+
+          echo "Release APK/AAB preserve the deliberate license bundle and OkHttp PSL notice/data."
+
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v7
+        continue-on-error: true
+        with:
+          name: q2-debug-apk
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+
+      - name: Upload unsigned release evidence
+        uses: actions/upload-artifact@v7
+        continue-on-error: true
+        with:
+          name: q3-unsigned-release-candidate
+          path: |
+            app/build/outputs/apk/release/*.apk
+            app/build/outputs/bundle/release/*.aab
+          if-no-files-found: error
+
+          unzip -Z1 "$apk" | grep -Eq '(^|/)okhttp3/internal/publicsuffix/publicsuffixes\.gz
+
+          unzip -Z1 "$aab" | grep -Eq '(^|/)okhttp3/internal/publicsuffix/NOTICE
+
+          unzip -Z1 "$aab" | grep -Eq '(^|/)okhttp3/internal/publicsuffix/publicsuffixes\.gz
+
+          echo "Release APK/AAB preserve the deliberate license bundle and OkHttp PSL notice/data."
+
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v7
+        continue-on-error: true
+        with:
+          name: q2-debug-apk
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+
+      - name: Upload unsigned release evidence
+        uses: actions/upload-artifact@v7
+        continue-on-error: true
+        with:
+          name: q3-unsigned-release-candidate
+          path: |
+            app/build/outputs/apk/release/*.apk
+            app/build/outputs/bundle/release/*.aab
+          if-no-files-found: error
+
+          unzip -Z1 "$aab" | grep -Eq '(^|/)okhttp3/internal/publicsuffix/NOTICE
+
+          unzip -Z1 "$aab" | grep -Eq '(^|/)okhttp3/internal/publicsuffix/publicsuffixes\.gz
+
+          echo "Release APK/AAB preserve the deliberate license bundle and OkHttp PSL notice/data."
+
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v7
+        continue-on-error: true
+        with:
+          name: q2-debug-apk
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+
+      - name: Upload unsigned release evidence
+        uses: actions/upload-artifact@v7
+        continue-on-error: true
+        with:
+          name: q3-unsigned-release-candidate
+          path: |
+            app/build/outputs/apk/release/*.apk
+            app/build/outputs/bundle/release/*.aab
+          if-no-files-found: error
+
+          unzip -Z1 "$apk" | grep -Eq '(^|/)okhttp3/internal/publicsuffix/publicsuffixes\.gz
+
+          unzip -Z1 "$aab" | grep -Eq '(^|/)okhttp3/internal/publicsuffix/NOTICE
+
+          unzip -Z1 "$aab" | grep -Eq '(^|/)okhttp3/internal/publicsuffix/publicsuffixes\.gz
+
+          echo "Release APK/AAB preserve the deliberate license bundle and OkHttp PSL notice/data."
+
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v7
+        continue-on-error: true
+        with:
+          name: q2-debug-apk
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+
+      - name: Upload unsigned release evidence
+        uses: actions/upload-artifact@v7
+        continue-on-error: true
+        with:
+          name: q3-unsigned-release-candidate
+          path: |
+            app/build/outputs/apk/release/*.apk
+            app/build/outputs/bundle/release/*.aab
+          if-no-files-found: error
+
+          unzip -Z1 "$aab" | grep -Eq '(^|/)okhttp3/internal/publicsuffix/publicsuffixes\.gz
+
+          echo "Release APK/AAB preserve the deliberate license bundle and OkHttp PSL notice/data."
+
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v7
+        continue-on-error: true
+        with:
+          name: q2-debug-apk
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+
+      - name: Upload unsigned release evidence
+        uses: actions/upload-artifact@v7
+        continue-on-error: true
+        with:
+          name: q3-unsigned-release-candidate
+          path: |
+            app/build/outputs/apk/release/*.apk
+            app/build/outputs/bundle/release/*.aab
+          if-no-files-found: error
+
+          unzip -Z1 "$apk" | grep -Eq '(^|/)okhttp3/internal/publicsuffix/publicsuffixes\.gz
+
+          unzip -Z1 "$aab" | grep -Eq '(^|/)okhttp3/internal/publicsuffix/NOTICE
+
+          unzip -Z1 "$aab" | grep -Eq '(^|/)okhttp3/internal/publicsuffix/publicsuffixes\.gz
+
+          echo "Release APK/AAB preserve the deliberate license bundle and OkHttp PSL notice/data."
+
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v7
+        continue-on-error: true
+        with:
+          name: q2-debug-apk
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+
+      - name: Upload unsigned release evidence
+        uses: actions/upload-artifact@v7
+        continue-on-error: true
+        with:
+          name: q3-unsigned-release-candidate
+          path: |
+            app/build/outputs/apk/release/*.apk
+            app/build/outputs/bundle/release/*.aab
+          if-no-files-found: error
+
+          unzip -Z1 "$aab" | grep -Eq '(^|/)okhttp3/internal/publicsuffix/NOTICE
+
+          unzip -Z1 "$aab" | grep -Eq '(^|/)okhttp3/internal/publicsuffix/publicsuffixes\.gz
+
+          echo "Release APK/AAB preserve the deliberate license bundle and OkHttp PSL notice/data."
+
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v7
+        continue-on-error: true
+        with:
+          name: q2-debug-apk
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+
+      - name: Upload unsigned release evidence
+        uses: actions/upload-artifact@v7
+        continue-on-error: true
+        with:
+          name: q3-unsigned-release-candidate
+          path: |
+            app/build/outputs/apk/release/*.apk
+            app/build/outputs/bundle/release/*.aab
+          if-no-files-found: error
 
           unzip -Z1 "$apk" | grep -Eq '(^|/)okhttp3/internal/publicsuffix/publicsuffixes\.gz
 
