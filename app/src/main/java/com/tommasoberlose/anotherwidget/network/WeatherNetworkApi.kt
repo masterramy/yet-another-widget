@@ -16,9 +16,8 @@ import com.tommasoberlose.anotherwidget.helpers.WeatherHelper
 import com.tommasoberlose.anotherwidget.network.repository.*
 import com.tommasoberlose.anotherwidget.ui.fragments.MainFragment
 import com.tommasoberlose.anotherwidget.ui.widgets.MainWidget
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlin.coroutines.resume
 import org.greenrobot.eventbus.EventBus
 import java.lang.Exception
 import java.text.SimpleDateFormat
@@ -49,31 +48,49 @@ class WeatherNetworkApi(val context: Context) {
         }
     }
 
-    private fun useOpenWeatherMap(context: Context) {
+    private suspend fun useOpenWeatherMap(context: Context) {
         if (Preferences.weatherProviderApiOpen != "") {
             val helper = OpenWeatherMapHelper(Preferences.weatherProviderApiOpen)
             helper.setUnits(if (Preferences.weatherTempUnit == "F") Units.IMPERIAL else Units.METRIC)
-            helper.getCurrentWeatherByGeoCoordinates(Preferences.customLocationLat.toDouble(), Preferences.customLocationLon.toDouble(), object :
-                CurrentWeatherCallback {
-                override fun onSuccess(currentWeather: CurrentWeather?) {
-                    currentWeather?.let {
-                        Preferences.weatherTemp = currentWeather.main.temp.toFloat()
-                        Preferences.weatherIcon = currentWeather.weather[0].icon
-                        Preferences.weatherRealTempUnit = Preferences.weatherTempUnit
-                        MainWidget.updateWidget(context)
+
+            suspendCancellableCoroutine<Unit> { continuation ->
+                helper.getCurrentWeatherByGeoCoordinates(
+                    Preferences.customLocationLat.toDouble(),
+                    Preferences.customLocationLon.toDouble(),
+                    object : CurrentWeatherCallback {
+                        override fun onSuccess(currentWeather: CurrentWeather?) {
+                            if (!continuation.isActive) return
+
+                            try {
+                                currentWeather?.let {
+                                    Preferences.weatherTemp = currentWeather.main.temp.toFloat()
+                                    Preferences.weatherIcon = currentWeather.weather[0].icon
+                                    Preferences.weatherRealTempUnit = Preferences.weatherTempUnit
+                                    MainWidget.updateWidget(context)
+                                }
+
+                                Preferences.weatherProviderError = ""
+                                Preferences.weatherProviderLocationError = ""
+                            } catch (_: Exception) {
+                                Preferences.weatherProviderError = context.getString(R.string.weather_provider_error_generic)
+                                Preferences.weatherProviderLocationError = ""
+                            }
+
+                            EventBus.getDefault().post(MainFragment.UpdateUiMessageEvent())
+                            if (continuation.isActive) continuation.resume(Unit)
+                        }
+
+                        override fun onFailure(throwable: Throwable?) {
+                            if (!continuation.isActive) return
+
+                            Preferences.weatherProviderError = context.getString(R.string.weather_provider_error_generic)
+                            Preferences.weatherProviderLocationError = ""
+                            EventBus.getDefault().post(MainFragment.UpdateUiMessageEvent())
+                            if (continuation.isActive) continuation.resume(Unit)
+                        }
                     }
-
-                    Preferences.weatherProviderError = ""
-                    Preferences.weatherProviderLocationError = ""
-                    EventBus.getDefault().post(MainFragment.UpdateUiMessageEvent())
-                }
-
-                override fun onFailure(throwable: Throwable?) {
-                    Preferences.weatherProviderError = context.getString(R.string.weather_provider_error_generic)
-                    Preferences.weatherProviderLocationError = ""
-                    EventBus.getDefault().post(MainFragment.UpdateUiMessageEvent())
-                }
-            })
+                )
+            }
         } else {
             Preferences.weatherProviderError = context.getString(R.string.weather_provider_error_missing_key)
             Preferences.weatherProviderLocationError = ""

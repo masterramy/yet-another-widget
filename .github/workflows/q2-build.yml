@@ -168,6 +168,17 @@ jobs:
           grep -Fq 'android:allowBackup="false"' "$manifest"
           ! grep -Fq 'android:allowBackup="true"' "$manifest"
           echo "Application backup disabled for local preference/API-key state."
+      - name: OpenWeatherMap callback must stay inside coroutine lifetime
+        shell: bash
+        run: |
+          set -euo pipefail
+          weather_network=app/src/main/java/com/tommasoberlose/anotherwidget/network/WeatherNetworkApi.kt
+          grep -Fq 'private suspend fun useOpenWeatherMap(context: Context)' "$weather_network"
+          grep -Fq 'suspendCancellableCoroutine<Unit>' "$weather_network"
+          grep -Fq 'if (!continuation.isActive) return' "$weather_network"
+          grep -Fq 'continuation.resume(Unit)' "$weather_network"
+          ! grep -Fq 'private fun useOpenWeatherMap(context: Context)' "$weather_network"
+          echo "OpenWeatherMap callback completion is owned by the calling coroutine."
       - name: Weather provider transport, migration, and MET attribution contract
         shell: bash
         run: |
