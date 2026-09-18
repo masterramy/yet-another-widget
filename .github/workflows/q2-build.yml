@@ -176,7 +176,7 @@ jobs:
           grep -Fq 'Preferences.weatherProvider != Constants.WeatherProvider.YR.rawValue' "$app"
           grep -Fq 'Preferences.weatherProvider = Constants.WeatherProvider.YR.rawValue' "$app"
           grep -Fq 'WEATHER_GOV.rawValue -> WEATHER_GOV' "$constants"
-          grep -Fq 'YR.rawValue -> YR' "$constants"
+          grep -Fq 'YR(6)' "$constants"
           grep -Fq 'else -> YR' "$constants"
           for key in weatherProviderApiOpen weatherProviderApiWeatherBit weatherProviderApiWeatherApi weatherProviderApiHere weatherProviderApiAccuweather; do
             grep -Fq "Preferences.$key = \"\"" "$app"
@@ -309,18 +309,30 @@ jobs:
           manifest=app/src/main/AndroidManifest.xml
           grep -Fq 'android:allowBackup="false"' "$manifest"
           ! grep -Fq 'android:allowBackup="true"' "$manifest"
-          echo "Application backup disabled for local preference/API-key state."
-      - name: OpenWeatherMap callback must stay inside coroutine lifetime
+          echo "Application backup disabled for local preference state."
+      - name: Retired credentialed weather implementations must remain absent
         shell: bash
         run: |
           set -euo pipefail
-          weather_network=app/src/main/java/com/tommasoberlose/anotherwidget/network/WeatherNetworkApi.kt
-          grep -Fq 'private suspend fun useOpenWeatherMap(context: Context)' "$weather_network"
-          grep -Fq 'suspendCancellableCoroutine<Unit>' "$weather_network"
-          grep -Fq 'if (!continuation.isActive) return' "$weather_network"
-          grep -Fq 'continuation.resume(Unit)' "$weather_network"
-          ! grep -Fq 'private fun useOpenWeatherMap(context: Context)' "$weather_network"
-          echo "OpenWeatherMap callback completion is owned by the calling coroutine."
+          network=app/src/main/java/com/tommasoberlose/anotherwidget/network/WeatherNetworkApi.kt
+          helper=app/src/main/java/com/tommasoberlose/anotherwidget/helpers/WeatherHelper.kt
+          services=app/src/main/java/com/tommasoberlose/anotherwidget/network/api/ApiServices.kt
+          build=app/build.gradle
+          for file in \
+            app/src/main/java/com/tommasoberlose/anotherwidget/network/repository/AccuweatherRepository.kt \
+            app/src/main/java/com/tommasoberlose/anotherwidget/network/repository/HereRepository.kt \
+            app/src/main/java/com/tommasoberlose/anotherwidget/network/repository/WeatherApiRepository.kt \
+            app/src/main/java/com/tommasoberlose/anotherwidget/network/repository/WeatherbitRepository.kt; do
+            test ! -e "$file"
+          done
+          ! grep -Fq 'OpenWeatherMap-Android-Library' "$build"
+          ! grep -Eq 'use(OpenWeatherMap|WeatherBitProvider|WeatherApiProvider|HereProvider|AccuweatherProvider)' "$network"
+          ! grep -Eq 'OpenWeatherMapHelper|CurrentWeatherCallback|openweathermaplib' "$network"
+          ! grep -Eq 'WeatherBitService|WeatherApiService|HereService|AccuweatherService' "$services"
+          ! grep -Eq 'getWeatherBitIcon|getWeatherApiIcon|isKeyRequired|getApiKey' "$helper"
+          ! grep -Eq 'OPEN_WEATHER|WEATHER_BIT|WEATHER_API|HERE|ACCUWEATHER' app/src/main/java/com/tommasoberlose/anotherwidget/global/Constants.kt
+          echo "Retired credentialed weather provider implementations and dependency are absent."
+
       - name: Shipping weather providers must be account-free MET and NWS only
         shell: bash
         run: |
@@ -331,8 +343,9 @@ jobs:
           provider_layout=app/src/main/res/layout/activity_weather_provider.xml
           network=app/src/main/java/com/tommasoberlose/anotherwidget/network/WeatherNetworkApi.kt
           privacy=privacy-policy.md
+          grep -Fq 'WEATHER_GOV(5)' "$constants"
+          grep -Fq 'YR(6)' "$constants"
           grep -Fq 'WEATHER_GOV.rawValue -> WEATHER_GOV' "$constants"
-          grep -Fq 'YR.rawValue -> YR' "$constants"
           grep -Fq 'else -> YR' "$constants"
           grep -Fq 'Preferences.weatherProvider != Constants.WeatherProvider.WEATHER_GOV.rawValue' "$application"
           grep -Fq 'Preferences.weatherProvider != Constants.WeatherProvider.YR.rawValue' "$application"

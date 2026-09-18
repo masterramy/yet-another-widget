@@ -86,12 +86,7 @@ class WeatherProviderActivity : AppCompatActivity() {
                             }
                     }
                     .clicked(R.id.action_configure) {
-                        BottomSheetWeatherProviderSettings(this) {
-                            lifecycleScope.launch {
-                                binding.loader.isVisible = true
-                                WeatherHelper.updateWeather(this@WeatherProviderActivity)
-                            }
-                        }.show()
+                        BottomSheetWeatherProviderSettings(this).show()
                     }
                     .visibility(R.id.action_configure, if (/*WeatherHelper.isKeyRequired(provider) && */provider.rawValue == Preferences.weatherProvider) View.VISIBLE else View.GONE)
                     .with<TextView>(R.id.provider_error) {

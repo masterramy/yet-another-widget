@@ -38,19 +38,12 @@ object Constants {
     }
 
     enum class WeatherProvider(val rawValue: Int) {
-        OPEN_WEATHER(0),
-        WEATHER_BIT(1),
-        WEATHER_API(2),
-        HERE(3),
-        ACCUWEATHER(4),
         WEATHER_GOV(5),
         YR(6);
 
         companion object {
-            private val map = values().associateBy(WeatherProvider::rawValue)
             fun fromInt(type: Int): WeatherProvider = when (type) {
                 WEATHER_GOV.rawValue -> WEATHER_GOV
-                YR.rawValue -> YR
                 else -> YR
             }
         }
