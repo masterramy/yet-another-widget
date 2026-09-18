@@ -36,6 +36,7 @@ class BottomSheetPicker<T>(
     private val onItemSelected: ((selectedValue: T?) -> Unit)? = null,
 ) : BottomSheetDialog(context, R.style.BottomSheetDialogTheme) {
 
+    private val dialogScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private var loadingJobs: ArrayList<Job> = ArrayList()
     private lateinit var adapter: SlimAdapter
 
@@ -58,7 +59,7 @@ class BottomSheetPicker<T>(
         // List
         adapter = SlimAdapter.create()
 
-        loadingJobs.add(GlobalScope.launch(Dispatchers.IO) {
+        loadingJobs.add(dialogScope.launch {
             listBinding.root.setHasFixedSize(true)
             val mLayoutManager = LinearLayoutManager(context)
             listBinding.root.layoutManager = mLayoutManager
@@ -83,15 +84,13 @@ class BottomSheetPicker<T>(
 
             adapter.updateData((items.indices).toList())
 
-            withContext(Dispatchers.Main) {
-                binding.loader.isVisible = false
-                binding.listContainer.addView(listBinding.root)
-                this@BottomSheetPicker.behavior.state = BottomSheetBehavior.STATE_EXPANDED
-                binding.listContainer.isVisible = true
+            binding.loader.isVisible = false
+            binding.listContainer.addView(listBinding.root)
+            this@BottomSheetPicker.behavior.state = BottomSheetBehavior.STATE_EXPANDED
+            binding.listContainer.isVisible = true
 
-                val idx = items.toList().indexOfFirst { it.value == getSelected?.invoke() }
-                (listBinding.root.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(idx,0)
-            }
+            val idx = items.toList().indexOfFirst { it.value == getSelected?.invoke() }
+            (listBinding.root.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(idx,0)
         })
 
         setContentView(binding.root)
@@ -99,7 +98,8 @@ class BottomSheetPicker<T>(
     }
 
     override fun onStop() {
-        loadingJobs.forEach { it.cancel() }
+        dialogScope.coroutineContext.cancelChildren()
+        loadingJobs.clear()
         super.onStop()
     }
 

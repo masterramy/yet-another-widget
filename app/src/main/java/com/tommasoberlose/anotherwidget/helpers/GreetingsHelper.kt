@@ -17,6 +17,16 @@ object GreetingsHelper {
     private const val EVENING_TIME = 38
     private const val NIGHT_TIME = 39
 
+    private fun pending(context: Context, requestCode: Int): PendingIntent =
+        PendingIntent.getBroadcast(
+            context,
+            requestCode,
+            Intent(context, UpdatesReceiver::class.java).apply {
+                action = Actions.ACTION_UPDATE_GREETINGS
+            },
+            PendingIntent.FLAG_IMMUTABLE
+        )
+
     fun toggleGreetings(context: Context) {
         with(context.getSystemService(Context.ALARM_SERVICE) as AlarmManager) {
             val now = Calendar.getInstance().apply {
@@ -32,12 +42,7 @@ object GreetingsHelper {
                         set(Calendar.HOUR_OF_DAY, 5)
                     }.timeInMillis,
                     1000 * 60 * 60 * 24,
-                    PendingIntent.getBroadcast(context,
-                        MORNING_TIME,
-                        Intent(context, UpdatesReceiver::class.java).apply {
-                            action = Actions.ACTION_UPDATE_GREETINGS
-                        },
-                        0)
+                    pending(context, MORNING_TIME)
                 )
 
                 setRepeating(
@@ -46,12 +51,7 @@ object GreetingsHelper {
                         set(Calendar.HOUR_OF_DAY, 9)
                     }.timeInMillis,
                     1000 * 60 * 60 * 24,
-                    PendingIntent.getBroadcast(context,
-                        MORNING_TIME_END,
-                        Intent(context, UpdatesReceiver::class.java).apply {
-                            action = Actions.ACTION_UPDATE_GREETINGS
-                        },
-                        0)
+                    pending(context, MORNING_TIME_END)
                 )
 
                 setRepeating(
@@ -60,12 +60,7 @@ object GreetingsHelper {
                         set(Calendar.HOUR_OF_DAY, 19)
                     }.timeInMillis,
                     1000 * 60 * 60 * 24,
-                    PendingIntent.getBroadcast(context,
-                        EVENING_TIME,
-                        Intent(context, UpdatesReceiver::class.java).apply {
-                            action = Actions.ACTION_UPDATE_GREETINGS
-                        },
-                        0)
+                    pending(context, EVENING_TIME)
                 )
 
                 setRepeating(
@@ -74,19 +69,11 @@ object GreetingsHelper {
                         set(Calendar.HOUR_OF_DAY, 22)
                     }.timeInMillis,
                     1000 * 60 * 60 * 24,
-                    PendingIntent.getBroadcast(context,
-                        NIGHT_TIME,
-                        Intent(context, UpdatesReceiver::class.java).apply {
-                            action = Actions.ACTION_UPDATE_GREETINGS
-                        },
-                        0)
+                    pending(context, NIGHT_TIME)
                 )
             } else {
                 listOf(MORNING_TIME, MORNING_TIME_END, EVENING_TIME, NIGHT_TIME).forEach {
-                    cancel(PendingIntent.getBroadcast(context, it, Intent(context,
-                        UpdatesReceiver::class.java).apply {
-                        action = Actions.ACTION_UPDATE_GREETINGS
-                    }, 0))
+                    cancel(pending(context, it))
                 }
             }
         }

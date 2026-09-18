@@ -92,6 +92,23 @@ jobs:
             exit 1
           fi
           echo "Next-alarm refresh uses immutable PendingIntent identity and exact-if-authorized fallback scheduling."
+      - name: UI coroutine ownership and greeting PendingIntent contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          color=app/src/main/java/com/tommasoberlose/anotherwidget/components/BottomSheetColorPicker.kt
+          picker=app/src/main/java/com/tommasoberlose/anotherwidget/components/BottomSheetPicker.kt
+          glance=app/src/main/java/com/tommasoberlose/anotherwidget/components/GlanceSettingsDialog.kt
+          greetings=app/src/main/java/com/tommasoberlose/anotherwidget/helpers/GreetingsHelper.kt
+          for source in "$color" "$picker" "$glance"; do
+            ! grep -Fq 'GlobalScope' "$source"
+            grep -Fq 'CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)' "$source"
+            grep -Fq 'coroutineContext.cancelChildren()' "$source"
+          done
+          test "$(grep -c 'PendingIntent.getBroadcast(' "$greetings")" = "1"
+          grep -Fq 'PendingIntent.FLAG_IMMUTABLE' "$greetings"
+          grep -Fq 'cancel(pending(context, it))' "$greetings"
+          echo "Dialog coroutines are owned/cancelled and greeting alarm tokens are immutable."
       - name: BroadcastReceiver background work must be durable
         shell: bash
         run: |

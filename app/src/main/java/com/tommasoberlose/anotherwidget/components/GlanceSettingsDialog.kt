@@ -28,6 +28,8 @@ import org.greenrobot.eventbus.EventBus
 class GlanceSettingsDialog(val context: Activity, val provider: Constants.GlanceProviderId, private val statusCallback: (() -> Unit)?) : BottomSheetDialog(context, R.style.BottomSheetDialogTheme) {
 
     private var binding: GlanceProviderSettingsLayoutBinding = GlanceProviderSettingsLayoutBinding.inflate(LayoutInflater.from(context))
+    private val dialogScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+    private var providerToggleJob: Job? = null
 
     override fun show() {
 
@@ -137,14 +139,11 @@ class GlanceSettingsDialog(val context: Activity, val provider: Constants.Glance
             Constants.GlanceProviderId.EVENTS -> Preferences.showEventsAsGlanceProvider
         })
 
-        var job: Job? = null
-
         binding.providerSwitch.setOnCheckedChangeListener { _, isChecked ->
-            job?.cancel()
-            job = GlobalScope.launch(Dispatchers.IO) {
+            providerToggleJob?.cancel()
+            providerToggleJob = dialogScope.launch {
                 delay(300)
-                withContext(Dispatchers.Main) {
-                    when (provider) {
+                when (provider) {
                         Constants.GlanceProviderId.PLAYING_SONG -> {
                             Preferences.showMusic = isChecked
                             checkNotificationPermission()
@@ -176,13 +175,18 @@ class GlanceSettingsDialog(val context: Activity, val provider: Constants.Glance
                         else -> {
                         }
                     }
-                    statusCallback?.invoke()
-                }
+                statusCallback?.invoke()
             }
         }
 
         setContentView(binding.root)
         super.show()
+    }
+
+    override fun onStop() {
+        dialogScope.coroutineContext.cancelChildren()
+        providerToggleJob = null
+        super.onStop()
     }
     
     private fun checkNextAlarm() {

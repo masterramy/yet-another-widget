@@ -40,6 +40,7 @@ class BottomSheetColorPicker(
     private val hideCopyPaste: Boolean = false,
 ) : BottomSheetDialog(context, R.style.BottomSheetDialogTheme) {
 
+    private val dialogScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private var loadingJobs: ArrayList<Job> = ArrayList()
     private lateinit var adapter: SlimAdapter
     private var alphaDebouncing: Job? = null
@@ -85,11 +86,9 @@ class BottomSheetColorPicker(
                     binding.textAlpha.text =
                         "%s: %s%%".format(context.getString(R.string.alpha), it.progress)
                     alphaDebouncing?.cancel()
-                    alphaDebouncing = GlobalScope.launch(Dispatchers.IO) {
+                    alphaDebouncing = dialogScope.launch {
                         delay(150)
-                        withContext(Dispatchers.Main) {
-                            onAlphaChangeListener?.invoke(it.progress)
-                        }
+                        onAlphaChangeListener?.invoke(it.progress)
                     }
                 }
             }
@@ -102,7 +101,7 @@ class BottomSheetColorPicker(
         // List
         adapter = SlimAdapter.create()
 
-        loadingJobs.add(GlobalScope.launch(Dispatchers.IO) {
+        loadingJobs.add(dialogScope.launch {
             listBinding.root.setHasFixedSize(true)
             val mLayoutManager = GridLayoutManager(context, 6)
             listBinding.root.layoutManager = mLayoutManager
@@ -140,15 +139,13 @@ class BottomSheetColorPicker(
 
             adapter.updateData(colors.toList())
 
-            withContext(Dispatchers.Main) {
-                binding.loader.isVisible = false
-                binding.listContainer.addView(listBinding.root)
-                this@BottomSheetColorPicker.behavior.state = BottomSheetBehavior.STATE_EXPANDED
-                binding.listContainer.isVisible = true
+            binding.loader.isVisible = false
+            binding.listContainer.addView(listBinding.root)
+            this@BottomSheetColorPicker.behavior.state = BottomSheetBehavior.STATE_EXPANDED
+            binding.listContainer.isVisible = true
 
-                val idx = colors.toList().indexOf(getSelected?.invoke())
-                (listBinding.root.layoutManager as GridLayoutManager).scrollToPositionWithOffset(idx,0)
-            }
+            val idx = colors.toList().indexOf(getSelected?.invoke())
+            (listBinding.root.layoutManager as GridLayoutManager).scrollToPositionWithOffset(idx,0)
         })
 
         setContentView(binding.root)
@@ -156,7 +153,9 @@ class BottomSheetColorPicker(
     }
 
     override fun onStop() {
-        loadingJobs.forEach { it.cancel() }
+        dialogScope.coroutineContext.cancelChildren()
+        alphaDebouncing = null
+        loadingJobs.clear()
         super.onStop()
     }
 
