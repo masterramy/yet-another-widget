@@ -100,15 +100,25 @@ jobs:
           picker=app/src/main/java/com/tommasoberlose/anotherwidget/components/BottomSheetPicker.kt
           glance=app/src/main/java/com/tommasoberlose/anotherwidget/components/GlanceSettingsDialog.kt
           greetings=app/src/main/java/com/tommasoberlose/anotherwidget/helpers/GreetingsHelper.kt
+          widget_helper=app/src/main/java/com/tommasoberlose/anotherwidget/helpers/WidgetHelper.kt
           for source in "$color" "$picker" "$glance"; do
             ! grep -Fq 'GlobalScope' "$source"
-            grep -Fq 'CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)' "$source"
+            grep -Fq 'CoroutineScope(SupervisorJob() + Dispatchers.Main)' "$source"
             grep -Fq 'coroutineContext.cancelChildren()' "$source"
           done
+          ! grep -Fq 'Dispatchers.Main.immediate' "$color"
+          ! grep -Fq 'Dispatchers.Main.immediate' "$picker"
+          ! grep -Fq 'Dispatchers.Main.immediate' "$glance"
           test "$(grep -c 'PendingIntent.getBroadcast(' "$greetings")" = "1"
           grep -Fq 'PendingIntent.FLAG_IMMUTABLE' "$greetings"
           grep -Fq 'cancel(pending(context, it))' "$greetings"
-          echo "Dialog coroutines are owned/cancelled and greeting alarm tokens are immutable."
+          grep -Fq 'hour >= 22 || hour < 5' "$greetings"
+          ! grep -Fq 'hour >= 22 && hour < 5' "$greetings"
+          ! grep -Fq 'HandlerThread' "$widget_helper"
+          ! grep -Fq 'Looper.prepare()' "$widget_helper"
+          grep -Fq 'Handler(Looper.getMainLooper())' "$widget_helper"
+          grep -Fq 'context.applicationContext' "$widget_helper"
+          echo "Dialog coroutines, greeting alarms, night greetings, and custom-font callback lifetime are hardened."
       - name: BroadcastReceiver background work must be durable
         shell: bash
         run: |

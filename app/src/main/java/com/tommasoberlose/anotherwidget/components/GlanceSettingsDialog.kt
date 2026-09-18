@@ -28,7 +28,7 @@ import org.greenrobot.eventbus.EventBus
 class GlanceSettingsDialog(val context: Activity, val provider: Constants.GlanceProviderId, private val statusCallback: (() -> Unit)?) : BottomSheetDialog(context, R.style.BottomSheetDialogTheme) {
 
     private var binding: GlanceProviderSettingsLayoutBinding = GlanceProviderSettingsLayoutBinding.inflate(LayoutInflater.from(context))
-    private val dialogScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+    private val dialogScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     private var providerToggleJob: Job? = null
 
     override fun show() {

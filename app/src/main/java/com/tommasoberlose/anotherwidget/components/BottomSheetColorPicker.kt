@@ -40,7 +40,7 @@ class BottomSheetColorPicker(
     private val hideCopyPaste: Boolean = false,
 ) : BottomSheetDialog(context, R.style.BottomSheetDialogTheme) {
 
-    private val dialogScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+    private val dialogScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     private var loadingJobs: ArrayList<Job> = ArrayList()
     private lateinit var adapter: SlimAdapter
     private var alphaDebouncing: Job? = null
