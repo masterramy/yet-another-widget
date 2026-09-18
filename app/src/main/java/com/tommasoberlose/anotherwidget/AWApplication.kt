@@ -23,7 +23,7 @@ class AWApplication : Application() {
             Preferences.weatherProvider = Constants.WeatherProvider.YR.rawValue
         }
 
-        // Historical Google Sans mode was value 1. It is retired; normalize it to
+        // Historical remote-font mode was value 1. It is retired; normalize it to
         // the default bundled typeface while preserving downloaded-font mode (2).
         if (Preferences.customFont == 1) {
             Preferences.customFont = Constants.CUSTOM_FONT_DEFAULT
