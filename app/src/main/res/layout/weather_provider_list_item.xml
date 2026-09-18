@@ -30,7 +30,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical|start"
-            android:text="@string/settings_weather_provider_open_weather"
             android:layout_gravity="center_vertical"
             android:textAlignment="viewStart"
             android:textColor="@color/colorPrimaryText"
@@ -55,8 +54,7 @@
                 android:paddingStart="6dp"
                 android:paddingEnd="6dp"
                 android:id="@+id/text2"
-                android:textAppearance="@style/TextAppearance.AppCompat.Button"
-                android:text="@string/api_key_required_message"/>
+                android:textAppearance="@style/TextAppearance.AppCompat.Button"/>
         </androidx.cardview.widget.CardView>
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
@@ -68,7 +66,6 @@
             android:letterSpacing="0"
             android:visibility="gone"
             android:fontFamily="sans-serif-medium"
-            android:text="@string/api_key_required_message"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
             app:textAllCaps="false" />
     </LinearLayout>
