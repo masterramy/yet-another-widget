@@ -49,8 +49,9 @@ object Constants {
         companion object {
             private val map = values().associateBy(WeatherProvider::rawValue)
             fun fromInt(type: Int): WeatherProvider = when (type) {
-                HERE.rawValue, ACCUWEATHER.rawValue -> YR
-                else -> map[type] ?: YR
+                WEATHER_GOV.rawValue -> WEATHER_GOV
+                YR.rawValue -> YR
+                else -> YR
             }
         }
     }

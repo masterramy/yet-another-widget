@@ -77,7 +77,7 @@ object WeatherHelper {
             Constants.WeatherProvider.HERE -> R.string.weather_provider_info_here_title
             Constants.WeatherProvider.ACCUWEATHER -> R.string.weather_provider_info_accuweather_title
             Constants.WeatherProvider.WEATHER_GOV -> R.string.weather_provider_info_weather_gov_title
-            Constants.WeatherProvider.YR -> R.string.weather_provider_info_yr_title
+            Constants.WeatherProvider.YR -> R.string.nothing
             else -> R.string.nothing
         })
     }

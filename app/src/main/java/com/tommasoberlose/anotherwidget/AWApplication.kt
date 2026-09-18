@@ -17,11 +17,19 @@ class AWApplication : Application() {
 
     private fun migrateLegacyPreferences() {
         if (
-            Preferences.weatherProvider == Constants.WeatherProvider.HERE.rawValue ||
-            Preferences.weatherProvider == Constants.WeatherProvider.ACCUWEATHER.rawValue
+            Preferences.weatherProvider != Constants.WeatherProvider.WEATHER_GOV.rawValue &&
+            Preferences.weatherProvider != Constants.WeatherProvider.YR.rawValue
         ) {
             Preferences.weatherProvider = Constants.WeatherProvider.YR.rawValue
         }
+
+        // Retired key-based weather providers no longer ship. Scrub any keys left
+        // by an upgraded historical install instead of retaining unused credentials.
+        Preferences.weatherProviderApiOpen = ""
+        Preferences.weatherProviderApiWeatherBit = ""
+        Preferences.weatherProviderApiWeatherApi = ""
+        Preferences.weatherProviderApiHere = ""
+        Preferences.weatherProviderApiAccuweather = ""
 
         // Historical remote-font mode was value 1. It is retired; normalize it to
         // the default bundled typeface while preserving downloaded-font mode (2).

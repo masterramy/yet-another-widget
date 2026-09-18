@@ -53,12 +53,6 @@
                 android:gravity="center"
                 android:textSize="24sp"
                 style="@style/AnotherWidget.Main.Title"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/weather_provider_activity_subtitle"
-                android:gravity="center"
-                style="@style/AnotherWidget.Main.Subtitle"/>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
     <RelativeLayout
