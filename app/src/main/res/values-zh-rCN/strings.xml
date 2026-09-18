@@ -130,36 +130,19 @@
     <string name="settings_weather_provider_api_key_title">天气 API 密钥</string>
     <string name="settings_weather_provider_api_key_subtitle_all_set">已正确配置天气信息来源。</string>
     <string name="settings_weather_provider_api_key_subtitle_not_set">必须配置天气信息来源。</string>
-    <string name="api_key_hint">OpenWeatherMap API 密钥</string>
     <string name="default_weather_app">Google Weather</string>
-    <string name="weather_warning">Google Awareness API 已被弃用。要在微件上显示天气，您需要从第三方来源获取 API 密钥。</string>
     <string name="settings_weather_icon_pack_title">天气图标</string>
     <string name="settings_weather_icon_pack_default">图标包 %d</string>
     <string name="settings_weather_provider_api">天气信息来源</string>
 
-    <string name="settings_weather_provider_open_weather" translatable="false">OpenWeatherMap.org</string>
-    <string name="settings_weather_provider_weatherbit" translatable="false">Weatherbit.io</string>
     <string name="settings_weather_provider_weather_api" translatable="false">WeatherAPI.com</string>
-    <string name="settings_weather_provider_here" translatable="false">HERE.com</string>
-    <string name="settings_weather_provider_accuweather" translatable="false">AccuWeather.com</string>
     <string name="settings_weather_provider_weather_gov" translatable="false">Weather.gov (USA)\nby National Weather Services</string>
-    <string name="settings_weather_provider_yr" translatable="false">YR.no/Met.no\nby Meteorologisk Institutt</string>
 
-    <string name="weather_provider_info_open_weather_title">需要 API 密钥\n来保证天气信息来源正常工作。</string>
-    <string name="weather_provider_info_weatherbit_title">该天气信息来源需要 API 密钥\n才能正常工作。</string>
     <string name="weather_provider_info_weatherapi_title">该天气信息来源需要 API 密钥\n才能正常工作。</string>
-    <string name="weather_provider_info_here_title">该天气信息来源需要 API 密钥\n才能正常工作。</string>
-    <string name="weather_provider_info_accuweather_title">该天气信息来源需要 API 密钥\n才能正常工作。</string>
     <string name="weather_provider_info_weather_gov_title">该天气信息来源\n仅在美国境内有效。</string>
-    <string name="weather_provider_info_yr_title">该天气来源仅支持\n摄氏度单位。</string>
 
-    <string name="weather_provider_info_open_weather_subtitle">前往天气来源网站、创建个人账户并将默认密钥复制粘贴到此处。</string>
-    <string name="weather_provider_info_weatherbit_subtitle">前往天气来源网站、创建个人账户并将默认密钥复制粘贴到此处。</string>
     <string name="weather_provider_info_weatherapi_subtitle">前往天气来源网站、创建个人账户并将默认密钥复制粘贴到此处。</string>
-    <string name="weather_provider_info_here_subtitle">前往天气来源网站、创建个人账户并将默认密钥复制粘贴到此处。</string>
-    <string name="weather_provider_info_accuweather_subtitle">前往天气来源网站、创建个人账户并将默认密钥复制粘贴到此处。</string>
     <string name="weather_provider_info_weather_gov_subtitle">\n</string>
-    <string name="weather_provider_info_yr_subtitle">\n</string>
 
     <string name="weather_provider_error_missing_key">您选择的天气信息来源需要 API 密钥。</string>
     <string name="weather_provider_error_wrong_location">不支持当前位置。</string>
@@ -169,11 +152,7 @@
     <string name="weather_provider_error_misconfigured">天气信息来源配置错误。</string>
     <string name="weather_provider_error_connection">网络连接错误。</string>
     <string name="weather_provider_error_generic">出错了，请检查天气信息来源设置。</string>
-    <string name="api_key_required_message">需要账户</string>
     <string name="us_only_message">仅限美国</string>
-    <string name="celsius_only_message">仅米制单位</string>
-    <string name="weather_select_a_provider">选择信息来源</string>
-    <string name="weather_provider_activity_subtitle">从列表中选择天气信息来源。\n部分来源需要注册免费个人账户，\n但它们通常也更精准。</string>
 
 
     <!-- Clock -->

@@ -130,36 +130,19 @@
     <string name="settings_weather_provider_api_key_title">Klucz API dostawcy pogody</string>
     <string name="settings_weather_provider_api_key_subtitle_all_set">Dostawca pogody jest poprawnie skonfigurowany.</string>
     <string name="settings_weather_provider_api_key_subtitle_not_set"> Należy skonfigurować dostawcę pogody.</string>
-    <string name="api_key_hint">Klucz API OpenWeatherMap</string>
     <string name="default_weather_app">Google Weather</string>
-    <string name="weather_warning">Google Awareness API został wycofany. Aby wyświetlać pogodę w widgecie, wymagane jest teraz posiadanie klucza API od zewnętrznego dostawcy.</string>
     <string name="settings_weather_icon_pack_title">Paczka ikon</string>
     <string name="settings_weather_icon_pack_default">Paczka ikon %d</string>
     <string name="settings_weather_provider_api">Dostawca pogody</string>
 
-    <string name="settings_weather_provider_open_weather" translatable="false">OpenWeatherMap.org</string>
-    <string name="settings_weather_provider_weatherbit" translatable="false">Weatherbit.io</string>
     <string name="settings_weather_provider_weather_api" translatable="false">WeatherAPI.com</string>
-    <string name="settings_weather_provider_here" translatable="false">HERE.com</string>
-    <string name="settings_weather_provider_accuweather" translatable="false">AccuWeather.com</string>
     <string name="settings_weather_provider_weather_gov" translatable="false">Weather.gov (USA)\nby National Weather Services</string>
-    <string name="settings_weather_provider_yr" translatable="false">YR.no/Met.no\nby Meteorologisk Institutt</string>
 
-    <string name="weather_provider_info_open_weather_title">Ten dostawca pogody potrzebuje \nklucza API do poprawnego działania.</string>
-    <string name="weather_provider_info_weatherbit_title">Ten dostawca pogody potrzebuje \nklucza API do poprawnego działania.</string>
     <string name="weather_provider_info_weatherapi_title">Ten dostawca pogody potrzebuje \nklucza API do poprawnego działania.</string>
-    <string name="weather_provider_info_here_title">Ten dostawca pogody potrzebuje \nklucza API do poprawnego działania.</string>
-    <string name="weather_provider_info_accuweather_title">Ten dostawca pogody potrzebuje \nklucza API do poprawnego działania.</string>
     <string name="weather_provider_info_weather_gov_title">Ten dostawcs pogody działa tylko\ndla USA.</string>
-    <string name="weather_provider_info_yr_title">Ten dostawca pogody zezwala tylko\nna stopnie Celsjusza.</string>
 
-    <string name="weather_provider_info_open_weather_subtitle">Otwórz stronę dostawcy, stwórz konto i skopiuj domyślny klucz API tutaj.</string>
-    <string name="weather_provider_info_weatherbit_subtitle">Otwórz stronę dostawcy, stwórz konto i skopiuj domyślny klucz API tutaj.</string>
     <string name="weather_provider_info_weatherapi_subtitle">Otwórz stronę dostawcy, stwórz konto i skopiuj domyślny klucz API tutaj.</string>
-    <string name="weather_provider_info_here_subtitle">Otwórz stronę dostawcy, stwórz konto i skopiuj domyślny klucz API tutaj.</string>
-    <string name="weather_provider_info_accuweather_subtitle">Otwórz stronę dostawcy, stwórz konto i skopiuj domyślny klucz API tutaj.</string>
     <string name="weather_provider_info_weather_gov_subtitle">\n</string>
-    <string name="weather_provider_info_yr_subtitle">\n</string>
 
     <string name="weather_provider_error_missing_key">Dostawca pogody, którego wybrałeś wymaga klucza API.</string>
     <string name="weather_provider_error_wrong_location">Aktualna lokalizacja nie jest wspierana.</string>
@@ -169,11 +152,7 @@
     <string name="weather_provider_error_misconfigured">Dostawca pogody jest źle skonfigurowany.</string>
     <string name="weather_provider_error_connection">Błąd połączenia.</string>
     <string name="weather_provider_error_generic">Coś poszło nie tak, sprawdź konfigurację dostawcy pogody.</string>
-    <string name="api_key_required_message">Wymagane konto</string>
     <string name="us_only_message">Tylko USA</string>
-    <string name="celsius_only_message">Tylko jednostki metryczne</string>
-    <string name="weather_select_a_provider">Wybierz dostawcę</string>
-    <string name="weather_provider_activity_subtitle">Wybierz dostawcę pogody z listy.\nNiektóre mogą wymagać darmowego konta,\nale zazwyczaj są dokładniejsze.</string>
 
 
     <!-- Clock -->

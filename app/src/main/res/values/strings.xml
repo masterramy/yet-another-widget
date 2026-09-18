@@ -135,39 +135,22 @@
     <string name="settings_weather_provider_api_key_title">Weather API key</string>
     <string name="settings_weather_provider_api_key_subtitle_all_set">The weather provider is configured correctly.</string>
     <string name="settings_weather_provider_api_key_subtitle_not_set">The weather provider must be configured.</string>
-    <string name="api_key_hint">OpenWeatherMap API Key</string>
     <string name="default_weather_app">Google Weather</string>
-    <string name="weather_warning">Google Awareness API is now deprecated. It is now required to have an API key from a third-party provider to show weather in the widget.</string>
     <string name="settings_weather_icon_pack_title">Icon pack</string>
     <string name="settings_weather_icon_pack_default">Icon pack %d</string>
     <string name="settings_weather_provider_api">Weather provider</string>
 
-    <string name="settings_weather_provider_open_weather" translatable="false">OpenWeatherMap.org</string>
-    <string name="settings_weather_provider_weatherbit" translatable="false">Weatherbit.io</string>
     <string name="settings_weather_provider_weather_api" translatable="false">WeatherAPI.com</string>
     <string name="weatherapi_provider_list_credit" translatable="false">Account + personal API key required • Weather data by WeatherAPI.com</string>
     <string name="weatherapi_widget_credit" translatable="false"> · WeatherAPI.com</string>
     <string name="weatherapi_compliance_notice" translatable="false">Weather data by WeatherAPI.com — https://www.weatherapi.com/\nWeather information is probabilistic and for general information only. Conditions can differ by place and time. Do not rely on this data alone for aviation, marine navigation, emergency planning, personal safety, or other safety-critical decisions. Consult official meteorological services and relevant authorities when accuracy is critical.</string>
-    <string name="settings_weather_provider_here" translatable="false">HERE.com</string>
-    <string name="settings_weather_provider_accuweather" translatable="false">AccuWeather.com</string>
     <string name="settings_weather_provider_weather_gov" translatable="false">Weather.gov (USA)\nby National Weather Services</string>
-    <string name="settings_weather_provider_yr" translatable="false">MET Norway\nLocationforecast</string>
 
-    <string name="weather_provider_info_open_weather_title">This weather provider needs\nan API key to work correctly.</string>
-    <string name="weather_provider_info_weatherbit_title">This weather provider needs\nan API key to work correctly.</string>
     <string name="weather_provider_info_weatherapi_title">This weather provider needs\nan API key to work correctly.</string>
-    <string name="weather_provider_info_here_title">This weather provider needs\nan API key to work correctly.</string>
-    <string name="weather_provider_info_accuweather_title">This weather provider needs\nan API key to work correctly.</string>
     <string name="weather_provider_info_weather_gov_title">This weather provider only works\nfor locations inside the USA.</string>
-    <string name="weather_provider_info_yr_title">This weather provider only allows\nCelsius temperature unit.</string>
 
-    <string name="weather_provider_info_open_weather_subtitle">Open the provider website, create a personal account and copy the default key here.</string>
-    <string name="weather_provider_info_weatherbit_subtitle">Open the provider website, create a personal account and copy the default key here.</string>
     <string name="weather_provider_info_weatherapi_subtitle">Open the provider website, create a personal account and copy the default key here.</string>
-    <string name="weather_provider_info_here_subtitle">Open the provider website, create a personal account and copy the default key here.</string>
-    <string name="weather_provider_info_accuweather_subtitle">Open the provider website, create a personal account and copy the default key here.</string>
     <string name="weather_provider_info_weather_gov_subtitle">\n</string>
-    <string name="weather_provider_info_yr_subtitle">Weather data provided by MET Norway Locationforecast.</string>
 
     <string name="weather_provider_error_missing_key">The weather provider that you\'ve selected requires an API key.</string>
     <string name="weather_provider_error_wrong_location">The current location is not supported.</string>
@@ -177,11 +160,7 @@
     <string name="weather_provider_error_misconfigured">The weather provider is wrongly configured.</string>
     <string name="weather_provider_error_connection">Connection error.</string>
     <string name="weather_provider_error_generic">Something went wrong, check the weather provider config.</string>
-    <string name="api_key_required_message">Account required</string>
     <string name="us_only_message">USA Only</string>
-    <string name="celsius_only_message">Metric Unit Only</string>
-    <string name="weather_select_a_provider">Select a provider</string>
-    <string name="weather_provider_activity_subtitle">Select a weather provider from the list.\nA few providers need a free personal account,\nbut they are usually more accurate.</string>
 
 
     <!-- Clock -->

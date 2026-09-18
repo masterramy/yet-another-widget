@@ -103,9 +103,7 @@
     <string name="settings_weather_provider_api_key_title">Kľúč k API pre počasie</string>
     <string name="settings_weather_provider_api_key_subtitle_all_set">Poskytovateľ počasia je správne nakonfigurovaný</string>
     <string name="settings_weather_provider_api_key_subtitle_not_set">Poskytovateľ počasia musí byť nakonfigurovaný</string>
-    <string name="api_key_hint">Kľúč k OpenWeather API</string>
     <string name="default_weather_app">Počasie Google</string>
-    <string name="weather_warning">Počasie Google Awareness je zastaralé. Pre zobrazovanie počasia vo widgete je vyžadovaný kľúč k OpenWeather API.</string>
     <string name="api_key_title_1">Vytvorte si OpenWeather účet</string>
     <string name="api_key_subtitle_1">Zaregistrujte sa zdarma na OpenWeather. Bude to trvať len pár minút.</string>
     <string name="api_key_title_2">Skopírujte kľúč k API</string>

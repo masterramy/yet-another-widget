@@ -90,9 +90,7 @@
     <string name="settings_weather_provider_api_key_title">Ключ для API погоды</string>
     <string name="settings_weather_provider_api_key_subtitle_all_set">Источник данных погоды указан верно</string>
     <string name="settings_weather_provider_api_key_subtitle_not_set">Источник данных погоды не настроен</string>
-    <string name="api_key_hint">Ключ API OpenWeather</string>
     <string name="default_weather_app">Google Погода</string>
-    <string name="weather_warning">Погода Google Awareness устарела. Для отображения погоды в виджете требуется API ключ OpenWeather.</string>
     <string name="api_key_title_1">Создайте аккаунт OpenWeather</string>
     <string name="api_key_subtitle_1">Создайте бесплатный аккаунт  OpenWeather. Это займёт не более нескольких минут.</string>
     <string name="api_key_title_2">Скопируйте ключ API</string>
