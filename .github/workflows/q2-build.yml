@@ -152,6 +152,18 @@ jobs:
           grep -Fq 'UpdateWeatherWorker.enqueue(context)' "$receivers/WeatherReceiver.kt"
           grep -Fq 'UpdateWeatherWorker.enqueue(context)' "$receivers/UpdatesReceiver.kt"
           echo "BroadcastReceiver weather refresh is routed through durable WorkManager work."
+      - name: Legacy provider and retired-font preferences must migrate durably
+        shell: bash
+        run: |
+          set -euo pipefail
+          app=app/src/main/java/com/tommasoberlose/anotherwidget/AWApplication.kt
+          grep -Fq 'migrateLegacyPreferences()' "$app"
+          grep -Fq 'Preferences.weatherProvider == Constants.WeatherProvider.HERE.rawValue' "$app"
+          grep -Fq 'Preferences.weatherProvider == Constants.WeatherProvider.ACCUWEATHER.rawValue' "$app"
+          grep -Fq 'Preferences.weatherProvider = Constants.WeatherProvider.YR.rawValue' "$app"
+          grep -Fq 'if (Preferences.customFont == 1)' "$app"
+          grep -Fq 'Preferences.customFont = Constants.CUSTOM_FONT_DEFAULT' "$app"
+          echo "Legacy hidden weather providers and retired Google Sans preference normalize at startup."
       - name: Historical network identity must be absent
         shell: bash
         run: |
@@ -189,10 +201,14 @@ jobs:
           grep -Fq 'FOREGROUND_SERVICE_TYPE_LOCATION' "$service"
           grep -Fq 'private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)' "$service"
           grep -Fq 'job = serviceScope.launch' "$service"
+          grep -Fq 'suspendCancellableCoroutine<android.location.Location?>' "$service"
+          grep -Fq 'if (!continuation.isActive) return@addOnCompleteListener' "$service"
+          grep -Fq 'continuation.resume(if (task.isSuccessful) task.result else null)' "$service"
           grep -Fq 'serviceScope.cancel()' "$service"
           grep -Fq 'stopSelf(startId)' "$service"
           ! grep -Fq 'GlobalScope' "$service"
           ! grep -Fq 'CoroutineScope(Dispatchers.IO)' "$service"
+          ! grep -Fq 'job?.cancel()' "$service"
           grep -Fq 'return START_NOT_STICKY' "$service"
           ! grep -Fq 'return START_STICKY' "$service"
           grep -Fq 'PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE' "$service"

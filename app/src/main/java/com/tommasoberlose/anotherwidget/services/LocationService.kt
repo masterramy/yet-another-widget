@@ -15,6 +15,7 @@ import com.tommasoberlose.anotherwidget.network.WeatherNetworkApi
 import com.tommasoberlose.anotherwidget.ui.activities.MainActivity
 import com.tommasoberlose.anotherwidget.ui.fragments.MainFragment
 import kotlinx.coroutines.*
+import kotlin.coroutines.resume
 import org.greenrobot.eventbus.EventBus
 
 class LocationService : Service() {
@@ -40,21 +41,23 @@ class LocationService : Service() {
                     Manifest.permission.ACCESS_FINE_LOCATION
                 ) == PackageManager.PERMISSION_GRANTED
             ) {
-                LocationServices.getFusedLocationProviderClient(this@LocationService).lastLocation.addOnCompleteListener { task ->
-                    job?.cancel()
-                    job = serviceScope.launch {
-                        if (task.isSuccessful) {
-                            task.result?.let { location ->
-                                Preferences.customLocationLat = location.latitude.toString()
-                                Preferences.customLocationLon = location.longitude.toString()
-                            }
+                val location = suspendCancellableCoroutine<android.location.Location?> { continuation ->
+                    LocationServices.getFusedLocationProviderClient(this@LocationService)
+                        .lastLocation
+                        .addOnCompleteListener { task ->
+                            if (!continuation.isActive) return@addOnCompleteListener
+                            continuation.resume(if (task.isSuccessful) task.result else null)
                         }
-
-                        WeatherNetworkApi(this@LocationService).updateWeather()
-                        EventBus.getDefault().post(MainFragment.UpdateUiMessageEvent())
-                        stopSelf(startId)
-                    }
                 }
+
+                location?.let {
+                    Preferences.customLocationLat = it.latitude.toString()
+                    Preferences.customLocationLon = it.longitude.toString()
+                }
+
+                WeatherNetworkApi(this@LocationService).updateWeather()
+                EventBus.getDefault().post(MainFragment.UpdateUiMessageEvent())
+                stopSelf(startId)
             } else {
                 stopSelf(startId)
             }
