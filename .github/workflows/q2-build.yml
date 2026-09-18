@@ -170,13 +170,20 @@ jobs:
         run: |
           set -euo pipefail
           app=app/src/main/java/com/tommasoberlose/anotherwidget/AWApplication.kt
+          constants=app/src/main/java/com/tommasoberlose/anotherwidget/global/Constants.kt
           grep -Fq 'migrateLegacyPreferences()' "$app"
-          grep -Fq 'Preferences.weatherProvider == Constants.WeatherProvider.HERE.rawValue' "$app"
-          grep -Fq 'Preferences.weatherProvider == Constants.WeatherProvider.ACCUWEATHER.rawValue' "$app"
+          grep -Fq 'Preferences.weatherProvider != Constants.WeatherProvider.WEATHER_GOV.rawValue' "$app"
+          grep -Fq 'Preferences.weatherProvider != Constants.WeatherProvider.YR.rawValue' "$app"
           grep -Fq 'Preferences.weatherProvider = Constants.WeatherProvider.YR.rawValue' "$app"
+          grep -Fq 'WEATHER_GOV.rawValue -> WEATHER_GOV' "$constants"
+          grep -Fq 'YR.rawValue -> YR' "$constants"
+          grep -Fq 'else -> YR' "$constants"
+          for key in weatherProviderApiOpen weatherProviderApiWeatherBit weatherProviderApiWeatherApi weatherProviderApiHere weatherProviderApiAccuweather; do
+            grep -Fq "Preferences.$key = \"\"" "$app"
+          done
           grep -Fq 'if (Preferences.customFont == 1)' "$app"
           grep -Fq 'Preferences.customFont = Constants.CUSTOM_FONT_DEFAULT' "$app"
-          echo "Legacy hidden weather providers and retired Google Sans preference normalize at startup."
+          echo "All retired weather-provider selections/keys and retired font preference normalize durably at startup."
       - name: External source links must use HTTPS and current project ownership
         shell: bash
         run: |
