@@ -136,7 +136,7 @@ jobs:
             exit 1
           fi
           echo "Google Sans source residue absent."
-      - name: Location foreground-service safety contract
+      - name: Location foreground-service and lifecycle ownership contract
         shell: bash
         run: |
           set -euo pipefail
@@ -147,13 +147,19 @@ jobs:
           test "$(grep -c 'android.permission.FOREGROUND_SERVICE_LOCATION' "$manifest")" = "1"
           grep -Fq 'android:foregroundServiceType="location"' "$manifest"
           grep -Fq 'FOREGROUND_SERVICE_TYPE_LOCATION' "$service"
+          grep -Fq 'private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)' "$service"
+          grep -Fq 'job = serviceScope.launch' "$service"
+          grep -Fq 'serviceScope.cancel()' "$service"
+          grep -Fq 'stopSelf(startId)' "$service"
+          ! grep -Fq 'GlobalScope' "$service"
+          ! grep -Fq 'CoroutineScope(Dispatchers.IO)' "$service"
           grep -Fq 'return START_NOT_STICKY' "$service"
           ! grep -Fq 'return START_STICKY' "$service"
           grep -Fq 'PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE' "$service"
           grep -Fq 'context is Activity && context.checkGrantedPermission' "$helper"
           grep -Fq 'Preferences.customLocationLat != "" && Preferences.customLocationLon != ""' "$helper"
           grep -Fq 'LocationService.requestNewLocation(this@CustomLocationActivity)' "$chooser"
-          echo "Location foreground-service safety contract present."
+          echo "Location foreground-service and lifecycle ownership contract present."
       - name: Local preference backup must be disabled
         shell: bash
         run: |
