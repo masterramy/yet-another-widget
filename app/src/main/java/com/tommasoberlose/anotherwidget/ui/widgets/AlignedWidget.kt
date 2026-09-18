@@ -440,6 +440,10 @@ class AlignedWidget(val context: Context, val rightAligned: Boolean = false) {
 
                 bindingView.weatherDateLineTemperature.text = currentTemp
                 bindingView.weatherSubLineTemperature.text = currentTemp
+                val showWeatherApiCredit =
+                    Constants.WeatherProvider.fromInt(Preferences.weatherProvider) == Constants.WeatherProvider.WEATHER_API
+                bindingView.weatherDateLineCredit.isVisible = showWeatherApiCredit
+                bindingView.weatherSubLineCredit.isVisible = showWeatherApiCredit
 
                 if (GlanceProviderHelper.showGlanceProviders(context)) {
                     bindingView.weatherSubLine.isVisible = false
@@ -746,6 +750,7 @@ class AlignedWidget(val context: Context, val rightAligned: Boolean = false) {
             listOf<TextView>(
                 bindingView.date,
                 bindingView.weatherDateLineTemperature,
+                bindingView.weatherDateLineCredit,
                 bindingView.nextEvent,
                 bindingView.nextEventDifferenceTime,
             ).forEach {
@@ -768,7 +773,12 @@ class AlignedWidget(val context: Context, val rightAligned: Boolean = false) {
                         .toFloat()) / 100
             }
 
-            listOf<TextView>(bindingView.subLineText, bindingView.weatherSubLineDivider, bindingView.weatherSubLineTemperature).forEach {
+            listOf<TextView>(
+                bindingView.subLineText,
+                bindingView.weatherSubLineDivider,
+                bindingView.weatherSubLineTemperature,
+                bindingView.weatherSubLineCredit
+            ).forEach {
                 it.setTextColor(ColorHelper.getSecondaryFontColor(context.applicationContext.isDarkTheme()))
             }
 
@@ -788,11 +798,13 @@ class AlignedWidget(val context: Context, val rightAligned: Boolean = false) {
             listOf<Pair<TextView, Float>>(
                 bindingView.date to Preferences.textMainSize,
                 bindingView.weatherDateLineTemperature to ((Preferences.textMainSize + Preferences.textSecondSize) / 2),
+                bindingView.weatherDateLineCredit to maxOf(9f, Preferences.textMainSize * 0.42f),
                 bindingView.nextEvent to Preferences.textMainSize,
                 bindingView.nextEventDifferenceTime to Preferences.textMainSize,
                 bindingView.subLineText to Preferences.textSecondSize,
                 bindingView.weatherSubLineDivider to (Preferences.textSecondSize - 2),
                 bindingView.weatherSubLineTemperature to Preferences.textSecondSize,
+                bindingView.weatherSubLineCredit to maxOf(9f, Preferences.textSecondSize * 0.55f),
             ).forEach {
                 it.first.setTextSize(TypedValue.COMPLEX_UNIT_SP, it.second)
             }

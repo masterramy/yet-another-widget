@@ -68,6 +68,15 @@
                     android:maxLines="1"
                     android:includeFontPadding="false"
                     android:id="@+id/weather_date_line_temperature"/>
+                <TextView
+                    android:id="@+id/weather_date_line_credit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:includeFontPadding="false"
+                    android:text="@string/weatherapi_widget_credit"
+                    android:visibility="gone"
+                    style="@style/AnotherWidget.Widget.Subtitle"/>
             </LinearLayout>
         </LinearLayout>
 
@@ -229,6 +238,15 @@
                     android:maxLines="1"
                     android:includeFontPadding="false"
                     android:id="@+id/weather_sub_line_temperature"/>
+                <TextView
+                    android:id="@+id/weather_sub_line_credit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:includeFontPadding="false"
+                    android:text="@string/weatherapi_widget_credit"
+                    android:visibility="gone"
+                    style="@style/AnotherWidget.Widget.Subtitle"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

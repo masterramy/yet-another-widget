@@ -146,6 +146,7 @@
     <string name="settings_weather_provider_weatherbit" translatable="false">Weatherbit.io</string>
     <string name="settings_weather_provider_weather_api" translatable="false">WeatherAPI.com</string>
     <string name="weatherapi_provider_list_credit" translatable="false">Account + personal API key required • Weather data by WeatherAPI.com</string>
+    <string name="weatherapi_widget_credit" translatable="false"> · WeatherAPI.com</string>
     <string name="weatherapi_compliance_notice" translatable="false">Weather data by WeatherAPI.com — https://www.weatherapi.com/\nWeather information is probabilistic and for general information only. Conditions can differ by place and time. Do not rely on this data alone for aviation, marine navigation, emergency planning, personal safety, or other safety-critical decisions. Consult official meteorological services and relevant authorities when accuracy is critical.</string>
     <string name="settings_weather_provider_here" translatable="false">HERE.com</string>
     <string name="settings_weather_provider_accuweather" translatable="false">AccuWeather.com</string>
