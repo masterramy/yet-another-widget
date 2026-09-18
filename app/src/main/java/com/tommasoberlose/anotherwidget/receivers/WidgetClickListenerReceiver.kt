@@ -23,7 +23,7 @@ class WidgetClickListenerReceiver : BroadcastReceiver() {
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                val uri = Uri.parse("http://www.google.com/search?q=weather")
+                val uri = Uri.parse("https://www.google.com/search?q=weather")
                 val i = Intent(Intent.ACTION_VIEW, uri)
                 i.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 try {
