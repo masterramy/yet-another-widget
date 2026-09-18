@@ -131,7 +131,6 @@
 
     <string name="weather_provider_info_weatherapi_subtitle">Apri il sito del provider, crea un account gratuito e personale.\nCerca la chiave API di default nelle impostazioni e copiala qui.</string>
     <string name="weather_provider_info_weather_gov_subtitle" />
-    <string name="weather_provider_info_yr_subtitle" />
 
     <string name="weather_provider_error_missing_key">Il provider meteo che hai selezionato\nnecessita di una chiave API.</string>
     <string name="weather_provider_error_wrong_location">La posizione attuale non è supportata da questo provider.</string>
