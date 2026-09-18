@@ -1,65 +1,49 @@
-**Privacy Policy**
+# Privacy Policy — Yet Another Widget (working identity)
 
-Tommaso Berlose built the Another Widget app as an Open Source app. This SERVICE is provided by Tommaso Berlose at no cost and is intended for use as is.
+Last updated: September 18, 2026
 
-This page is used to inform visitors regarding my policies with the collection, use, and disclosure of Personal Information if anyone decided to use my Service.
+This document describes the current pre-release restoration candidate. Before public distribution, the final app name, publisher identity, contact details, and stable public policy URL must be synchronized with the actual Google Play listing.
 
-If you choose to use my Service, then you agree to the collection and use of information in relation to this policy. The Personal Information that I collect is used for providing and improving the Service. I will not use or share your information with anyone except as described in this Privacy Policy.
+## Summary
 
-The terms used in this Privacy Policy have the same meanings as in our Terms and Conditions, which is accessible at Another Widget unless otherwise defined in this Privacy Policy.
+The app does not contain advertising, analytics, Firebase Crashlytics, or an app-owned user-account/backend service. Most information used by the widget stays on the device. Data is sent off-device only when needed for a feature the user enables, such as requesting weather from a selected weather provider or opening an external link.
 
-**Information Collection and Use**
+## Calendar information
 
-For a better experience, while using our Service, I may require you to provide us with certain personally identifiable information, including but not limited to Location data. The information that I request will be retained on your device and is not collected by me in any way.
+If the user enables calendar events and grants calendar permission, the app reads upcoming calendar data through Android's CalendarContract APIs. Event data used by the widget, including titles, times, and locations, may be cached locally on the device. The app does not send calendar contents to an app-owned server.
 
-The app does use third party services that may collect information used to identify you.
+## Location and weather
 
-Link to privacy policy of third party service providers used by the app
+If the user chooses device geolocation for weather and grants location permission, the app requests **approximate (coarse) location only while an app Activity is visible**. The last latitude and longitude are stored locally so scheduled weather refreshes can reuse them without reacquiring device location while the app is closed or not in use.
 
-*   [Google Play Services](https://www.google.com/policies/privacy/)
-*   [Firebase Crashlytics](https://firebase.google.com/support/privacy/)
+Weather requests send the saved location to the weather provider selected by the user. Depending on that choice, the provider may be OpenWeatherMap, Weatherbit, WeatherAPI.com, the U.S. National Weather Service (weather.gov), or MET Norway. Providers that require an API key receive the key supplied by the user as part of the weather request. Those third parties process the request under their own terms and privacy practices.
 
-**Log Data**
+When the user searches for a custom place, the app uses Android's Geocoder implementation. The implementation and any network processing behind it can vary by device and Android service provider.
 
-I want to inform you that whenever you use my Service, in a case of an error in the app I collect data and information (through third party products) on your phone called Log Data. This Log Data may include information such as your device Internet Protocol (“IP”) address, device name, operating system version, the configuration of the app when utilizing my Service, the time and date of your use of the Service, and other statistics.
+## Notifications and media
 
-**Cookies**
+If the user explicitly enables Android notification-listener access, the app can read notification metadata needed for the optional notification and current-media widget features. The app stores only the metadata needed to render those enabled features, such as a notification title/package or current media title/artist/album, and does not send that information to an app-owned server.
 
-Cookies are files with a small amount of data that are commonly used as anonymous unique identifiers. These are sent to your browser from the websites that you visit and are stored on your device's internal memory.
+## Wallpaper preview
 
-This Service does not use these “cookies” explicitly. However, the app may use third party code and libraries that use “cookies” to collect information and improve their services. You have the option to either accept or refuse these cookies and know when a cookie is being sent to your device. If you choose to refuse our cookies, you may not be able to use some portions of this Service.
+On Android 12L and earlier only, the optional in-app widget preview can request legacy storage access to show the current wallpaper behind the preview. This feature is disabled on Android 13 and later. Wallpaper content is used locally and is not uploaded by the app.
 
-**Service Providers**
+## Local storage and retention
 
-I may employ third-party companies and individuals due to the following reasons:
+Preferences, user-supplied weather API keys, saved weather coordinates, widget configuration, cached calendar events, and enabled notification/media metadata are stored locally in the app's private data. Android backup is disabled for the application. Data remains until it is replaced, cleared by app behavior, removed through Android app-data controls, or deleted when the app is uninstalled.
 
-*   To facilitate our Service;
-*   To provide the Service on our behalf;
-*   To perform Service-related services; or
-*   To assist us in analyzing how our Service is used.
+## Internet access and external services
 
-I want to inform users of this Service that these third parties have access to your Personal Information. The reason is to perform the tasks assigned to them on our behalf. However, they are obligated not to disclose or use the information for any other purpose.
+The app uses internet access for enabled weather providers and for user-initiated external links such as project feedback or provider documentation. The project does not operate its own analytics or telemetry endpoint.
 
-**Security**
+Third-party services can receive ordinary network metadata such as IP address when the device communicates with them. Their handling of that information is governed by their own privacy policies.
 
-I value your trust in providing us your Personal Information, thus we are striving to use commercially acceptable means of protecting it. But remember that no method of transmission over the internet, or method of electronic storage is 100% secure and reliable, and I cannot guarantee its absolute security.
+## Sale of data
 
-**Links to Other Sites**
+The app does not sell personal data and does not use personal or sensitive data for advertising.
 
-This Service may contain links to other sites. If you click on a third-party link, you will be directed to that site. Note that these external sites are not operated by me. Therefore, I strongly advise you to review the Privacy Policy of these websites. I have no control over and assume no responsibility for the content, privacy policies, or practices of any third-party sites or services.
+## Changes and contact
 
-**Children’s Privacy**
+This policy will be updated if the app's data practices or enabled third-party services change. Questions about the current restoration source can be raised through the issue tracker at:
 
-These Services do not address anyone under the age of 13. I do not knowingly collect personally identifiable information from children under 13\. In the case I discover that a child under 13 has provided me with personal information, I immediately delete this from our servers. If you are a parent or guardian and you are aware that your child has provided us with personal information, please contact me so that I will be able to do necessary actions.
-
-**Changes to This Privacy Policy**
-
-I may update our Privacy Policy from time to time. Thus, you are advised to review this page periodically for any changes. I will notify you of any changes by posting the new Privacy Policy on this page.
-
-This policy is effective as of 2020-10-02
-
-**Contact Us**
-
-If you have any questions or suggestions about my Privacy Policy, do not hesitate to contact me at tommaso.berlose@gmail.com.
-
-This privacy policy page was created at [privacypolicytemplate.net](https://privacypolicytemplate.net) and modified/generated by [App Privacy Policy Generator](https://app-privacy-policy-generator.firebaseapp.com/)
+https://github.com/masterramy/yet-another-widget/issues

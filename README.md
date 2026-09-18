@@ -1,39 +1,25 @@
+# Yet Another Widget
 
-<img src="hero.png"/>
+**Yet Another Widget** is the working identity for an independent, pre-release restoration of the MIT-licensed Android project **Another Widget**.
 
-## It’s time to say goodbye
+The goal is a simple, reliable home-screen glance widget for date/time, calendar events, weather, battery, notifications, and media context on current Android versions. This repository is not an official continuation of the historical app and is not affiliated with or endorsed by its original developer.
 
-I'd like to thank everyone who's downloaded, used, and contributed to Another Widget! I've truly appreciated the love and support this project has received.
+## Release status
 
-This repository will be archived. This means the code will remain available for reference, but there won't be any further development or official support.
+This project is still in release-integration and certification work. No production Google Play release is authorized from this branch. The final public app name, Android application ID, launcher icon, signing identity, store listing, and public privacy-policy URL must be settled before the release candidate is frozen.
 
-Thanks again for being part of the Another Widget community!
+The restoration intentionally minimizes permissions and inherited services. Current work includes API-36 compatibility, supported CalendarContract and WorkManager paths, foreground-only coarse location for optional weather geolocation, removal of obsolete Google Fit/Billing/remote-font paths, and publication hardening.
 
-With gratitude,  
-Tommaso Berlose - The Another Widget Developer
+## Open-source provenance
 
+This restoration is based on **Another Widget** by Tommaso Berlose, released under the MIT License. The original copyright and license terms remain preserved in [LICENSE](LICENSE).
 
-Another Widget
-========
+Additional third-party provenance and notices are recorded in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
-Another Widget intelligently summarizes the information you need most.
-Watch the next events, the weather, and the information you want in an intuitive and elegant way. (Nope, reminders cannot be displayed because it's not allowed.)
+## Contributions and feedback
 
-While respecting the design of the application, there is a great opportunity to customize the information displayed and widget components.
-Also, as much as possible, there are always updates and new features in the short run.
+Use this repository's issue tracker for restoration bugs and feature discussion. Translation contributions can be prepared against the current English strings in `app/src/main/res/values/strings.xml`.
 
-Help me developing with feedback and support me on how you can.
-<div style="text-align:center"><a href='https://play.google.com/store/apps/details?id=com.tommasoberlose.anotherwidget&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' height='100px' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a></div>
+## Coordination
 
-
-Help with translations
--------
-
-Hey! You could view the file strings.xml ([here](https://github.com/tommasoberlose/another-widget/blob/master/app/src/main/res/values/strings.xml)) that contains the English version of the app strings.
-You have to copy the file, create a copy of it inside the folder values-[LANGUAGE-SUFFIX] with the translated strings and create a pull request to submit your changes.
-
-License
--------
-Copyright (C) 2017-2020 Tommaso Berlose (http://tommasoberlose.com)
-
-Another Widget binaries and source code can be used according to the [MIT Licence](LICENSE).
+Interactive and scheduled restoration workers must follow [docs/INTERACTIVE_WORKER_COORDINATION.md](docs/INTERACTIVE_WORKER_COORDINATION.md) before taking a source slice, so concurrent work is reconciled rather than duplicated.

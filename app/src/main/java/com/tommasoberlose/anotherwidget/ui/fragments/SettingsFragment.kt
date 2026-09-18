@@ -92,8 +92,10 @@ class SettingsFragment : Fragment() {
                 Preferences.showWallpaper &&
                 requireActivity().checkGrantedPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
         )
-        // Paid-upfront release: the legacy donation/IAP entry point is intentionally unavailable.
+        // Independent paid-upfront release: inherited ownership/legal destinations stay unavailable.
         binding.actionHelpDev.visibility = View.GONE
+        binding.actionWebsite.visibility = View.GONE
+        binding.actionPrivacyPolicy.visibility = View.GONE
 
         setupListener()
 
@@ -192,19 +194,11 @@ class SettingsFragment : Fragment() {
         }
 
         binding.actionTranslate.setOnClickListener {
-            requireActivity().openURI("https://github.com/tommasoberlose/another-widget/blob/master/app/src/main/res/values/strings.xml")
-        }
-
-        binding.actionWebsite.setOnClickListener {
-            requireActivity().openURI("https://tommasoberlose.com/")
+            requireActivity().openURI("https://github.com/masterramy/yet-another-widget/blob/main/app/src/main/res/values/strings.xml")
         }
 
         binding.actionFeedback.setOnClickListener {
-            requireActivity().openURI("https://github.com/tommasoberlose/another-widget/issues")
-        }
-
-        binding.actionPrivacyPolicy.setOnClickListener {
-            requireActivity().openURI("https://github.com/tommasoberlose/another-widget/blob/master/privacy-policy.md")
+            requireActivity().openURI("https://github.com/masterramy/yet-another-widget/issues")
         }
 
         binding.actionRefreshWidget.setOnClickListener {
