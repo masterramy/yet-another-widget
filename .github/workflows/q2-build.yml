@@ -21,7 +21,7 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
-      - uses: android-actions/setup-android@v3
+      - uses: android-actions/setup-android@v4
         with:
           packages: platform-tools
       - name: Install Android 36 SDK
@@ -76,6 +76,22 @@ jobs:
           grep -Fq 'set(' "$notification"
           grep -Fq 'timeoutIntent' "$notification"
           echo "Notification timeout uses one immutable inexact-alarm token without exact-alarm special access."
+      - name: Next-alarm refresh scheduling must be Android 12+ safe
+        shell: bash
+        run: |
+          set -euo pipefail
+          alarm=app/src/main/java/com/tommasoberlose/anotherwidget/helpers/AlarmHelper.kt
+          grep -Fq 'PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE' "$alarm"
+          grep -Fq 'cancel(operation)' "$alarm"
+          grep -Fq 'Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && canScheduleExactAlarms()' "$alarm"
+          grep -Fq 'setExact(AlarmManager.RTC, trigger, operation)' "$alarm"
+          grep -Fq 'setAndAllowWhileIdle(AlarmManager.RTC, trigger, operation)' "$alarm"
+          grep -Fq 'else -> set(AlarmManager.RTC, trigger, operation)' "$alarm"
+          if grep -n -F 'PendingIntent.getBroadcast(context, ALARM_UPDATE_ID, intent, 0)' "$alarm"; then
+            echo "ERROR: unsafe next-alarm PendingIntent flags returned" >&2
+            exit 1
+          fi
+          echo "Next-alarm refresh uses immutable PendingIntent identity and exact-if-authorized fallback scheduling."
       - name: BroadcastReceiver background work must be durable
         shell: bash
         run: |
