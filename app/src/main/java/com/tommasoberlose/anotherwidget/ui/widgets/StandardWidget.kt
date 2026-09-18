@@ -514,13 +514,13 @@ class StandardWidget(val context: Context) {
                             now.timeInMillis,
                             nextEvent.startDate
                         )
-                            .toLowerCase(Locale.getDefault())
+                            .lowercase(Locale.getDefault())
                     } else {
                         SettingsStringHelper.getAllDayEventDifferenceText(
                             context,
                             now.timeInMillis,
                             nextEvent.startDate
-                        ).toLowerCase(Locale.getDefault())
+                        ).lowercase(Locale.getDefault())
                     }
                     bindingView.nextEventDifferenceTime.text = diffTime
 
@@ -733,13 +733,13 @@ class StandardWidget(val context: Context) {
                                             now.timeInMillis,
                                             nextEvent.startDate
                                         )
-                                            .toLowerCase(Locale.getDefault())
+                                            .lowercase(Locale.getDefault())
                                     } else {
                                         SettingsStringHelper.getAllDayEventDifferenceText(
                                             context,
                                             now.timeInMillis,
                                             nextEvent.startDate
-                                        ).toLowerCase(Locale.getDefault())
+                                        ).lowercase(Locale.getDefault())
                                     }
                                 } else "").trimEnd()
                                 bindingView.subLineIcon.isVisible = true

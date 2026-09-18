@@ -124,7 +124,7 @@ class ClockFragment : Fragment() {
                     binding.clockTextColorLabel.text = getString(R.string.transparent)
                 } else {
                     binding.clockTextColorLabel.text =
-                        "#%s".format(Integer.toHexString(ColorHelper.getClockFontColor(activity?.isDarkTheme() == true))).toUpperCase()
+                        "#%s".format(Integer.toHexString(ColorHelper.getClockFontColor(activity?.isDarkTheme() == true))).uppercase()
                 }
             }
         }
@@ -135,7 +135,7 @@ class ClockFragment : Fragment() {
                     binding.clockTextColorLabel.text = getString(R.string.transparent)
                 } else {
                     binding.clockTextColorLabel.text =
-                        "#%s".format(Integer.toHexString(ColorHelper.getClockFontColor(activity?.isDarkTheme() == true))).toUpperCase()
+                        "#%s".format(Integer.toHexString(ColorHelper.getClockFontColor(activity?.isDarkTheme() == true))).uppercase()
                 }
             }
         }

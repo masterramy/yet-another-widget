@@ -224,7 +224,7 @@ fun String.getCapWordString(): String {
         var newText = ""
         for (t: String in ar) {
             newText += " "
-            newText += t.substring(0, 1).toUpperCase(Locale.getDefault())
+            newText += t.substring(0, 1).uppercase(Locale.getDefault())
             newText += t.substring(1)
         }
         newText.substring(1)
@@ -243,7 +243,7 @@ fun Intent.isDefaultSet(context: Context): Boolean {
 }
 
 fun Locale.isMetric(): Boolean {
-    return when (country.toUpperCase(this)) {
+    return when (country.uppercase(this)) {
         "US", "LR", "MM", "GB" -> false
         else -> true
     }

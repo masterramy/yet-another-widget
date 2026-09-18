@@ -137,7 +137,7 @@ object ColorHelper {
     fun Int.toHexValue(): String {
         val intValue = (this * 255 / 100).toDouble().roundToInt()
         val hexValue = intValue.toString(16)
-        return hexValue.padStart(2, '0').toUpperCase()
+        return hexValue.padStart(2, '0').uppercase()
     }
 
     fun String.toIntValue(): Int {
@@ -164,7 +164,7 @@ object ColorHelper {
                 val clip = "#%s%s".format(
                     alpha.toHexValue(),
                     if (colorString.length > 6) colorString.substring(2) else colorString
-                ).toUpperCase()
+                ).uppercase()
                 setPrimaryClip(ClipData.newPlainText(clip, clip))
                 toast(getString(R.string.color_copied))
             } catch (ex: Exception) {

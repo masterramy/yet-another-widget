@@ -485,13 +485,13 @@ class AlignedWidget(val context: Context, val rightAligned: Boolean = false) {
                             now.timeInMillis,
                             nextEvent.startDate
                         )
-                            .toLowerCase(Locale.getDefault())
+                            .lowercase(Locale.getDefault())
                     } else {
                         SettingsStringHelper.getAllDayEventDifferenceText(
                             context,
                             now.timeInMillis,
                             nextEvent.startDate
-                        ).toLowerCase(Locale.getDefault())
+                        ).lowercase(Locale.getDefault())
                     }
                     bindingView.nextEventDifferenceTime.text = diffTime
 
@@ -701,13 +701,13 @@ class AlignedWidget(val context: Context, val rightAligned: Boolean = false) {
                                             now.timeInMillis,
                                             nextEvent.startDate
                                         )
-                                            .toLowerCase(Locale.getDefault())
+                                            .lowercase(Locale.getDefault())
                                     } else {
                                         SettingsStringHelper.getAllDayEventDifferenceText(
                                             context,
                                             now.timeInMillis,
                                             nextEvent.startDate
-                                        ).toLowerCase(Locale.getDefault())
+                                        ).lowercase(Locale.getDefault())
                                     }
                                 } else "").trimEnd()
                                 bindingView.subLineIcon.isVisible = true

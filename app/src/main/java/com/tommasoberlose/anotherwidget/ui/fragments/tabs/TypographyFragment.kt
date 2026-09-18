@@ -110,7 +110,7 @@ class TypographyFragment : Fragment() {
                     binding.fontColorLabel.text = getString(R.string.transparent)
                 } else {
                     binding.fontColorLabel.text =
-                        "#%s".format(Integer.toHexString(ColorHelper.getFontColor(requireActivity().isDarkTheme()))).toUpperCase()
+                        "#%s".format(Integer.toHexString(ColorHelper.getFontColor(requireActivity().isDarkTheme()))).uppercase()
                 }
             }
         }
@@ -121,7 +121,7 @@ class TypographyFragment : Fragment() {
                     binding.secondaryFontColorLabel.text = getString(R.string.transparent)
                 } else {
                     binding.secondaryFontColorLabel.text =
-                        "#%s".format(Integer.toHexString(ColorHelper.getSecondaryFontColor(requireActivity().isDarkTheme()))).toUpperCase()
+                        "#%s".format(Integer.toHexString(ColorHelper.getSecondaryFontColor(requireActivity().isDarkTheme()))).uppercase()
                 }
             }
         }

@@ -17,7 +17,7 @@ object DateHelper {
                 getDefaultDateText(context, date)
             }
             when {
-                Preferences.isDateUppercase -> text.toUpperCase(Locale.getDefault())
+                Preferences.isDateUppercase -> text.uppercase(Locale.getDefault())
                 Preferences.isDateCapitalize -> text.getCapWordString()
                 else -> text
             }
@@ -29,7 +29,7 @@ object DateHelper {
                 DateUtils.formatDateTime(context, date.timeInMillis, flags)
             )
             when {
-                Preferences.isDateUppercase -> text.toUpperCase(Locale.getDefault())
+                Preferences.isDateUppercase -> text.uppercase(Locale.getDefault())
                 Preferences.isDateCapitalize -> text.getCapWordString()
                 else -> text
             }

@@ -92,7 +92,7 @@ class CustomDateActivity : AppCompatActivity() {
                 }
 
                 if (viewModel.isDateUppercase.value == true) {
-                    text = text.toUpperCase(Locale.getDefault())
+                    text = text.uppercase(Locale.getDefault())
                 }
 
                 withContext(Dispatchers.Main) {

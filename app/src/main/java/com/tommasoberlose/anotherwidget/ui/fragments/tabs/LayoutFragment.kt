@@ -132,7 +132,7 @@ class LayoutFragment : Fragment() {
                     binding.backgroundColorLabel.text = getString(R.string.transparent)
                 } else {
                     binding.backgroundColorLabel.text =
-                        "#%s".format(Integer.toHexString(ColorHelper.getBackgroundColor(requireActivity().isDarkTheme()))).toUpperCase()
+                        "#%s".format(Integer.toHexString(ColorHelper.getBackgroundColor(requireActivity().isDarkTheme()))).uppercase()
                 }
             }
         }
