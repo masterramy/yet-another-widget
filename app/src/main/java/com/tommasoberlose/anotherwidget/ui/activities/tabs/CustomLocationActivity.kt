@@ -22,7 +22,7 @@ import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.tommasoberlose.anotherwidget.databinding.ActivityCustomLocationBinding
 import com.tommasoberlose.anotherwidget.global.Preferences
-import com.tommasoberlose.anotherwidget.services.LocationService
+import com.tommasoberlose.anotherwidget.helpers.WeatherHelper
 import com.tommasoberlose.anotherwidget.ui.viewmodels.tabs.CustomLocationViewModel
 import kotlinx.coroutines.*
 import net.idik.lib.slimadapter.SlimAdapter
@@ -119,21 +119,20 @@ class CustomLocationActivity : AppCompatActivity() {
     private fun requirePermission() {
         Dexter.withContext(this)
             .withPermissions(
-                Manifest.permission.ACCESS_FINE_LOCATION
+                Manifest.permission.ACCESS_COARSE_LOCATION
             ).withListener(object: MultiplePermissionsListener {
                 override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
                     report?.let {
                         if (report.areAllPermissionsGranted()){
-                            Preferences.bulk {
-                                remove(Preferences::customLocationLat)
-                                remove(Preferences::customLocationLon)
-                                remove(Preferences::customLocationAdd)
+                            // GPS mode is user-selected while this Activity is visible.
+                            // Keep the last saved coordinates as a fallback if the platform has
+                            // no fresh cached fix, then refresh them with coarse location only.
+                            Preferences.customLocationAdd = ""
+                            lifecycleScope.launch {
+                                WeatherHelper.updateWeather(this@CustomLocationActivity)
+                                setResult(Activity.RESULT_OK)
+                                finish()
                             }
-                            // GPS mode is user-selected here while this Activity is visible, so
-                            // start the one-shot location service before returning to settings.
-                            LocationService.requestNewLocation(this@CustomLocationActivity)
-                            setResult(Activity.RESULT_OK)
-                            finish()
                         }
                     }
                 }

@@ -135,7 +135,7 @@ class WeatherFragment : Fragment() {
     }
 
     private fun checkLocationPermission() {
-        if (requireActivity().checkGrantedPermission(Manifest.permission.ACCESS_FINE_LOCATION)) {
+        if (requireActivity().checkGrantedPermission(Manifest.permission.ACCESS_COARSE_LOCATION)) {
             binding.locationPermissionAlert.isVisible = false
             WeatherReceiver.setUpdates(requireContext())
         } else if (Preferences.showWeather && Preferences.customLocationAdd == "") {
@@ -220,7 +220,7 @@ class WeatherFragment : Fragment() {
     private fun requirePermission() {
         Dexter.withContext(requireContext())
             .withPermissions(
-                Manifest.permission.ACCESS_FINE_LOCATION
+                Manifest.permission.ACCESS_COARSE_LOCATION
             ).withListener(object: MultiplePermissionsListener {
                 override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
                     report?.let {

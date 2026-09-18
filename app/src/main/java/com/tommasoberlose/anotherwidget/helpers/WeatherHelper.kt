@@ -4,14 +4,16 @@ import android.Manifest
 import android.app.Activity
 import android.content.Context
 import com.chibatching.kotpref.Kotpref
+import com.google.android.gms.location.LocationServices
 import com.tommasoberlose.anotherwidget.R
 import com.tommasoberlose.anotherwidget.global.Constants
 import com.tommasoberlose.anotherwidget.global.Preferences
 import com.tommasoberlose.anotherwidget.network.WeatherNetworkApi
-import com.tommasoberlose.anotherwidget.services.LocationService
 import com.tommasoberlose.anotherwidget.ui.widgets.MainWidget
 import com.tommasoberlose.anotherwidget.utils.checkGrantedPermission
 import com.tommasoberlose.anotherwidget.utils.isDarkTheme
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlin.coroutines.resume
 
 
 /**
@@ -25,10 +27,24 @@ object WeatherHelper {
         val networkApi = WeatherNetworkApi(context)
         if (Preferences.customLocationAdd != "") {
             networkApi.updateWeather()
-        } else if (context is Activity && context.checkGrantedPermission(Manifest.permission.ACCESS_FINE_LOCATION)) {
-            // Refresh device coordinates only from a visible app surface. Scheduled/background
-            // refreshes reuse the last coordinates instead of starting a location FGS.
-            LocationService.requestNewLocation(context)
+        } else if (context is Activity && context.checkGrantedPermission(Manifest.permission.ACCESS_COARSE_LOCATION)) {
+            // Device coordinates are refreshed only from a visible app surface. Scheduled
+            // refreshes reuse the last saved coordinates and never request device location.
+            val location = suspendCancellableCoroutine<android.location.Location?> { continuation ->
+                LocationServices.getFusedLocationProviderClient(context)
+                    .lastLocation
+                    .addOnCompleteListener { task ->
+                        if (!continuation.isActive) return@addOnCompleteListener
+                        continuation.resume(if (task.isSuccessful) task.result else null)
+                    }
+            }
+            location?.let {
+                Preferences.customLocationLat = it.latitude.toString()
+                Preferences.customLocationLon = it.longitude.toString()
+            }
+            if (Preferences.customLocationLat != "" && Preferences.customLocationLon != "") {
+                networkApi.updateWeather()
+            }
         } else if (Preferences.customLocationLat != "" && Preferences.customLocationLon != "") {
             networkApi.updateWeather()
         }

@@ -221,34 +221,33 @@ jobs:
           test ! -e app/src/main/java/com/tommasoberlose/anotherwidget/services/EventListenerJob.kt
           ! grep -R -n -F 'JobService' app/src/main/java/com/tommasoberlose/anotherwidget             --include='*.kt' --include='*.java'
           echo "Retired legacy JobService paths are absent."
-      - name: Location foreground-service and lifecycle ownership contract
+      - name: Location access must remain coarse, foreground-only, and service-free
         shell: bash
         run: |
           set -euo pipefail
           manifest=app/src/main/AndroidManifest.xml
-          service=app/src/main/java/com/tommasoberlose/anotherwidget/services/LocationService.kt
           helper=app/src/main/java/com/tommasoberlose/anotherwidget/helpers/WeatherHelper.kt
+          weather=app/src/main/java/com/tommasoberlose/anotherwidget/ui/fragments/tabs/WeatherFragment.kt
           chooser=app/src/main/java/com/tommasoberlose/anotherwidget/ui/activities/tabs/CustomLocationActivity.kt
-          test "$(grep -c 'android.permission.FOREGROUND_SERVICE_LOCATION' "$manifest")" = "1"
-          grep -Fq 'android:foregroundServiceType="location"' "$manifest"
-          grep -Fq 'FOREGROUND_SERVICE_TYPE_LOCATION' "$service"
-          grep -Fq 'private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)' "$service"
-          grep -Fq 'job = serviceScope.launch' "$service"
-          grep -Fq 'suspendCancellableCoroutine<android.location.Location?>' "$service"
-          grep -Fq 'if (!continuation.isActive) return@addOnCompleteListener' "$service"
-          grep -Fq 'continuation.resume(if (task.isSuccessful) task.result else null)' "$service"
-          grep -Fq 'serviceScope.cancel()' "$service"
-          grep -Fq 'stopSelf(startId)' "$service"
-          ! grep -Fq 'GlobalScope' "$service"
-          ! grep -Fq 'CoroutineScope(Dispatchers.IO)' "$service"
-          ! grep -Fq 'job?.cancel()' "$service"
-          grep -Fq 'return START_NOT_STICKY' "$service"
-          ! grep -Fq 'return START_STICKY' "$service"
-          grep -Fq 'PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE' "$service"
-          grep -Fq 'context is Activity && context.checkGrantedPermission' "$helper"
+          service=app/src/main/java/com/tommasoberlose/anotherwidget/services/LocationService.kt
+          test "$(grep -c 'android.permission.ACCESS_COARSE_LOCATION' "$manifest")" = "1"
+          ! grep -Fq 'android.permission.ACCESS_FINE_LOCATION' "$manifest"
+          ! grep -Fq 'android.permission.ACCESS_BACKGROUND_LOCATION' "$manifest"
+          ! grep -Fq 'android.permission.FOREGROUND_SERVICE' "$manifest"
+          ! grep -Fq 'foregroundServiceType="location"' "$manifest"
+          test ! -e "$service"
+          ! grep -R -Fq 'Manifest.permission.ACCESS_FINE_LOCATION' app/src/main/java
+          grep -Fq 'context is Activity && context.checkGrantedPermission(Manifest.permission.ACCESS_COARSE_LOCATION)' "$helper"
+          grep -Fq 'LocationServices.getFusedLocationProviderClient(context)' "$helper"
+          grep -Fq 'suspendCancellableCoroutine<android.location.Location?>' "$helper"
+          grep -Fq 'if (!continuation.isActive) return@addOnCompleteListener' "$helper"
+          grep -Fq 'continuation.resume(if (task.isSuccessful) task.result else null)' "$helper"
           grep -Fq 'Preferences.customLocationLat != "" && Preferences.customLocationLon != ""' "$helper"
-          grep -Fq 'LocationService.requestNewLocation(this@CustomLocationActivity)' "$chooser"
-          echo "Location foreground-service and lifecycle ownership contract present."
+          grep -Fq 'Manifest.permission.ACCESS_COARSE_LOCATION' "$weather"
+          grep -Fq 'Manifest.permission.ACCESS_COARSE_LOCATION' "$chooser"
+          grep -Fq 'Preferences.customLocationAdd = ""' "$chooser"
+          ! grep -Fq 'LocationService' "$chooser"
+          echo "Weather location access is coarse-only, visible-activity initiated, and service-free."
       - name: Local preference backup must be disabled
         shell: bash
         run: |
