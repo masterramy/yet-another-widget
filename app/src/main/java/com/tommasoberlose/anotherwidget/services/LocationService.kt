@@ -2,14 +2,10 @@ package com.tommasoberlose.anotherwidget.services
 
 import android.Manifest
 import android.app.*
-import android.app.job.JobScheduler
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.location.Address
-import android.location.Geocoder
 import android.os.IBinder
-import android.util.Log
 import androidx.core.app.*
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.LocationServices
@@ -20,12 +16,10 @@ import com.tommasoberlose.anotherwidget.ui.activities.MainActivity
 import com.tommasoberlose.anotherwidget.ui.fragments.MainFragment
 import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
-import java.lang.Exception
-import java.util.*
-import kotlin.collections.ArrayList
 
 class LocationService : Service() {
 
+    private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private var job: Job? = null
 
     override fun onCreate() {
@@ -40,49 +34,39 @@ class LocationService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         job?.cancel()
-        job = GlobalScope.launch(Dispatchers.IO) {
+        job = serviceScope.launch {
             if (ActivityCompat.checkSelfPermission(
                     this@LocationService,
                     Manifest.permission.ACCESS_FINE_LOCATION
                 ) == PackageManager.PERMISSION_GRANTED
             ) {
                 LocationServices.getFusedLocationProviderClient(this@LocationService).lastLocation.addOnCompleteListener { task ->
-                    val networkApi = WeatherNetworkApi(this@LocationService)
-                    if (task.isSuccessful) {
-                        val location = task.result
-                        if (location != null) {
-                            Preferences.customLocationLat = location.latitude.toString()
-                            Preferences.customLocationLon = location.longitude.toString()
+                    job?.cancel()
+                    job = serviceScope.launch {
+                        if (task.isSuccessful) {
+                            task.result?.let { location ->
+                                Preferences.customLocationLat = location.latitude.toString()
+                                Preferences.customLocationLon = location.longitude.toString()
+                            }
                         }
 
-                        CoroutineScope(Dispatchers.IO).launch {
-                            networkApi.updateWeather()
-                            withContext(Dispatchers.Main) {
-                                stopSelf()
-                            }
-                        }
+                        WeatherNetworkApi(this@LocationService).updateWeather()
                         EventBus.getDefault().post(MainFragment.UpdateUiMessageEvent())
-                    } else {
-                        CoroutineScope(Dispatchers.IO).launch {
-                            networkApi.updateWeather()
-                            withContext(Dispatchers.Main) {
-                                stopSelf()
-                            }
-                        }
-                        EventBus.getDefault().post(MainFragment.UpdateUiMessageEvent())
+                        stopSelf(startId)
                     }
                 }
             } else {
-                stopSelf()
+                stopSelf(startId)
             }
         }
         return START_NOT_STICKY
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         job?.cancel()
+        serviceScope.cancel()
         job = null
+        super.onDestroy()
     }
 
     companion object {
