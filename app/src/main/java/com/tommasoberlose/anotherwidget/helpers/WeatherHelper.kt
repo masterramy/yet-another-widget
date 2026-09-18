@@ -86,7 +86,7 @@ object WeatherHelper {
             Constants.WeatherProvider.WEATHER_API -> "https://www.weatherapi.com/login.aspx"
             Constants.WeatherProvider.HERE -> "https://developer.here.com/login"
             Constants.WeatherProvider.ACCUWEATHER -> "https://developer.accuweather.com/user/login"
-            Constants.WeatherProvider.WEATHER_GOV -> "http://www.weather.gov/"
+            Constants.WeatherProvider.WEATHER_GOV -> "https://www.weather.gov/"
             Constants.WeatherProvider.YR -> "https://api.met.no/weatherapi/locationforecast/2.0/documentation"
             else -> ""
         }
