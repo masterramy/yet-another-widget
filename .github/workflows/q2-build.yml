@@ -534,7 +534,30 @@ jobs:
           grep -Fq 'Copyright 2014 Google, Inc. All rights reserved.' "$root/GLIDE_LICENSE.txt"
           grep -Fq 'Pinned upstream commit: `3e00f876906019ac224e29159ff1a777c4a47d4b`' "$root/THIRD_PARTY_NOTICES.md"
           grep -Fq 'play-services-location:21.0.1' "$root/THIRD_PARTY_NOTICES.md"
+          grep -Fq 'OkHttp Public Suffix List data' "$root/THIRD_PARTY_NOTICES.md"
+          grep -Fq 'Mozilla Public License 2.0' "$root/THIRD_PARTY_NOTICES.md"
           echo "Deterministic redistribution license sources are present."
+
+      - name: Dead locale-only resources must remain absent
+        shell: bash
+        run: |
+          set -euo pipefail
+          for retired in \
+            action_open_provider \
+            api_key_info_all_set \
+            api_key_subtitle_1 \
+            api_key_subtitle_2 \
+            api_key_subtitle_3 \
+            api_key_title_1 \
+            api_key_title_2 \
+            api_key_title_3 \
+            next_alarm_warning; do
+            if grep -R -n -F "name=\"$retired\"" app/src/main/res/values* --include='strings.xml'; then
+              echo "ERROR: dead locale-only resource remains: $retired" >&2
+              exit 1
+            fi
+          done
+          echo "Dead locale-only resource warnings are eliminated."
 
       - name: Q2 deterministic build
         shell: bash
@@ -555,10 +578,68 @@ jobs:
           done
           echo "Exact redistribution license bundle is present in the built APK."
 
+      - name: Unsigned release APK and AAB must compile
+        shell: bash
+        run: |
+          set -euo pipefail
+          ! grep -R -n -E 'signingConfig|signingConfigs|storeFile|keyAlias|storePassword|keyPassword' app/build.gradle gradle.properties 2>/dev/null
+          ./gradlew --no-daemon --stacktrace :app:assembleRelease :app:bundleRelease
+          apk="$(find app/build/outputs/apk/release -maxdepth 1 -type f -name '*.apk' -print -quit)"
+          aab="$(find app/build/outputs/bundle/release -maxdepth 1 -type f -name '*.aab' -print -quit)"
+          test -n "$apk"
+          test -n "$aab"
+          test "$(basename "$apk")" = "app-release-unsigned.apk"
+          test "$(basename "$aab")" = "app-release.aab"
+          if apksigner verify "$apk" >/dev/null 2>&1; then
+            echo "ERROR: release APK unexpectedly carries a signing identity" >&2
+            exit 1
+          fi
+          echo "Unsigned release APK and Play-format AAB compile without repository signing material."
+
+      - name: Release APK and AAB must preserve redistribution notices
+        shell: bash
+        run: |
+          set -euo pipefail
+          apk="$(find app/build/outputs/apk/release -maxdepth 1 -type f -name '*.apk' -print -quit)"
+          aab="$(find app/build/outputs/bundle/release -maxdepth 1 -type f -name '*.aab' -print -quit)"
+          root=app/src/main/assets/licenses
+          for file in ORIGINAL_APP_LICENSE.txt THIRD_PARTY_NOTICES.md APACHE-2.0.txt GLIDE_LICENSE.txt; do
+            expected="$(sha256sum "$root/$file" | awk '{print $1}')"
+
+            apk_path="assets/licenses/$file"
+            unzip -Z1 "$apk" | grep -Fxq "$apk_path"
+            apk_hash="$(unzip -p "$apk" "$apk_path" | sha256sum | awk '{print $1}')"
+            test "$expected" = "$apk_hash"
+
+            aab_path="base/assets/licenses/$file"
+            unzip -Z1 "$aab" | grep -Fxq "$aab_path"
+            aab_hash="$(unzip -p "$aab" "$aab_path" | sha256sum | awk '{print $1}')"
+            test "$expected" = "$aab_hash"
+          done
+          unzip -Z1 "$apk" | grep -Eq '(^|/)okhttp3/internal/publicsuffix/NOTICE
+
+          unzip -Z1 "$apk" | grep -Eq '(^|/)okhttp3/internal/publicsuffix/publicsuffixes\.gz
+
+          unzip -Z1 "$aab" | grep -Eq '(^|/)okhttp3/internal/publicsuffix/NOTICE
+
+          unzip -Z1 "$aab" | grep -Eq '(^|/)okhttp3/internal/publicsuffix/publicsuffixes\.gz
+
+          echo "Release APK/AAB preserve the deliberate license bundle and OkHttp PSL notice/data."
+
       - name: Upload debug APK
         uses: actions/upload-artifact@v7
         continue-on-error: true
         with:
           name: q2-debug-apk
           path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+
+      - name: Upload unsigned release evidence
+        uses: actions/upload-artifact@v7
+        continue-on-error: true
+        with:
+          name: q3-unsigned-release-candidate
+          path: |
+            app/build/outputs/apk/release/*.apk
+            app/build/outputs/bundle/release/*.aab
           if-no-files-found: error
