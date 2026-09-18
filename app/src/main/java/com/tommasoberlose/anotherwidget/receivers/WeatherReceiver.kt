@@ -9,9 +9,7 @@ import android.os.Build
 import com.tommasoberlose.anotherwidget.global.Actions
 import com.tommasoberlose.anotherwidget.global.Preferences
 import com.tommasoberlose.anotherwidget.helpers.WeatherHelper
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import com.tommasoberlose.anotherwidget.services.UpdateWeatherWorker
 import java.util.*
 
 class WeatherReceiver : BroadcastReceiver() {
@@ -24,7 +22,7 @@ class WeatherReceiver : BroadcastReceiver() {
             Intent.ACTION_TIME_CHANGED -> setUpdates(context)
 
             Actions.ACTION_WEATHER_UPDATE -> {
-                GlobalScope.launch(Dispatchers.IO) { WeatherHelper.updateWeather(context) }
+                UpdateWeatherWorker.enqueue(context)
             }
         }
     }
