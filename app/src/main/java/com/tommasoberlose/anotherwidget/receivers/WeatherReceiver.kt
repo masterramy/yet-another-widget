@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import com.tommasoberlose.anotherwidget.global.Actions
+import com.tommasoberlose.anotherwidget.global.Constants
 import com.tommasoberlose.anotherwidget.global.Preferences
 import com.tommasoberlose.anotherwidget.helpers.WeatherHelper
 import com.tommasoberlose.anotherwidget.services.UpdateWeatherWorker
@@ -51,7 +52,13 @@ class WeatherReceiver : BroadcastReceiver() {
         fun setUpdates(context: Context) {
             removeUpdates(context)
             if (Preferences.showWeather) {
-                val interval = MINUTE * when (Preferences.weatherRefreshPeriod) {
+                val effectiveRefreshPeriod =
+                    if (Constants.WeatherProvider.fromInt(Preferences.weatherProvider) == Constants.WeatherProvider.WEATHER_API) {
+                        Preferences.weatherRefreshPeriod.coerceAtMost(1)
+                    } else {
+                        Preferences.weatherRefreshPeriod
+                    }
+                val interval = MINUTE * when (effectiveRefreshPeriod) {
                     0 -> 30
                     1 -> 60
                     2 -> 60L * 3

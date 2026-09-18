@@ -28,6 +28,7 @@ object Preferences : KotprefModel() {
     var weatherTemp by floatPref(key = "PREF_WEATHER_TEMP", default = 0f)
     var weatherTempUnit by stringPref(key = "PREF_WEATHER_TEMP_UNIT", default = if (usesMetric()) "C" else "F")
     var weatherRealTempUnit by stringPref(key = "PREF_WEATHER_REAL_TEMP_UNIT", default = if (usesMetric()) "C" else "F")
+    var weatherUpdatedAt by longPref(key = "PREF_WEATHER_UPDATED_AT", default = 0L)
     var calendarAllDay by booleanPref(key = "PREF_CALENDAR_ALL_DAY", default = true)
     var calendarFilter by stringPref(key = "PREF_CALENDAR_FILTER", default = "")
 

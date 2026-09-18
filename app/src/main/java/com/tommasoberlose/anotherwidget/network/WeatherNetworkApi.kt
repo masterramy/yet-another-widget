@@ -68,6 +68,7 @@ class WeatherNetworkApi(val context: Context) {
                                 Preferences.weatherTemp = temp.toFloat()
                                 Preferences.weatherIcon = WeatherHelper.getWeatherGovIcon(fullIcon, isDaytime)
                                 Preferences.weatherRealTempUnit = Preferences.weatherTempUnit
+                                Preferences.weatherUpdatedAt = System.currentTimeMillis()
 
                                 Preferences.weatherProviderError = ""
                                 Preferences.weatherProviderLocationError = ""
@@ -130,6 +131,7 @@ class WeatherNetworkApi(val context: Context) {
                             Preferences.weatherTemp = if (Preferences.weatherTempUnit == "F") tempF.toFloat() else tempC.toFloat()
                             Preferences.weatherIcon = WeatherHelper.getWeatherApiIcon(iconCode.toInt(), isDay.toInt() == 1)
                             Preferences.weatherRealTempUnit = Preferences.weatherTempUnit
+                            Preferences.weatherUpdatedAt = System.currentTimeMillis()
                             MainWidget.updateWidget(context)
                             Preferences.weatherProviderError = ""
                             Preferences.weatherProviderLocationError = ""

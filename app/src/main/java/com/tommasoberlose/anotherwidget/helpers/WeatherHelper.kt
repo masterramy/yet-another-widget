@@ -22,6 +22,8 @@ import kotlin.coroutines.resume
 
 object WeatherHelper {
 
+    private const val WEATHER_API_MAX_CACHE_AGE_MILLIS = 60 * 60 * 1000L
+
     suspend fun updateWeather(context: Context) {
         Kotpref.init(context)
         val networkApi = WeatherNetworkApi(context)
@@ -50,10 +52,33 @@ object WeatherHelper {
         }
     }
 
-    fun removeWeather(context: Context) {
+    private fun clearWeatherCache() {
         Preferences.remove(Preferences::weatherTemp)
         Preferences.remove(Preferences::weatherRealTempUnit)
         Preferences.remove(Preferences::weatherIcon)
+        Preferences.weatherUpdatedAt = 0L
+    }
+
+    fun hasDisplayableWeather(now: Long = System.currentTimeMillis()): Boolean {
+        if (!Preferences.showWeather || Preferences.weatherIcon.isEmpty()) return false
+        if (Constants.WeatherProvider.fromInt(Preferences.weatherProvider) != Constants.WeatherProvider.WEATHER_API) {
+            return true
+        }
+
+        val age = now - Preferences.weatherUpdatedAt
+        if (
+            Preferences.weatherUpdatedAt <= 0L ||
+            age < 0L ||
+            age >= WEATHER_API_MAX_CACHE_AGE_MILLIS
+        ) {
+            clearWeatherCache()
+            return false
+        }
+        return true
+    }
+
+    fun removeWeather(context: Context) {
+        clearWeatherCache()
         MainWidget.updateWidget(context)
     }
 
