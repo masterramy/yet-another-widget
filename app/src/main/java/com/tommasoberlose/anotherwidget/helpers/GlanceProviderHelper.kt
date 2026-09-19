@@ -14,11 +14,7 @@ object GlanceProviderHelper {
     fun getGlanceProviders(context: Context): ArrayList<Constants.GlanceProviderId> {
         val enabledProviders = Preferences.enabledGlanceProviderOrder.split(",").filter { it != "" }
 
-        // GOOGLE_FIT_STEPS remains as an inert enum value so existing serialized provider
-        // orders stay readable, but the retired provider is never exposed or rendered.
         val providers = Constants.GlanceProviderId.values()
-            .filter { it != Constants.GlanceProviderId.GOOGLE_FIT_STEPS }
-            .toTypedArray()
 
         return ArrayList(providers.filter { enabledProviders.contains(it.id) }.sortedWith(Comparator { p1, p2 ->
             when {
@@ -64,7 +60,6 @@ object GlanceProviderHelper {
                    R.drawable.round_battery_charging_full_24
                )
             }
-            Constants.GlanceProviderId.GOOGLE_FIT_STEPS -> null
             Constants.GlanceProviderId.NOTIFICATIONS -> {
                 GlanceProvider(providerId.id,
                     context.getString(R.string.settings_show_notifications_title),

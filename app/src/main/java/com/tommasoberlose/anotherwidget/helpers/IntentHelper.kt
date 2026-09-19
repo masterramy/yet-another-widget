@@ -212,11 +212,6 @@ object IntentHelper {
         return Intent(Intent.ACTION_POWER_USAGE_SUMMARY)
     }
 
-    @Deprecated("Google Fit integration is retired; retained only as a temporary Q2 compile bridge until overlay absorption")
-    fun getFitIntent(context: Context): Intent {
-        return Intent()
-    }
-
     fun getMusicIntent(context: Context): Intent {
         return when (Preferences.mediaPlayerPackage) {
             DO_NOTHING_OPTION -> {

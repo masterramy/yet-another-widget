@@ -28,7 +28,7 @@ import com.tommasoberlose.anotherwidget.global.Preferences
 import com.tommasoberlose.anotherwidget.helpers.*
 import com.tommasoberlose.anotherwidget.helpers.ColorHelper.toIntValue
 import com.tommasoberlose.anotherwidget.helpers.ImageHelper.applyShadow
-import com.tommasoberlose.anotherwidget.receivers.CrashlyticsReceiver
+import com.tommasoberlose.anotherwidget.helpers.RuntimeLog
 import com.tommasoberlose.anotherwidget.receivers.NewCalendarEventReceiver
 import com.tommasoberlose.anotherwidget.receivers.WidgetClickListenerReceiver
 import com.tommasoberlose.anotherwidget.utils.checkGrantedPermission
@@ -65,8 +65,7 @@ class StandardWidget(val context: Context) {
             )
             views.setOnClickPendingIntent(R.id.widget_shape_background, refreshIntent)
         } catch (ex: Exception) {
-            ex.printStackTrace()
-            CrashlyticsReceiver.sendCrash(context, ex)
+            RuntimeLog.caught(ex)
         }
 
         // Clock
@@ -82,8 +81,7 @@ class StandardWidget(val context: Context) {
             )
             views = updateGridView(generatedBinding, views, appWidgetId)
         } catch (ex: Exception) {
-            ex.printStackTrace()
-            CrashlyticsReceiver.sendCrash(context, ex)
+            RuntimeLog.caught(ex)
         }
 
         return views
@@ -324,19 +322,6 @@ class StandardWidget(val context: Context) {
                                 break@loop
                             }
                         }
-                        Constants.GlanceProviderId.GOOGLE_FIT_STEPS -> {
-                            if (Preferences.showDailySteps && Preferences.googleFitSteps > 0) {
-                                val fitIntent = PendingIntent.getActivity(
-                                    context,
-                                    widgetID,
-                                    IntentHelper.getFitIntent(context),
-                                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-                                )
-                                views.setOnClickPendingIntent(R.id.sub_line_rect, fitIntent)
-                                showSomething = true
-                                break@loop
-                            }
-                        }
                         Constants.GlanceProviderId.NOTIFICATIONS -> {
                             if (Preferences.showNotifications && ActiveNotificationsHelper.showLastNotification()) {
                                 try {
@@ -423,8 +408,7 @@ class StandardWidget(val context: Context) {
                 views.setViewVisibility(R.id.sub_line_top_margin_large_sans, View.GONE)
             }
         } catch (ex: Exception) {
-            ex.printStackTrace()
-            CrashlyticsReceiver.sendCrash(context, ex)
+            RuntimeLog.caught(ex)
         }
 
         return views
@@ -688,16 +672,6 @@ class StandardWidget(val context: Context) {
                                 break@loop
                             }
                         }
-                        Constants.GlanceProviderId.GOOGLE_FIT_STEPS -> {
-                            if (Preferences.showDailySteps && Preferences.googleFitSteps > 0) {
-                                bindingView.subLineIcon.isVisible = false
-                                bindingView.subLineText.text =
-                                    context.getString(R.string.daily_steps_counter)
-                                        .format(Preferences.googleFitSteps)
-                                showSomething = true
-                                break@loop
-                            }
-                        }
                         Constants.GlanceProviderId.NOTIFICATIONS -> {
                             if (Preferences.showNotifications && ActiveNotificationsHelper.showLastNotification()) {
                                 try {
@@ -957,8 +931,7 @@ class StandardWidget(val context: Context) {
             return bindingView
 
         } catch (ex: Exception) {
-            ex.printStackTrace()
-            CrashlyticsReceiver.sendCrash(context, ex)
+            RuntimeLog.caught(ex)
             return null
         }
     }
