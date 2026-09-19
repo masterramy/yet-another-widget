@@ -144,7 +144,7 @@
     <!-- Settings -->
     <string name="action_share">Zdieľať</string>
     <string name="action_rate">Ohodnotiť aplikáciu</string>
-<string name="action_feedback">Spätná väzba</string>
+    <string name="action_feedback">Spätná väzba</string>
     <string name="action_about">O aplikácii</string>
     <string name="action_refresh_widget">Aktualizovať widget</string>
     <string name="toolbar_transition_name" translatable="false">toolbar</string>
@@ -157,9 +157,9 @@
     <string name="settings_not_visible">Skryté</string>
     <string name="support_translations_title">Pomôžte s prekladom</string>
     <string name="support_translations_subtitle">Otvorte pull request na GitHube</string>
-<string name="error">Ups, niečo sa pokazilo!</string>
+    <string name="error">Ups, niečo sa pokazilo!</string>
     <string name="settings_theme_title">Motív</string>
-<string name="settings_subtitle_dark_theme_light">Svetlý</string>
+    <string name="settings_subtitle_dark_theme_light">Svetlý</string>
     <string name="settings_subtitle_dark_theme_dark">Tmavý</string>
     <string name="settings_subtitle_dark_theme_by_battery_saver">Nastavené šetričom batérie</string>
     <string name="settings_subtitle_dark_theme_follow_system">Rovnaký ako motív systému</string>
@@ -184,8 +184,8 @@
 
     <!-- Activities -->
     <string name="action_choose_application">Vyberte aplikáciu</string>
-<string name="action_show_widget_preview">Ukázať náhľad widgetu</string>
-<string name="settings_title_integrations">Integrácie</string>
+    <string name="action_show_widget_preview">Ukázať náhľad widgetu</string>
+    <string name="settings_title_integrations">Integrácie</string>
     <string name="label_count_installed_integrations">%d nainštalovaných integrácií</string>
     <string name="nothing">Nič</string>
 </resources>

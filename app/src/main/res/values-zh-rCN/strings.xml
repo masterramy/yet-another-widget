@@ -244,7 +244,7 @@
     <!-- Settings -->
     <string name="action_share">分享</string>
     <string name="action_rate">给应用打分</string>
-<string name="action_feedback">反馈</string>
+    <string name="action_feedback">反馈</string>
     <string name="action_about">关于</string>
     <string name="action_refresh_widget">刷新微件</string>
     <string name="toolbar_transition_name" translatable="false">toolbar</string>
@@ -257,9 +257,9 @@
     <string name="settings_not_visible">隐藏</string>
     <string name="support_translations_title">帮助改进翻译</string>
     <string name="support_translations_subtitle">在 GitHub 上提交拉取请求</string>
-<string name="error">糟糕，遇到了一些错误！</string>
+    <string name="error">糟糕，遇到了一些错误！</string>
     <string name="settings_theme_title">主题</string>
-<string name="settings_subtitle_dark_theme_light">亮色</string>
+    <string name="settings_subtitle_dark_theme_light">亮色</string>
     <string name="settings_subtitle_dark_theme_dark">暗色</string>
     <string name="settings_subtitle_dark_theme_by_battery_saver">跟随省电模式</string>
     <string name="settings_subtitle_dark_theme_follow_system">跟随系统</string>
@@ -288,8 +288,8 @@
 
     <!-- Activities -->
     <string name="action_choose_application">选择应用</string>
-<string name="action_show_widget_preview">显示微件预览</string>
-<string name="settings_title_integrations">整合</string>
+    <string name="action_show_widget_preview">显示微件预览</string>
+    <string name="settings_title_integrations">整合</string>
     <string name="label_count_installed_integrations">已安装 %d 个集成插件</string>
     <string name="nothing">无</string>
     <string name="action_dismiss">拒绝</string>

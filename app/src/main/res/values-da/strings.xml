@@ -253,7 +253,7 @@
     <!-- Settings -->
     <string name="action_share">Del</string>
     <string name="action_rate">Bedøm app</string>
-<string name="action_feedback">Feedback</string>
+    <string name="action_feedback">Feedback</string>
     <string name="action_about">Om</string>
     <string name="action_refresh_widget">Genindlæs widget</string>
     <string name="toolbar_transition_name" translatable="false">toolbar</string>
@@ -266,9 +266,9 @@
     <string name="settings_not_visible">Skjult</string>
     <string name="support_translations_title">Hjælp med oversættelser</string>
     <string name="support_translations_subtitle">Åbn en pull-anmodning på GitHub</string>
-<string name="error">Ups, noget gik galt!</string>
+    <string name="error">Ups, noget gik galt!</string>
     <string name="settings_theme_title">Tema</string>
-<string name="settings_subtitle_dark_theme_light">Lys</string>
+    <string name="settings_subtitle_dark_theme_light">Lys</string>
     <string name="settings_subtitle_dark_theme_dark">Mørk</string>
     <string name="settings_subtitle_dark_theme_by_battery_saver">Angivet af batterisparefunktionen</string>
     <string name="settings_subtitle_dark_theme_follow_system">Følg systemtemaet</string>
@@ -297,8 +297,8 @@
 
     <!-- Activities -->
     <string name="action_choose_application">Vælg applikation</string>
-<string name="action_show_widget_preview">Vis widget forhåndsvisning</string>
-<string name="settings_title_integrations">Integrationer</string>
+    <string name="action_show_widget_preview">Vis widget forhåndsvisning</string>
+    <string name="settings_title_integrations">Integrationer</string>
     <string name="label_count_installed_integrations">%d installerede integrationer</string>
     <string name="nothing">Intet</string>
     <string name="action_dismiss">Afvis</string>

@@ -244,7 +244,7 @@
     <!-- Settings -->
     <string name="action_share">Udostępnij</string>
     <string name="action_rate">Oceń aplikację</string>
-<string name="action_feedback">Feedback</string>
+    <string name="action_feedback">Feedback</string>
     <string name="action_about">O aplikacji</string>
     <string name="action_refresh_widget">Odśwież widget</string>
     <string name="toolbar_transition_name" translatable="false">toolbar</string>
@@ -257,9 +257,9 @@
     <string name="settings_not_visible">Ukryte</string>
     <string name="support_translations_title">Pomóż przetłumaczyć aplikację</string>
     <string name="support_translations_subtitle">Otwórz pull request na GitHub</string>
-<string name="error">Ooops, coś poszło nie tak!</string>
+    <string name="error">Ooops, coś poszło nie tak!</string>
     <string name="settings_theme_title">Motyw</string>
-<string name="settings_subtitle_dark_theme_light">Jasny</string>
+    <string name="settings_subtitle_dark_theme_light">Jasny</string>
     <string name="settings_subtitle_dark_theme_dark">Ciemny</string>
     <string name="settings_subtitle_dark_theme_by_battery_saver">Zgodnie z oszczędzaniem bateriiSet by battery saver</string>
     <string name="settings_subtitle_dark_theme_follow_system">Podążaj za systemem</string>
@@ -288,8 +288,8 @@
 
     <!-- Activities -->
     <string name="action_choose_application">Wybierz aplikację</string>
-<string name="action_show_widget_preview">Pokaż podgląd widgetu</string>
-<string name="settings_title_integrations">Integracje</string>
+    <string name="action_show_widget_preview">Pokaż podgląd widgetu</string>
+    <string name="settings_title_integrations">Integracje</string>
     <string name="label_count_installed_integrations">%d zainstalowanych integracji</string>
     <string name="nothing">Nic</string>
     <string name="action_dismiss">Odrzuć</string>
