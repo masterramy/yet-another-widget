@@ -225,7 +225,6 @@
     <!-- Settings -->
     <string name="action_share">Teilen</string>
     <string name="action_rate">App bewerten</string>
-    <string name="action_support">Unterstütze mich</string>
     <string name="action_feedback">Feedback</string>
     <string name="action_about">Über</string>
     <string name="action_refresh_widget">Widget aktualisieren</string>
@@ -238,11 +237,8 @@
     <string name="settings_not_visible">Ausgeblendet</string>
     <string name="support_translations_title">Hilf beim Übersetzen</string>
     <string name="support_translations_subtitle">Öffne eine neue Pull-Request auf GitHub</string>
-    <string name="support_website_title">Meine anderen Projekte anschauen</string>
-    <string name="support_website_subtitle">Gleicher Entwickler, viele Möglichkeiten</string>
     <string name="error">Ups, da ist etwas schief gelaufen!</string>
     <string name="settings_theme_title">Thema</string>
-    <string name="support_main_subtitle">Entwickler brauchen immer viel Kaffee</string>
     <string name="settings_subtitle_dark_theme_light">Hell</string>
     <string name="settings_subtitle_dark_theme_dark">Dunkel</string>
     <string name="settings_subtitle_dark_theme_by_battery_saver">Durch Energiesparmodus festgelegt</string>
@@ -271,15 +267,7 @@
 
     <!-- Activities -->
     <string name="action_choose_application">Anwendung auswählen</string>
-    <string name="support_main_title">Den Entwickler unterstützen</string>
-    <string name="thanks">Danke für Ihre Unterstützung!</string>
-    <string name="donation_coffee">Ein italienischer Kaffee</string>
-    <string name="donation_donuts">Ein paar glasierte Donuts</string>
-    <string name="donation_dinner">Ein teures Dinner</string>
-    <string name="donation_breakfast">Ein englisches Frühstück</string>
-    <string name="donation_lunch">Ein schnelles Mittagessen</string>
     <string name="action_show_widget_preview">Widget Vorschau anzeigen</string>
-    <string name="support_dev_subtitle">Dies ist ein Ein-Entwickler-Projekt, \ndaher vielen Dank für die Unterstützung!</string>
     <string name="settings_title_integrations">Integrationen</string>
     <string name="label_count_installed_integrations">%d installierte Integrationen</string>
     <string name="nothing">Nichts</string>

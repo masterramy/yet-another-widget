@@ -212,7 +212,6 @@
     <!-- Settings -->
     <string name="action_share">Condividi</string>
     <string name="action_rate">Lascia una recensione</string>
-    <string name="action_support">Dona</string>
     <string name="action_feedback">Feedback</string>
     <string name="action_about">Informazioni</string>
     <string name="action_refresh_widget">Ricarica widget</string>
@@ -225,11 +224,8 @@
     <string name="settings_not_visible">Non visibile</string>
     <string name="support_translations_title">Aiuta con le traduzioni</string>
     <string name="support_translations_subtitle">Apri una richiesta di modifica su GitHub</string>
-    <string name="support_website_title">Guarda i miei altri progetti</string>
-    <string name="support_website_subtitle">Stesso sviluppatore, altre possibilità</string>
     <string name="error">Ops, qualcosa non ha funzionato!</string>
     <string name="settings_theme_title">Tema</string>
-    <string name="support_main_subtitle">Gli sviluppatore hanno sempre bisogno di caffè</string>
     <string name="settings_subtitle_dark_theme_light">Light</string>
     <string name="settings_subtitle_dark_theme_dark">Dark</string>
     <string name="settings_subtitle_dark_theme_by_battery_saver">In base al risparmio energetico</string>
@@ -258,15 +254,7 @@
 
     <!-- Activities -->
     <string name="action_choose_application">Scegli applicazione</string>
-    <string name="support_main_title">Supporta lo sviluppatore</string>
-    <string name="thanks">Grazie per il supporto!</string>
-    <string name="donation_coffee">Un caffè</string>
-    <string name="donation_donuts">Un gelato</string>
-    <string name="donation_dinner">Una cena</string>
-    <string name="donation_breakfast">Una colazione abbondante</string>
-    <string name="donation_lunch">Un pranzo veloce</string>
     <string name="action_show_widget_preview">Mostra preview widget</string>
-    <string name="support_dev_subtitle">Questo è un progetto sviluppato da una singola persona,\n grazie per il tuo supporto!</string>
     <string name="settings_title_integrations">Integrazioni</string>
     <string name="label_count_installed_integrations">%d integrazioni installate</string>
     <string name="nothing">Niente</string>

@@ -132,7 +132,6 @@
     <!-- Settings -->
     <string name="action_share">Поделиться</string>
     <string name="action_rate">Оценить приложение</string>
-    <string name="action_support">Поддержите меня</string>
     <string name="action_feedback">Обратная связь</string>
     <string name="action_about">О разработчике</string>
     <string name="action_refresh_widget">Обновить виджет</string>
@@ -145,11 +144,8 @@
     <string name="settings_not_visible">Не отображается</string>
     <string name="support_translations_title">Помочь с переводом</string>
     <string name="support_translations_subtitle">Открыть GitHub</string>
-    <string name="support_website_title">Ознакомиться с моими другими проектами</string>
-    <string name="support_website_subtitle">Тот же разработчик, множество возможностей</string>
     <string name="error">Упс, что-то пошло не так!</string>
     <string name="settings_theme_title">Тема</string>
-    <string name="support_main_subtitle">Кофе — это топливо разработчиков</string>
     <string name="settings_subtitle_dark_theme_light">Светлая</string>
     <string name="settings_subtitle_dark_theme_dark">Тёмная</string>
     <string name="settings_subtitle_dark_theme_by_battery_saver">Установлено энергосбережением</string>
@@ -174,15 +170,7 @@
 
     <!-- Activities -->
     <string name="action_choose_application">Выберите приложение</string>
-    <string name="support_main_title">Поддержать разработчика</string>
-    <string name="thanks">Спасибо, что поддерживаете меня!</string>
-    <string name="donation_coffee">Капучино</string>
-    <string name="donation_donuts">Пара глазированных пончиков</string>
-    <string name="donation_dinner">Ужин в Ginza Project</string>
-    <string name="donation_breakfast">Скромный завтрак</string>
-    <string name="donation_lunch">Хороший обед</string>
     <string name="action_show_widget_preview">Показать превью виджета</string>
-    <string name="support_dev_subtitle">Этот проект разрабатывает один человек,\nспасибо за поддержку</string>
     <string name="settings_title_integrations">Интеграции</string>
     <string name="label_count_installed_integrations">%d установленные интеграции</string>
 </resources>

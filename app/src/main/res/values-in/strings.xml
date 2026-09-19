@@ -135,7 +135,6 @@
     <!-- Settings -->
     <string name="action_share">Bagikan</string>
     <string name="action_rate">Nilai aplikasi</string>
-    <string name="action_support">Dukung saya</string>
     <string name="action_feedback">Umpanbalik</string>
     <string name="action_about">Tentang</string>
     <string name="action_refresh_widget">Segarkan widget</string>
@@ -149,11 +148,8 @@
     <string name="settings_not_visible">Disembunyikan</string>
     <string name="support_translations_title">Bantu menerjemahkan</string>
     <string name="support_translations_subtitle">Buka pull request pada GitHub</string>
-    <string name="support_website_title">Lihat proyek saya lainnya</string>
-    <string name="support_website_subtitle">Pengembang yang sama, banyak kemungkinan</string>
     <string name="error">Ups, telah terjadi kesalahan!</string>
     <string name="settings_theme_title">Tema</string>
-    <string name="support_main_subtitle">Pengembang selalu membutuhkan banyak minum kopi</string>
     <string name="settings_subtitle_dark_theme_light">Terang</string>
     <string name="settings_subtitle_dark_theme_dark">Gelap</string>
     <string name="settings_subtitle_dark_theme_by_battery_saver">Setel berdasarkan Penghemat Baterai</string>
@@ -179,15 +175,7 @@
 
     <!-- Activities -->
     <string name="action_choose_application">Pilih aplikasi</string>
-    <string name="support_main_title">Dukung pengembang</string>
-    <string name="thanks">Terima kasih telah mendukung saya!</string>
-    <string name="donation_coffee">Kopi italia</string>
-    <string name="donation_donuts">Donat yang nikmat</string>
-    <string name="donation_dinner">Makan malam yang mewah</string>
-    <string name="donation_breakfast">Sarapan yang semangat</string>
-    <string name="donation_lunch">Makan siang yang cepat</string>
     <string name="action_show_widget_preview">Pratinjau widget</string>
-    <string name="support_dev_subtitle">Ini adalah proyek pengembang tunggal,\nterima kasih banyak untuk dukungannya!</string>
     <string name="settings_title_integrations">Integrasi</string>
     <string name="label_count_installed_integrations">%d integrasi terpasang</string>
     <string name="nothing">Tidak ada</string>
