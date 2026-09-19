@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-PACKAGE="com.tommasoberlose.anotherwidget"
-ACTIVITY="$PACKAGE/.ui.activities.MainActivity"
 APK="$(find app/build/outputs/apk/debug -maxdepth 1 -type f -name '*.apk' | head -n1)"
-
 test -n "$APK"
+source tools/q1_runtime_identity.sh
+yaw_read_app_identity "$APK"
+PACKAGE="$YAW_PACKAGE"
+ACTIVITY="$PACKAGE/$YAW_ACTIVITY_CLASS"
+APP_LABEL="$YAW_APP_LABEL"
 rm -rf q1-evidence
 mkdir -p q1-evidence
 
@@ -157,13 +159,14 @@ tap_node() {
 
 find_drag_source() {
   local xml="$1"
-  python3 - "$xml" <<'PY'
+  python3 - "$xml" "$APP_LABEL" <<'PY'
 import re, sys, xml.etree.ElementTree as ET
 root = ET.parse(sys.argv[1]).getroot()
+label = sys.argv[2].strip().lower()
 for cell in root.iter('node'):
     desc = cell.attrib.get('content-desc', '').lower()
     klass = cell.attrib.get('class', '').lower()
-    if 'another widget widget' not in desc or 'widgetcell' not in klass:
+    if f'{label} widget' not in desc or 'widgetcell' not in klass:
         continue
     for node in cell.iter('node'):
         if node.attrib.get('resource-id', '').endswith('/widget_preview_container'):
@@ -217,7 +220,7 @@ fi
 capture_launch_diagnostics
 
 if [ "$main_ui_dump_ok" -eq 1 ]; then
-  if ! grep -qi 'Another Widget' q1-evidence/main-activity-ui.xml; then
+  if ! grep -Fqi "$APP_LABEL" q1-evidence/main-activity-ui.xml; then
     echo "MainActivity did not render the expected app shell" >&2
     cat q1-evidence/launch-summary.txt >&2 || true
 
@@ -280,7 +283,7 @@ fi
 sleep 3
 ui_dump widget-picker || exit 19
 
-if tap_node q1-evidence/widget-picker.xml "another widget"; then
+if tap_node q1-evidence/widget-picker.xml "$APP_LABEL"; then
   sleep 2
   ui_dump widget-picker-expanded || exit 19
 else
@@ -288,10 +291,10 @@ else
 fi
 
 source_xy="$(find_drag_source q1-evidence/widget-picker-expanded.xml)" || {
-  echo "Another Widget preview drag source not found in launcher widget picker" >&2
+  echo "Widget preview drag source not found for app label: $APP_LABEL" >&2
   exit 21
 }
-echo "Another Widget preview drag source: $source_xy" | tee q1-evidence/widget-drag.txt
+echo "Widget preview drag source for $APP_LABEL: $source_xy" | tee q1-evidence/widget-drag.txt
 # The picker is a scrollable RecyclerView. A single draganddrop gesture can be
 # interpreted as list motion before Launcher3 establishes a widget drag. Use a
 # fail-closed two-stage pointer sequence: hold the preview beyond long-press

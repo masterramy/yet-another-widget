@@ -1,10 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-PACKAGE="com.tommasoberlose.anotherwidget"
+APP_APK="$(find app/build/outputs/apk/debug -maxdepth 1 -type f -name '*.apk' | head -n1)"
 TEST_APK="app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk"
-TEST_RUNNER="com.tommasoberlose.anotherwidget.test/androidx.test.runner.AndroidJUnitRunner"
 TEST_CLASS="com.tommasoberlose.anotherwidget.LauncherWidgetDragTest"
+test -n "$APP_APK"
+source tools/q1_runtime_identity.sh
+yaw_read_app_identity "$APP_APK"
+PACKAGE="$YAW_PACKAGE"
+APP_LABEL="$YAW_APP_LABEL"
 
 set +e
 bash tools/q1_emulator_smoke.sh
@@ -110,6 +114,8 @@ if [ ! -f "$TEST_APK" ]; then
   echo "Missing Q1 androidTest APK after harness rebuild: $TEST_APK" >&2
   exit 30
 fi
+yaw_read_test_identity "$TEST_APK"
+TEST_RUNNER="$YAW_TEST_PACKAGE/$YAW_TEST_RUNNER_CLASS"
 adb install -r "$TEST_APK" | tee q1-evidence/androidtest-install.txt
 
 adb shell input keyevent KEYCODE_HOME
@@ -137,12 +143,13 @@ sleep 3
 
 adb shell uiautomator dump /data/local/tmp/q1-picker.xml >/dev/null
 adb pull /data/local/tmp/q1-picker.xml /tmp/q1-picker.xml >/dev/null
-another_xy="$(python3 - /tmp/q1-picker.xml <<'PY'
+another_xy="$(python3 - /tmp/q1-picker.xml "$APP_LABEL" <<'PY'
 import re,sys,xml.etree.ElementTree as ET
 root=ET.parse(sys.argv[1]).getroot()
+label=sys.argv[2].strip().lower()
 for n in root.iter('node'):
     hay=' '.join((n.attrib.get('text',''),n.attrib.get('content-desc',''))).lower()
-    if 'another widget' in hay:
+    if label in hay:
         m=re.match(r'\[(\d+),(\d+)\]\[(\d+),(\d+)\]',n.attrib.get('bounds',''))
         if m:
             a,b,c,d=map(int,m.groups()); print((a+c)//2,(b+d)//2); raise SystemExit(0)
@@ -154,11 +161,12 @@ sleep 2
 
 adb shell uiautomator dump /data/local/tmp/q1-expanded.xml >/dev/null
 adb pull /data/local/tmp/q1-expanded.xml /tmp/q1-expanded.xml >/dev/null
-source_xy="$(python3 - /tmp/q1-expanded.xml <<'PY'
+source_xy="$(python3 - /tmp/q1-expanded.xml "$APP_LABEL" <<'PY'
 import re,sys,xml.etree.ElementTree as ET
 root=ET.parse(sys.argv[1]).getroot()
+label=sys.argv[2].strip().lower()
 for cell in root.iter('node'):
-    if 'another widget widget' not in cell.attrib.get('content-desc','').lower():
+    if f'{label} widget' not in cell.attrib.get('content-desc','').lower():
         continue
     for n in cell.iter('node'):
         if n.attrib.get('resource-id','').endswith('/widget_preview_container'):

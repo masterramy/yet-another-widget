@@ -559,6 +559,30 @@ jobs:
           done
           echo "Dead locale-only resource warnings are eliminated."
 
+      - name: Runtime QA harness must discover public app identity from APK
+        shell: bash
+        run: |
+          set -euo pipefail
+          helper=tools/q1_runtime_identity.sh
+          for script in tools/q1_emulator_smoke.sh tools/q1_emulator_smoke_recover.sh tools/q1_pin_probe.sh; do
+            bash -n "$script"
+          done
+          bash -n "$helper"
+          ! grep -R -n -F 'PACKAGE="com.tommasoberlose.anotherwidget"' tools
+          grep -Fq 'aapt dump badging "$apk"' "$helper"
+          grep -Fq 'YAW_PACKAGE=' "$helper"
+          grep -Fq 'YAW_ACTIVITY_CLASS=' "$helper"
+          grep -Fq 'YAW_APP_LABEL=' "$helper"
+          grep -Fq 'YAW_TEST_PACKAGE=' "$helper"
+          grep -Fq 'YAW_TEST_RUNNER_CLASS=' "$helper"
+          grep -Fq 'yaw_read_app_identity "$APK"' tools/q1_emulator_smoke.sh
+          grep -Fq 'APP_LABEL="$YAW_APP_LABEL"' tools/q1_emulator_smoke.sh
+          grep -Fq 'yaw_read_app_identity "$APP_APK"' tools/q1_emulator_smoke_recover.sh
+          grep -Fq 'yaw_read_test_identity "$TEST_APK"' tools/q1_emulator_smoke_recover.sh
+          grep -Fq 'yaw_read_app_identity "$APP_APK"' tools/q1_pin_probe.sh
+          grep -Fq 'yaw_read_test_identity "$TEST_APK"' tools/q1_pin_probe.sh
+          echo "Runtime QA harness derives public package/activity/label/test runner identity from built APKs."
+
       - name: Q2 deterministic build
         shell: bash
         run: bash tools/q1_build.sh

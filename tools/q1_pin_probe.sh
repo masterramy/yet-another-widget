@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-PACKAGE="com.tommasoberlose.anotherwidget"
-TEST_PACKAGE="${PACKAGE}.test"
+APP_APK="$(find app/build/outputs/apk/debug -maxdepth 1 -type f -name '*.apk' | head -n1)"
 TEST_APK="app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk"
-RUNNER="${TEST_PACKAGE}/androidx.test.runner.AndroidJUnitRunner"
 CLASS="com.tommasoberlose.anotherwidget.PinWidgetRequestTest"
+test -n "$APP_APK"
+source tools/q1_runtime_identity.sh
+yaw_read_app_identity "$APP_APK"
+PACKAGE="$YAW_PACKAGE"
 mkdir -p q1-evidence
 
 wake_and_unlock() {
@@ -74,6 +76,9 @@ if [ ! -f "$TEST_APK" ]; then
   exit 30
 fi
 sha256sum "$TEST_APK" | tee q1-evidence/pin-request-test-apk-sha256.txt
+yaw_read_test_identity "$TEST_APK"
+TEST_PACKAGE="$YAW_TEST_PACKAGE"
+RUNNER="$TEST_PACKAGE/$YAW_TEST_RUNNER_CLASS"
 adb install -r "$TEST_APK" | tee q1-evidence/pin-request-test-install.txt
 adb shell pm path "$TEST_PACKAGE" | tee q1-evidence/pin-request-test-package.txt
 adb shell pm list instrumentation | tee q1-evidence/pin-request-instrumentation-list.txt
