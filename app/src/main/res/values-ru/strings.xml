@@ -117,7 +117,6 @@
     <string name="settings_at_a_glance_title">Glance</string>
     <string name="settings_show_music_title">Текущая песня</string>
     <string name="settings_request_notification_access">Нам необходим доступ к уведомлениям для отображения информации песни.</string>
-    <string name="settings_request_fitness_access">Нам нужно несколько разрешений для отображения шагов за этот день из Google Fit.</string>
     <string name="title_show_glance">Отображение дополнительной информации</string>
     <string name="description_show_glance_visible">Сервис включён</string>
     <string name="description_show_glance_not_visible">Сервис отключён</string>
@@ -125,9 +124,7 @@
     <string name="settings_sort_glance_providers_subtitle">Изменить важность источников данных</string>
     <string name="settings_custom_notes_title">Настраиваемые заметки</string>
     <string name="settings_low_battery_level_title">Уровень заряда аккумулятора</string>
-    <string name="settings_daily_steps_title">Шаги за сегодня</string>
     <string name="battery_low_warning">Низкий уровень заряда аккумулятора</string>
-    <string name="daily_steps_counter">%d шагов</string>
     <string name="charging">Зарядка</string>
     <string name="providers">Что показывать?</string>
     <string name="glance_info">Информация Glance будет показана только в том случае, если нет событий для отображения.</string>

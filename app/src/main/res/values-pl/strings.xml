@@ -179,15 +179,12 @@
     <string name="settings_show_music_title">Aktualnie odtwarzany utwór</string>
     <string name="settings_request_notification_access">Potrzebujemy uprawnienia dostępu do powiadomień, aby wyświetlić aktuanie odtwarzany utwór.</string>
     <string name="settings_request_last_notification_access">Potrzebujemy uprawnienia dostępu do powiadomień, aby wyświetlić powiadomienia.</string>
-    <string name="settings_request_fitness_access">Potrzebujemy parę uprawnień aby wyświetlić kroki z Google Fit.</string>
     <string name="title_show_glance">Pokaż informacje w skrócie</string>
     <string name="description_show_glance_visible">Usłuja włączona</string>
     <string name="description_show_glance_not_visible">Usługa wyłączona</string>
     <string name="settings_sort_glance_providers_title">Priorytet wyświetlania</string>
     <string name="settings_sort_glance_providers_subtitle">Zmień priorytet źródeł danych sortując tą listę (przeciągnij i upuść).</string>
     <string name="settings_custom_notes_title">Niestandardowe notatki</string>
-    <string name="settings_daily_steps_title">Fitness</string>
-    <string name="daily_steps_counter">%d kroków</string>
     <string name="settings_low_battery_level_title">Bateria</string>
     <string name="battery_low_warning">Niski poziom baterii</string>
     <string name="charging">Ładowanie</string>
@@ -198,7 +195,6 @@
     <string name="settings_music_players_filter_subtitle">Wybierz swoje odtwarzacze muzyki</string>
     <string name="settings_show_music_subtitle">Używamy powiadomień odtwarzaczy, aby wyświetlić aktualnie odtwarzany utwór.</string>
     <string name="settings_low_battery_level_subtitle">Zostań ponformowany, gdy urządzenie ma mało baterii lub się ładuje.</string>
-    <string name="settings_daily_steps_subtitle">Wyświetl swoje dzienne kroki na krótką chwilę po ukończeniu spaceru lub biegu.</string>
     <string name="settings_show_next_alarm_subtitle">Zobacz swój następny alarm.\nSprawdź czy twoja domyślna aplikacja zegara jest jedyną, wktórej ustawiono alarmt.</string>
     <string name="settings_show_next_alarm_app_title">Ustawiono alarm przez %s</string>
     <string name="settings_show_next_alarm_app_subtitle_wrong">Następny alarm wygląda na nieprawidłowy</string>
@@ -207,9 +203,6 @@
     <string name="settings_show_notifications_subtitle">Zobacz swoje ostatnie powiadomienia.</string>
     <string name="settings_show_greetings_title">Pozdrowienia</string>
     <string name="settings_show_greetings_subtitle">Wyświetlaj ciekawe zdania, które umilą ci dziań gdy się tego nie spodziewasz.</string>
-    <string name="google_fit_account_connected">Połączono konto</string>
-    <string name="google_fit_account_not_connected">Nie połączono konta</string>
-    <string name="google_fit">Google Fit</string>
     <string name="action_connect">Połącz</string>
     <string name="action_disconnect">Rozłącz</string>
     <string name="applications_filter_title">Aplikacje</string>
