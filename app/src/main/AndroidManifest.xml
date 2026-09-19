@@ -55,16 +55,16 @@
             android:enabled="true"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.tommasoberlose.anotherwidget.action.GO_TO_NEXT_EVENT" />
-                <action android:name="com.tommasoberlose.anotherwidget.action.GO_TO_PREVIOUS_EVENT" />
+                <action android:name="${applicationId}.action.GO_TO_NEXT_EVENT" />
+                <action android:name="${applicationId}.action.GO_TO_PREVIOUS_EVENT" />
             </intent-filter>
         </receiver>
 
         <receiver android:name=".receivers.UpdatesReceiver" android:enabled="true" android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="com.tommasoberlose.anotherwidget.action.ACTION_CALENDAR_UPDATE" />
-                <action android:name="com.tommasoberlose.anotherwidget.action.ACTION_TIME_UPDATE" />
+                <action android:name="${applicationId}.action.CALENDAR_UPDATE" />
+                <action android:name="${applicationId}.action.TIME_UPDATE" />
                 <action android:name="com.sec.android.widgetapp.APPWIDGET_RESIZE" />
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
                 <action android:name="android.app.action.NEXT_ALARM_CLOCK_CHANGED" />
@@ -77,7 +77,7 @@
 
         <receiver android:name=".receivers.WeatherReceiver" android:enabled="true" android:exported="false">
             <intent-filter>
-                <action android:name="com.tommasoberlose.anotherwidget.action.ACTION_WEATHER_UPDATE" />
+                <action android:name="${applicationId}.action.WEATHER_UPDATE" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -89,7 +89,7 @@
 
         <receiver android:name=".receivers.WidgetClickListenerReceiver" android:enabled="true" android:exported="false">
             <intent-filter>
-                <action android:name="com.tommasoberlose.anotherwidget.action.ACTION_OPEN_WEATHER_INTENT" />
+                <action android:name="${applicationId}.action.OPEN_WEATHER_INTENT" />
             </intent-filter>
         </receiver>
 

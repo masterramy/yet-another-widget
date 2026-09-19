@@ -1,18 +1,21 @@
 package com.tommasoberlose.anotherwidget.global
 
+import com.tommasoberlose.anotherwidget.BuildConfig
+
 object Actions {
     const val ACTION_EXTRA_OPEN_WEATHER_PROVIDER = "ACTION_EXTRA_OPEN_WEATHER_PROVIDER"
 
-    const val ACTION_TIME_UPDATE = "com.tommasoberlose.anotherwidget.action.TIME_UPDATE"
-    const val ACTION_ALARM_UPDATE = "com.tommasoberlose.anotherwidget.action.ALARM_UPDATE"
-    const val ACTION_CALENDAR_UPDATE = "com.tommasoberlose.anotherwidget.action.CALENDAR_UPDATE"
-    const val ACTION_WEATHER_UPDATE = "com.tommasoberlose.anotherwidget.action.WEATHER_UPDATE"
-    const val ACTION_OPEN_WEATHER_INTENT = "com.tommasoberlose.anotherwidget.action.OPEN_WEATHER_INTENT"
-    const val ACTION_GO_TO_NEXT_EVENT = "com.tommasoberlose.anotherwidget.action.GO_TO_NEXT_EVENT"
-    const val ACTION_GO_TO_PREVIOUS_EVENT = "com.tommasoberlose.anotherwidget.action.GO_TO_PREVIOUS_EVENT"
-    const val ACTION_REPORT_CRASH = "com.tommasoberlose.anotherwidget.action.REPORT_CRASH"
-    const val ACTION_CLEAR_NOTIFICATION = "com.tommasoberlose.anotherwidget.action.CLEAR_NOTIFICATION"
-    const val ACTION_UPDATE_GREETINGS = "com.tommasoberlose.anotherwidget.action.UPDATE_GREETINGS"
+    private val actionPrefix = "${BuildConfig.APPLICATION_ID}.action."
 
-    const val ACTION_REFRESH = "com.tommasoberlose.anotherwidget.action.REFRESH"
+    val ACTION_TIME_UPDATE = actionPrefix + "TIME_UPDATE"
+    val ACTION_ALARM_UPDATE = actionPrefix + "ALARM_UPDATE"
+    val ACTION_CALENDAR_UPDATE = actionPrefix + "CALENDAR_UPDATE"
+    val ACTION_WEATHER_UPDATE = actionPrefix + "WEATHER_UPDATE"
+    val ACTION_OPEN_WEATHER_INTENT = actionPrefix + "OPEN_WEATHER_INTENT"
+    val ACTION_GO_TO_NEXT_EVENT = actionPrefix + "GO_TO_NEXT_EVENT"
+    val ACTION_GO_TO_PREVIOUS_EVENT = actionPrefix + "GO_TO_PREVIOUS_EVENT"
+    val ACTION_REPORT_CRASH = actionPrefix + "REPORT_CRASH"
+    val ACTION_CLEAR_NOTIFICATION = actionPrefix + "CLEAR_NOTIFICATION"
+    val ACTION_UPDATE_GREETINGS = actionPrefix + "UPDATE_GREETINGS"
+    val ACTION_REFRESH = actionPrefix + "REFRESH"
 }

@@ -559,6 +559,23 @@ jobs:
           done
           echo "Dead locale-only resource warnings are eliminated."
 
+      - name: Internal broadcast action namespace must follow applicationId
+        shell: bash
+        run: |
+          set -euo pipefail
+          actions=app/src/main/java/com/tommasoberlose/anotherwidget/global/Actions.kt
+          manifest=app/src/main/AndroidManifest.xml
+          grep -Fq 'private val actionPrefix = "${BuildConfig.APPLICATION_ID}.action."' "$actions"
+          ! grep -Fq 'com.tommasoberlose.anotherwidget.action.' "$actions"
+          ! grep -Fq 'com.tommasoberlose.anotherwidget.action.' "$manifest"
+          grep -Fq 'android:name="${applicationId}.action.GO_TO_NEXT_EVENT"' "$manifest"
+          grep -Fq 'android:name="${applicationId}.action.GO_TO_PREVIOUS_EVENT"' "$manifest"
+          grep -Fq 'android:name="${applicationId}.action.CALENDAR_UPDATE"' "$manifest"
+          grep -Fq 'android:name="${applicationId}.action.TIME_UPDATE"' "$manifest"
+          grep -Fq 'android:name="${applicationId}.action.WEATHER_UPDATE"' "$manifest"
+          grep -Fq 'android:name="${applicationId}.action.OPEN_WEATHER_INTENT"' "$manifest"
+          echo "Internal broadcast actions follow the eventual public application ID."
+
       - name: Runtime QA harness must discover public app identity from APK
         shell: bash
         run: |
