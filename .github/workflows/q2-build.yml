@@ -589,6 +589,19 @@ jobs:
           grep -Fq 'android:name="${applicationId}.action.OPEN_WEATHER_INTENT"' "$manifest"
           echo "Internal broadcast actions follow the eventual public application ID."
 
+      - name: Public app name must have one locale-independent source
+        shell: bash
+        run: |
+          set -euo pipefail
+          default=app/src/main/res/values/strings.xml
+          test "$(grep -c 'name="app_name"' "$default")" = "1"
+          grep -Fq '<string name="app_name" translatable="false">Another Widget</string>' "$default"
+          if grep -R -n 'name="app_name"' app/src/main/res/values-* --include='strings.xml'; then
+            echo "ERROR: locale-specific app_name would split final public identity" >&2
+            exit 1
+          fi
+          echo "Public app label is controlled by one default non-translatable resource."
+
       - name: Runtime QA harness must discover public app identity from APK
         shell: bash
         run: |
