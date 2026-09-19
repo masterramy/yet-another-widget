@@ -120,7 +120,6 @@
     <string name="settings_at_a_glance_title">Sekilas</string>
     <string name="settings_show_music_title">Lagu yang diputar</string>
     <string name="settings_request_notification_access">Membutuhkan izin akses notifikasi untuk menampilkan lagu yang saat ini diputar.</string>
-    <string name="settings_request_fitness_access">Membutuhkan beberapa izin untuk menampilkan jumlah langkah dari Google Fit.</string>
     <string name="title_show_glance">Tampilkan info sekilas</string>
     <string name="description_show_glance_visible">Layanan diaktifkan</string>
     <string name="description_show_glance_not_visible">Layanan dinonaktifkan</string>
@@ -128,9 +127,7 @@
     <string name="settings_sort_glance_providers_subtitle">Ubah prioritas penyedia data</string>
     <string name="settings_custom_notes_title">Catatan khusus</string>
     <string name="settings_low_battery_level_title">Level baterai</string>
-    <string name="settings_daily_steps_title">Langkah harian</string>
     <string name="battery_low_warning">Level baterai rendah</string>
-    <string name="daily_steps_counter">%d langkah sejauh ini</string>
     <string name="charging">Mengisi daya</string>
     <string name="providers">Penyedia</string>
     <string name="glance_info">Info sekilas hanya akan muncul ketika tidak ada acara yang ditampilkan dan hanya ketika beberapa kondisi diverifikasi.</string>

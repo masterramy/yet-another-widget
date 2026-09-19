@@ -159,15 +159,12 @@
     <string name="settings_show_music_title">Aktuell spielendes Lied</string>
     <string name="settings_request_notification_access">Wir benötigen Zugriff auf die Benachrichtigungen, um auf das aktuell abgespielte Lied zugreifen zu können.</string>
     <string name="settings_request_last_notification_access">Wir benötigen Zugriff auf die Benachrichtigungen, um Ihre letzten Benachrichtigungen sehen zu können.</string>
-    <string name="settings_request_fitness_access">Wir benötigen ein paar Berechtigungen, um die täglichen Schritte von Google Fit zu erhalten.</string>
     <string name="title_show_glance">Informationen auf einen Blick anzeigen</string>
     <string name="description_show_glance_visible">Dienst ist aktiviert</string>
     <string name="description_show_glance_not_visible">Dienst ist deaktiviert</string>
     <string name="settings_sort_glance_providers_title">Priorität der Datenquelle</string>
     <string name="settings_sort_glance_providers_subtitle">Priorität der jeweiligen Dienste ändern, indem Sie die Liste per Drag-and-Drop sortieren.</string>
     <string name="settings_custom_notes_title">Benutzerdefinierte Notiz</string>
-    <string name="settings_daily_steps_title">Tägliche Schritte</string>
-    <string name="daily_steps_counter">%d Schritte bis jetzt</string>
     <string name="settings_low_battery_level_title">Akku</string>
     <string name="battery_low_warning">Niedriger Akkustand</string>
     <string name="charging">Wird aufgeladen</string>
@@ -178,7 +175,6 @@
     <string name="settings_music_players_filter_subtitle">Wähle die gewünschten Musik Player aus</string>
     <string name="settings_show_music_subtitle">Wir verwenden die Benachrichtigung der Musik-Player, um das aktuell gespielte Lied anzuzeigen.</string>
     <string name="settings_low_battery_level_subtitle">Darüber informiert werden, wenn der Akku schwach ist oder aufgeladen wird.</string>
-    <string name="settings_daily_steps_subtitle">Zeigt die täglichen Schritte, nachdem Sie einen Spaziergang oder einen Lauf beendet haben.</string>
     <string name="settings_show_next_alarm_subtitle">Zeigt den nächsten Alarm an.\nStellen Sie sicher, dass Ihre standardmäßige Uhren-App die einzige ist, die Alarme auf dem Gerät einstellt.</string>
     <string name="settings_show_next_alarm_app_title">Alarm gesetzt durch %s</string>
     <string name="settings_show_next_alarm_app_subtitle_wrong">Der nächste Wecker scheint falsch zu sein</string>
@@ -187,9 +183,6 @@
     <string name="settings_show_notifications_subtitle">Zeigt die letzten Benachrichtigungen an, die auf Ihrem Gerät empfangen wurden.</string>
     <string name="settings_show_greetings_title">Grüße</string>
     <string name="settings_show_greetings_subtitle">Zeigt einen netten Satz, der zur Tageszeit passt.</string>
-    <string name="google_fit_account_connected">Konto verbunden</string>
-    <string name="google_fit_account_not_connected">Konto nicht verbunden</string>
-    <string name="google_fit">Google Fit</string>
     <string name="action_connect">Verbinden</string>
     <string name="action_disconnect">Trennen</string>
     <string name="applications_filter_title">Anwendungen</string>
