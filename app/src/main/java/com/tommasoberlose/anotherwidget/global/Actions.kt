@@ -14,7 +14,6 @@ object Actions {
     val ACTION_OPEN_WEATHER_INTENT = actionPrefix + "OPEN_WEATHER_INTENT"
     val ACTION_GO_TO_NEXT_EVENT = actionPrefix + "GO_TO_NEXT_EVENT"
     val ACTION_GO_TO_PREVIOUS_EVENT = actionPrefix + "GO_TO_PREVIOUS_EVENT"
-    val ACTION_REPORT_CRASH = actionPrefix + "REPORT_CRASH"
     val ACTION_CLEAR_NOTIFICATION = actionPrefix + "CLEAR_NOTIFICATION"
     val ACTION_UPDATE_GREETINGS = actionPrefix + "UPDATE_GREETINGS"
     val ACTION_REFRESH = actionPrefix + "REFRESH"

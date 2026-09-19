@@ -71,6 +71,14 @@ jobs:
             echo "ERROR: retired Google Fit/sign-in implementation remains" >&2
             exit 1
           fi
+          if grep -R -E "GOOGLE_FIT_STEPS|showDailySteps|googleFitSteps|getFitIntent|daily_steps_counter|settings_daily_steps_|settings_request_fitness_access|google_fit_account_|name=\"google_fit\"" app/src/main; then
+            echo "ERROR: retired Google Fit rendering/preference/resource residue remains" >&2
+            exit 1
+          fi
+          test ! -e app/src/main/java/com/tommasoberlose/anotherwidget/receivers/CrashlyticsReceiver.kt
+          ! grep -R -n -F 'CrashlyticsReceiver' app/src/main/java
+          grep -Fq 'object RuntimeLog' app/src/main/java/com/tommasoberlose/anotherwidget/helpers/RuntimeLog.kt
+          grep -Fq 'Log.e(BuildConfig.APPLICATION_ID' app/src/main/java/com/tommasoberlose/anotherwidget/helpers/RuntimeLog.kt
           if grep -R -E "ACTION_REQUEST_SCHEDULE_EXACT_ALARM|SCHEDULE_EXACT_ALARM|USE_EXACT_ALARM" app/src/main app/build.gradle; then
             echo "ERROR: exact-alarm permission/request capability residue remains" >&2
             exit 1
@@ -427,17 +435,22 @@ jobs:
           grep -Fq 'The app does not ship or share a common WeatherAPI.com key.' "$privacy"
           echo "Shipping weather is NWS plus globally available user-key WeatherAPI with persistent attribution/disclaimer."
 
-      - name: NWS transport must remain HTTPS and identified
+      - name: NWS transport must remain HTTPS and build-identity identified
         shell: bash
         run: |
           set -euo pipefail
           gov=app/src/main/java/com/tommasoberlose/anotherwidget/network/repository/WeatherGovRepository.kt
           services=app/src/main/java/com/tommasoberlose/anotherwidget/network/api/ApiServices.kt
           grep -Fq 'private const val BASE_URL_GOV = "https://api.weather.gov/"' "$gov"
-          test "$(grep -c '@Headers("User-Agent: YetAnotherWidget/2.3.3 (https://github.com/masterramy/yet-another-widget)")' "$services")" = "2"
+          grep -Fq '"${BuildConfig.APPLICATION_ID}/${BuildConfig.VERSION_NAME} (https://github.com/masterramy/yet-another-widget)"' "$gov"
+          test "$(grep -c '@Header("User-Agent") userAgent: String' "$services")" = "2"
+          ! grep -Fq 'YetAnotherWidget/2.3.3' "$services"
+          ! grep -Fq 'YetAnotherWidget/2.3.3' "$gov"
+          grep -Fq 'apiServiceGov.getGridPoints(userAgent, latitude, longitude)' "$gov"
+          grep -Fq 'apiServiceGov.getWeather(userAgent, gridId, gridX.toInt(), gridY.toInt(), unit)' "$gov"
           grep -Fq '@GET("points/{latitude},{longitude}")' "$services"
           grep -Fq '@GET("gridpoints/{gridId}/{gridX},{gridY}/forecast")' "$services"
-          echo "NWS transport remains HTTPS and identified."
+          echo "NWS transport remains HTTPS and identifies the final build package/version dynamically."
 
       - name: Gson security and public-map contract
         shell: bash
