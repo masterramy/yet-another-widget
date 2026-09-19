@@ -80,6 +80,24 @@ jobs:
             fi
           done
           echo "Retired Billing, donation, and inherited developer-support surfaces are absent."
+      - name: Retired integrations shell must be absent
+        shell: bash
+        run: |
+          set -euo pipefail
+          manifest=app/src/main/AndroidManifest.xml
+          settings=app/src/main/java/com/tommasoberlose/anotherwidget/ui/fragments/SettingsFragment.kt
+          settings_layout=app/src/main/res/layout/fragment_app_settings.xml
+          test ! -e app/src/main/java/com/tommasoberlose/anotherwidget/ui/activities/settings/IntegrationsActivity.kt
+          test ! -e app/src/main/java/com/tommasoberlose/anotherwidget/ui/viewmodels/settings/IntegrationsViewModel.kt
+          test ! -e app/src/main/res/layout/activity_integrations.xml
+          ! grep -Fq '.ui.activities.settings.IntegrationsActivity' "$manifest"
+          ! grep -Fq 'binding.actionIntegrations' "$settings"
+          ! grep -Fq '@+id/action_integrations' "$settings_layout"
+          if grep -R -n -E 'installedIntegrations|settings_title_integrations|label_count_installed_integrations' app/src/main; then
+            echo "ERROR: retired integrations shell residue remains" >&2
+            exit 1
+          fi
+          echo "Retired empty integrations shell is absent."
       - name: Google Fit and exact-alarm capability surface must be retired
         shell: bash
         run: |

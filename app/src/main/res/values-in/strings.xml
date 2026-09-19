@@ -176,7 +176,5 @@
     <!-- Activities -->
     <string name="action_choose_application">Pilih aplikasi</string>
     <string name="action_show_widget_preview">Pratinjau widget</string>
-    <string name="settings_title_integrations">Integrasi</string>
-    <string name="label_count_installed_integrations">%d integrasi terpasang</string>
     <string name="nothing">Tidak ada</string>
 </resources>

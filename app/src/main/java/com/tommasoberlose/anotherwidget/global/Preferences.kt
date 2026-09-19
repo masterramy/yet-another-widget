@@ -163,6 +163,4 @@ object Preferences : KotprefModel() {
 
     var showEventsAsGlanceProvider by booleanPref(default = false)
 
-    // Integrations
-    var installedIntegrations by intPref(default = 0)
 }

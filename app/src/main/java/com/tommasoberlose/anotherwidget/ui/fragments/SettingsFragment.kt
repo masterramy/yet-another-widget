@@ -1,7 +1,6 @@
 package com.tommasoberlose.anotherwidget.ui.fragments
 
 import android.Manifest
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -30,7 +29,6 @@ import com.tommasoberlose.anotherwidget.helpers.ActiveNotificationsHelper
 import com.tommasoberlose.anotherwidget.helpers.CalendarHelper
 import com.tommasoberlose.anotherwidget.helpers.MediaPlayerHelper
 import com.tommasoberlose.anotherwidget.helpers.WeatherHelper
-import com.tommasoberlose.anotherwidget.ui.activities.settings.IntegrationsActivity
 import com.tommasoberlose.anotherwidget.ui.activities.MainActivity
 import com.tommasoberlose.anotherwidget.ui.viewmodels.MainViewModel
 import com.tommasoberlose.anotherwidget.utils.checkGrantedPermission
@@ -120,12 +118,6 @@ class SettingsFragment : Fragment() {
             }
         }
 
-        viewModel.installedIntegrations.observe(viewLifecycleOwner) {
-            binding.integrationsCountLabel.text =
-                getString(R.string.label_count_installed_integrations).format(
-                    it)
-        }
-
         viewModel.showPreview.observe(viewLifecycleOwner) {
             maintainScrollPosition {
                 binding.showWidgetPreviewLabel.text =
@@ -162,10 +154,6 @@ class SettingsFragment : Fragment() {
             } else {
                 Preferences.showWallpaper = isChecked
             }
-        }
-
-        binding.actionIntegrations.setOnClickListener {
-            startActivity(Intent(requireContext(), IntegrationsActivity::class.java))
         }
 
         binding.actionChangeTheme.setOnClickListener {

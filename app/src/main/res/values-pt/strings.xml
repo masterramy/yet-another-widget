@@ -268,8 +268,6 @@
     <!-- Activities -->
     <string name="action_choose_application">Escolha a aplicação</string>
     <string name="action_show_widget_preview">Mostrar prévia do widget</string>
-    <string name="settings_title_integrations">Integrações</string>
-    <string name="label_count_installed_integrations">%d integrações instaladas</string>
     <string name="nothing">Nada</string>
     <string name="action_dismiss">Dispensar</string>
     <string name="action_accept">Aceitar</string>

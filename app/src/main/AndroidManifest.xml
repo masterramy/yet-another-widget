@@ -37,7 +37,6 @@
         <activity android:name=".ui.activities.tabs.CustomLocationActivity" android:exported="false" android:launchMode="singleInstance" android:screenOrientation="portrait" />
         <activity android:name=".ui.activities.tabs.WeatherProviderActivity" android:exported="false" android:launchMode="singleInstance" android:screenOrientation="portrait" />
         <activity android:name=".ui.activities.tabs.CustomDateActivity" android:exported="false" android:launchMode="singleInstance" android:screenOrientation="portrait" />
-        <activity android:name=".ui.activities.settings.IntegrationsActivity" android:exported="false" android:launchMode="singleInstance" android:screenOrientation="portrait" />
         <activity android:name=".ui.activities.tabs.MusicPlayersFilterActivity" android:exported="false" android:launchMode="singleInstance" android:screenOrientation="portrait" />
         <activity android:name=".ui.activities.tabs.AppNotificationsFilterActivity" android:exported="false" android:launchMode="singleInstance" android:screenOrientation="portrait" />
         <activity android:name=".ui.activities.tabs.MediaInfoFormatActivity" android:exported="false" android:launchMode="singleInstance" android:screenOrientation="portrait" />

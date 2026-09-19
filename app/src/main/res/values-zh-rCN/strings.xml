@@ -289,8 +289,6 @@
     <!-- Activities -->
     <string name="action_choose_application">选择应用</string>
     <string name="action_show_widget_preview">显示微件预览</string>
-    <string name="settings_title_integrations">整合</string>
-    <string name="label_count_installed_integrations">已安装 %d 个集成插件</string>
     <string name="nothing">无</string>
     <string name="action_dismiss">拒绝</string>
     <string name="action_accept">接收</string>

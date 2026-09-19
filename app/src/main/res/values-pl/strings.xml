@@ -289,8 +289,6 @@
     <!-- Activities -->
     <string name="action_choose_application">Wybierz aplikację</string>
     <string name="action_show_widget_preview">Pokaż podgląd widgetu</string>
-    <string name="settings_title_integrations">Integracje</string>
-    <string name="label_count_installed_integrations">%d zainstalowanych integracji</string>
     <string name="nothing">Nic</string>
     <string name="action_dismiss">Odrzuć</string>
     <string name="action_accept">Akceptuj</string>

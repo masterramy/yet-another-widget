@@ -171,6 +171,4 @@
     <!-- Activities -->
     <string name="action_choose_application">Выберите приложение</string>
     <string name="action_show_widget_preview">Показать превью виджета</string>
-    <string name="settings_title_integrations">Интеграции</string>
-    <string name="label_count_installed_integrations">%d установленные интеграции</string>
 </resources>

@@ -185,7 +185,5 @@
     <!-- Activities -->
     <string name="action_choose_application">Vyberte aplikáciu</string>
     <string name="action_show_widget_preview">Ukázať náhľad widgetu</string>
-    <string name="settings_title_integrations">Integrácie</string>
-    <string name="label_count_installed_integrations">%d nainštalovaných integrácií</string>
     <string name="nothing">Nič</string>
 </resources>

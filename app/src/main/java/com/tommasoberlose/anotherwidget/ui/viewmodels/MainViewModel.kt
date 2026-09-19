@@ -98,7 +98,6 @@ class MainViewModel(context: Application) : AndroidViewModel(context) {
     val darkThemePreference = Preferences.asLiveData(Preferences::darkThemePreference)
     val showWallpaper = Preferences.asLiveData(Preferences::showWallpaper)
     val showPreview = Preferences.asLiveData(Preferences::showPreview)
-    val installedIntegrations = Preferences.asLiveData(Preferences::installedIntegrations)
 
     // UI
     val fragmentScrollY = MutableLiveData<Int>()
@@ -171,6 +170,5 @@ class MainViewModel(context: Application) : AndroidViewModel(context) {
         addSource(Preferences.asLiveData(Preferences::appNotificationsFilter)) { value = true }
         addSource(Preferences.asLiveData(Preferences::showEventsAsGlanceProvider)) { value = true }
 
-        addSource(Preferences.asLiveData(Preferences::installedIntegrations)) { value = true }
     }
 }

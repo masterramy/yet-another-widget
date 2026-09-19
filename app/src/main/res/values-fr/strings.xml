@@ -302,8 +302,6 @@
     <!-- Activities -->
     <string name="action_choose_application">Choisir l\'app</string>
     <string name="action_show_widget_preview">Afficher l\'aperçu du widget</string>
-    <string name="settings_title_integrations">Intégrations</string>
-    <string name="label_count_installed_integrations">%d intégrations installées</string>
     <string name="nothing">Rien</string>
     <string name="action_dismiss">REFUSER</string>
     <string name="action_accept">ACCEPTER</string>
