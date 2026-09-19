@@ -27,7 +27,6 @@
     <string name="settings_date_format_title">Datoformat</string>
     <string name="header_widget_background">Widget baggrund</string>
     <string name="settings_secondary_row_top_margin_title">Rækkeafstand</string>
-    <string name="action_custom_font_to_search">Brugerdefineret skrifttype...</string>
     <string name="font_family_settings_title">Font familie</string>
     <string name="settings_widget_align_title">Justering</string>
     <string name="settings_widget_align_left_subtitle">Venstre</string>

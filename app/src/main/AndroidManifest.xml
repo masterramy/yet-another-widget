@@ -33,7 +33,6 @@
         </activity>
 
         <activity android:name=".ui.activities.tabs.ChooseApplicationActivity" android:exported="false" android:launchMode="singleInstance" android:screenOrientation="portrait" />
-        <activity android:name=".ui.activities.tabs.CustomFontActivity" android:exported="false" android:launchMode="singleInstance" android:screenOrientation="portrait" />
         <activity android:name=".ui.activities.tabs.CustomLocationActivity" android:exported="false" android:launchMode="singleInstance" android:screenOrientation="portrait" />
         <activity android:name=".ui.activities.tabs.WeatherProviderActivity" android:exported="false" android:launchMode="singleInstance" android:screenOrientation="portrait" />
         <activity android:name=".ui.activities.tabs.CustomDateActivity" android:exported="false" android:launchMode="singleInstance" android:screenOrientation="portrait" />

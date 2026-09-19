@@ -27,7 +27,6 @@
     <string name="settings_date_format_title">Formato da data</string>
     <string name="header_widget_background">Fundo do widget</string>
     <string name="settings_secondary_row_top_margin_title">Margem</string>
-    <string name="action_custom_font_to_search">Fonte personalizada...</string>
     
     <string name="font_100" translatable="false">Thin</string>
     <string name="font_200" translatable="false">Light</string>

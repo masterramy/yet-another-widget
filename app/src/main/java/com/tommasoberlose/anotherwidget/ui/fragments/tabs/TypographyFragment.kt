@@ -19,13 +19,11 @@ import com.tommasoberlose.anotherwidget.components.BottomSheetPicker
 import com.tommasoberlose.anotherwidget.databinding.FragmentTabTypographyBinding
 import com.tommasoberlose.anotherwidget.global.Constants
 import com.tommasoberlose.anotherwidget.global.Preferences
-import com.tommasoberlose.anotherwidget.global.RequestCode
 import com.tommasoberlose.anotherwidget.helpers.ColorHelper
 import com.tommasoberlose.anotherwidget.helpers.ColorHelper.toHexValue
 import com.tommasoberlose.anotherwidget.helpers.ColorHelper.toIntValue
 import com.tommasoberlose.anotherwidget.helpers.DateHelper
 import com.tommasoberlose.anotherwidget.helpers.SettingsStringHelper
-import com.tommasoberlose.anotherwidget.ui.activities.tabs.CustomFontActivity
 import com.tommasoberlose.anotherwidget.ui.activities.MainActivity
 import com.tommasoberlose.anotherwidget.ui.activities.tabs.CustomDateActivity
 import com.tommasoberlose.anotherwidget.ui.viewmodels.MainViewModel
@@ -268,14 +266,8 @@ class TypographyFragment : Fragment() {
             if (Preferences.customFontFile != "") {
                 dialog.addItem(SettingsStringHelper.getCustomFontLabel(requireContext(), Constants.CUSTOM_FONT_DOWNLOADED), Constants.CUSTOM_FONT_DOWNLOADED)
             }
-            dialog.addItem(getString(R.string.action_custom_font_to_search), Constants.CUSTOM_FONT_DOWNLOAD_NEW)
             dialog.addOnSelectItemListener { value ->
-                if (value == Constants.CUSTOM_FONT_DOWNLOAD_NEW) {
-                    startActivityForResult(
-                        Intent(requireContext(), CustomFontActivity::class.java),
-                        RequestCode.CUSTOM_FONT_CHOOSER_REQUEST_CODE.code
-                    )
-                } else if (value != Constants.CUSTOM_FONT_DOWNLOADED) {
+                if (value != Constants.CUSTOM_FONT_DOWNLOADED) {
                     Preferences.bulk {
                         customFont = value
                         customFontFile = ""

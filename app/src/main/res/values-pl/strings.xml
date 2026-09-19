@@ -27,7 +27,6 @@
     <string name="settings_date_format_title">Format daty</string>
     <string name="header_widget_background">Tło widgetu</string>
     <string name="settings_secondary_row_top_margin_title">Oddzidlenie rzędów</string>
-    <string name="action_custom_font_to_search">Niestandardowa czcionka…</string>
     <string name="font_family_settings_title">Rodzina czcionek</string>
     
     <string name="font_100" translatable="false">Thin</string>

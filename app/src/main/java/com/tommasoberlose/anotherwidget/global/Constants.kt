@@ -7,7 +7,6 @@ object Constants {
 
     const val CUSTOM_FONT_DEFAULT = 0
     const val CUSTOM_FONT_DOWNLOADED = 2
-    const val CUSTOM_FONT_DOWNLOAD_NEW = 3
 
     enum class ClockBottomMargin(val rawValue: Int) {
         NONE(0), SMALL(1), MEDIUM(2), LARGE(3)

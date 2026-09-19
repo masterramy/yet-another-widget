@@ -231,6 +231,30 @@ jobs:
           grep -Fq 'if (Preferences.customFont == 1)' "$app"
           grep -Fq 'Preferences.customFont = Constants.CUSTOM_FONT_DEFAULT' "$app"
           echo "Retired provider selections/credentials normalize to WeatherAPI while preserving an existing WeatherAPI key."
+      - name: New remote-font acquisition surface must be absent
+        shell: bash
+        run: |
+          set -euo pipefail
+          manifest=app/src/main/AndroidManifest.xml
+          constants=app/src/main/java/com/tommasoberlose/anotherwidget/global/Constants.kt
+          requests=app/src/main/java/com/tommasoberlose/anotherwidget/global/RequestCode.kt
+          typography=app/src/main/java/com/tommasoberlose/anotherwidget/ui/fragments/tabs/TypographyFragment.kt
+          widget=app/src/main/java/com/tommasoberlose/anotherwidget/helpers/WidgetHelper.kt
+          test ! -e app/src/main/java/com/tommasoberlose/anotherwidget/ui/activities/tabs/CustomFontActivity.kt
+          test ! -e app/src/main/java/com/tommasoberlose/anotherwidget/ui/viewmodels/tabs/CustomFontViewModel.kt
+          test ! -e app/src/main/res/layout/activity_custom_font.xml
+          ! grep -Fq '.ui.activities.tabs.CustomFontActivity' "$manifest"
+          ! grep -Fq 'CUSTOM_FONT_DOWNLOAD_NEW' "$constants"
+          ! grep -Fq 'CUSTOM_FONT_CHOOSER_REQUEST_CODE' "$requests"
+          ! grep -Fq 'CustomFontActivity' "$typography"
+          if grep -R -n -F 'action_custom_font_to_search' app/src/main/res/values* --include='strings.xml'; then
+            echo "ERROR: retired new-font acquisition resource remains" >&2
+            exit 1
+          fi
+          grep -Fq 'const val CUSTOM_FONT_DOWNLOADED = 2' "$constants"
+          grep -Fq 'if (Preferences.customFontFile != "")' "$widget"
+          grep -Fq 'FontRequest(' "$widget"
+          echo "New remote-font acquisition is absent while legacy downloaded-font compatibility remains."
       - name: External source links must use HTTPS and current project ownership
         shell: bash
         run: |

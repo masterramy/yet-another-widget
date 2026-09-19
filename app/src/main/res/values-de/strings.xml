@@ -26,7 +26,6 @@
     <string name="settings_date_format_title">Datumsformat</string>
     <string name="header_widget_background">Widget Hintergrund</string>
     <string name="settings_secondary_row_top_margin_title">Zeilenabstand</string>
-    <string name="action_custom_font_to_search">Benutzerdefinierte Schriftart…</string>
     <string name="font_family_settings_title">Schriftfamilie</string>
     <string name="settings_widget_align_title">Widget Ausrichtung</string>
     <string name="settings_widget_align_left_subtitle">Links</string>
