@@ -223,8 +223,7 @@
     <!-- Settings -->
     <string name="action_share">Compartilhar</string>
     <string name="action_rate">Avaliar o aplicativo</string>
-    <string name="action_support">Me apoie</string>
-    <string name="action_feedback">Feedback</string>
+<string name="action_feedback">Feedback</string>
     <string name="action_about">Sobre</string>
     <string name="action_refresh_widget">Recarregar widget</string>
     <string name="toolbar_transition_name" translatable="false">toolbar</string>
@@ -237,12 +236,9 @@
     <string name="settings_not_visible">Não visível</string>
     <string name="support_translations_title">Ajude com traduções</string>
     <string name="support_translations_subtitle">Abra um pull request no GitHub</string>
-    <string name="support_website_title">Cheque meus outros projetos</string>
-    <string name="support_website_subtitle">O mesmo desenvolvedor, diversas possibilidades</string>
-    <string name="error">Ooops, algo deu errado!</string>
+<string name="error">Ooops, algo deu errado!</string>
     <string name="settings_theme_title">Tema</string>
-    <string name="support_main_subtitle">Devs sempre precisam de bastante café</string>
-    <string name="settings_subtitle_dark_theme_light">Light</string>
+<string name="settings_subtitle_dark_theme_light">Light</string>
     <string name="settings_subtitle_dark_theme_dark">Dark</string>
     <string name="settings_subtitle_dark_theme_by_battery_saver">Definido pela economia de bateria</string>
     <string name="settings_subtitle_dark_theme_follow_system">Segue o tema do sistema</string>
@@ -271,16 +267,8 @@
 
     <!-- Activities -->
     <string name="action_choose_application">Escolha a aplicação</string>
-    <string name="support_main_title">Apoie o desenvolvedor</string>
-    <string name="thanks">Obrigado por me apoiar!</string>
-    <string name="donation_coffee">Um café italiano</string>
-    <string name="donation_donuts">Alguns donuts glaceados</string>
-    <string name="donation_dinner">Um jantar caro</string>
-    <string name="donation_breakfast">Um café da manhã inglês</string>
-    <string name="donation_lunch">Um almoço rápido</string>
-    <string name="action_show_widget_preview">Mostrar prévia do widget</string>
-    <string name="support_dev_subtitle">Este é um projeto de um único desenvolvedor,\nentão obrigado pelo apoio!</string>
-    <string name="settings_title_integrations">Integrações</string>
+<string name="action_show_widget_preview">Mostrar prévia do widget</string>
+<string name="settings_title_integrations">Integrações</string>
     <string name="label_count_installed_integrations">%d integrações instaladas</string>
     <string name="nothing">Nada</string>
     <string name="action_dismiss">Dispensar</string>

@@ -257,8 +257,7 @@
     <!-- Settings -->
     <string name="action_share">Share</string>
     <string name="action_rate">Rate app</string>
-    <string name="action_support">Support me</string>
-    <string name="action_feedback">Feedback</string>
+<string name="action_feedback">Feedback</string>
     <string name="action_about">About</string>
     <string name="action_refresh_widget">Refresh widget</string>
     <string name="toolbar_transition_name" translatable="false">toolbar</string>
@@ -271,12 +270,9 @@
     <string name="settings_not_visible">Hidden</string>
     <string name="support_translations_title">Help with translations</string>
     <string name="support_translations_subtitle">Open a pull request on GitHub</string>
-    <string name="support_website_title">Check my other projects</string>
-    <string name="support_website_subtitle">Same developer, many possibilities</string>
-    <string name="error">Ooops, something went wrong!</string>
+<string name="error">Ooops, something went wrong!</string>
     <string name="settings_theme_title">Theme</string>
-    <string name="support_main_subtitle">Devs always need a lot of coffee</string>
-    <string name="settings_subtitle_dark_theme_light">Light</string>
+<string name="settings_subtitle_dark_theme_light">Light</string>
     <string name="settings_subtitle_dark_theme_dark">Dark</string>
     <string name="settings_subtitle_dark_theme_by_battery_saver">Set by battery saver</string>
     <string name="settings_subtitle_dark_theme_follow_system">Follow the system theme</string>
@@ -305,16 +301,8 @@
 
     <!-- Activities -->
     <string name="action_choose_application">Choose application</string>
-    <string name="support_main_title">Support the developer</string>
-    <string name="thanks">Thanks for supporting me!</string>
-    <string name="donation_coffee">An italian coffee</string>
-    <string name="donation_donuts">Some glazed donuts</string>
-    <string name="donation_dinner">An expensive dinner</string>
-    <string name="donation_breakfast">An english breakfast</string>
-    <string name="donation_lunch">A quick lunch</string>
-    <string name="action_show_widget_preview">Show widget preview</string>
-    <string name="support_dev_subtitle">This is a single developer project,\nso thank you for the support!</string>
-    <string name="settings_title_integrations">Integrations</string>
+<string name="action_show_widget_preview">Show widget preview</string>
+<string name="settings_title_integrations">Integrations</string>
     <string name="label_count_installed_integrations">%d installed integrations</string>
     <string name="nothing">Nothing</string>
     <string name="action_dismiss">Dismiss</string>

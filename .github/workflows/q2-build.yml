@@ -55,6 +55,31 @@ jobs:
           test ! -e app/src/main/java/com/tommasoberlose/anotherwidget/ui/viewmodels/settings/SupportDevViewModel.kt
           test ! -e app/src/main/res/layout/activity_support_dev.xml
           test ! -e app/src/main/res/layout/inapp_product_layout.xml
+          settings=app/src/main/java/com/tommasoberlose/anotherwidget/ui/fragments/SettingsFragment.kt
+          settings_layout=app/src/main/res/layout/fragment_app_settings.xml
+          ! grep -Fq 'binding.actionHelpDev' "$settings"
+          ! grep -Fq 'binding.actionWebsite' "$settings"
+          ! grep -Fq '@+id/action_help_dev' "$settings_layout"
+          ! grep -Fq '@+id/action_website' "$settings_layout"
+          for retired in \
+            action_support \
+            support_website_title \
+            support_website_subtitle \
+            support_main_subtitle \
+            support_main_title \
+            thanks \
+            donation_coffee \
+            donation_donuts \
+            donation_dinner \
+            donation_breakfast \
+            donation_lunch \
+            support_dev_subtitle; do
+            if grep -R -n -F "name=\"$retired\"" app/src/main/res/values* --include='strings.xml'; then
+              echo "ERROR: retired donation/developer resource remains: $retired" >&2
+              exit 1
+            fi
+          done
+          echo "Retired Billing, donation, and inherited developer-support surfaces are absent."
       - name: Google Fit and exact-alarm capability surface must be retired
         shell: bash
         run: |
@@ -204,7 +229,7 @@ jobs:
           grep -Fq 'https://github.com/masterramy/yet-another-widget/issues' "$settings"
           ! grep -Fq 'github.com/tommasoberlose/another-widget' "$settings"
           ! grep -Fq 'tommasoberlose.com' "$settings"
-          grep -Fq 'binding.actionWebsite.visibility = View.GONE' "$settings"
+          ! grep -Fq 'binding.actionWebsite' "$settings"
           grep -Fq 'binding.actionPrivacyPolicy.visibility = View.GONE' "$settings"
           echo "External app links are HTTPS-only and no longer route users to inherited ownership surfaces."
 

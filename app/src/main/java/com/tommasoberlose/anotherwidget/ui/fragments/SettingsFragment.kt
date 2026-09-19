@@ -92,9 +92,7 @@ class SettingsFragment : Fragment() {
                 Preferences.showWallpaper &&
                 requireActivity().checkGrantedPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
         )
-        // Independent paid-upfront release: inherited ownership/legal destinations stay unavailable.
-        binding.actionHelpDev.visibility = View.GONE
-        binding.actionWebsite.visibility = View.GONE
+        // Final public legal/privacy destination remains Master-owned until Q4 freeze.
         binding.actionPrivacyPolicy.visibility = View.GONE
 
         setupListener()
