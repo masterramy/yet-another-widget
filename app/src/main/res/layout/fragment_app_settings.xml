@@ -209,24 +209,6 @@
                         android:buttonTint="@color/colorAccent" />
                 </LinearLayout>
                 <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="8dp"
-                        android:paddingRight="8dp"
-                        android:orientation="vertical">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            style="@style/AnotherWidget.Settings.Title"
-                            android:text="@string/settings_title_integrations"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/integrations_count_label"
-                            style="@style/AnotherWidget.Settings.Subtitle"/>
-                    </LinearLayout>
-                </LinearLayout>
-                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="12dp"
