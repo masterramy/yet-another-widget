@@ -39,7 +39,6 @@ class GlanceSettingsDialog(val context: Activity, val provider: Constants.Glance
             Constants.GlanceProviderId.NEXT_CLOCK_ALARM -> context.getString(R.string.settings_show_next_alarm_title)
             Constants.GlanceProviderId.BATTERY_LEVEL_LOW -> context.getString(R.string.settings_low_battery_level_title)
             Constants.GlanceProviderId.CUSTOM_INFO -> context.getString(R.string.settings_custom_notes_title)
-            Constants.GlanceProviderId.GOOGLE_FIT_STEPS -> context.getString(R.string.settings_daily_steps_title)
             Constants.GlanceProviderId.NOTIFICATIONS -> context.getString(R.string.settings_show_notifications_title)
             Constants.GlanceProviderId.GREETINGS -> context.getString(R.string.settings_show_greetings_title)
             Constants.GlanceProviderId.EVENTS -> context.getString(R.string.settings_show_events_as_glance_provider_title)
@@ -51,7 +50,6 @@ class GlanceSettingsDialog(val context: Activity, val provider: Constants.Glance
             Constants.GlanceProviderId.NEXT_CLOCK_ALARM -> context.getString(R.string.settings_show_next_alarm_subtitle)
             Constants.GlanceProviderId.BATTERY_LEVEL_LOW -> context.getString(R.string.settings_low_battery_level_subtitle)
             Constants.GlanceProviderId.CUSTOM_INFO -> ""
-            Constants.GlanceProviderId.GOOGLE_FIT_STEPS -> context.getString(R.string.settings_daily_steps_subtitle)
             Constants.GlanceProviderId.NOTIFICATIONS -> context.getString(R.string.settings_show_notifications_subtitle)
             Constants.GlanceProviderId.GREETINGS -> context.getString(R.string.settings_show_greetings_subtitle)
             Constants.GlanceProviderId.EVENTS -> context.getString(R.string.settings_show_events_as_glance_provider_subtitle)
@@ -79,9 +77,6 @@ class GlanceSettingsDialog(val context: Activity, val provider: Constants.Glance
             binding.warningContainer.isVisible = false
             checkNextAlarm()
         }
-
-        /* RETIRED GOOGLE FIT STEPS */
-        binding.actionToggleGoogleFit.isVisible = false
 
         /* BATTERY INFO */
         if (provider == Constants.GlanceProviderId.BATTERY_LEVEL_LOW) {
@@ -133,7 +128,6 @@ class GlanceSettingsDialog(val context: Activity, val provider: Constants.Glance
             Constants.GlanceProviderId.NEXT_CLOCK_ALARM -> Preferences.showNextAlarm
             Constants.GlanceProviderId.BATTERY_LEVEL_LOW -> Preferences.showBatteryCharging
             Constants.GlanceProviderId.CUSTOM_INFO -> true
-            Constants.GlanceProviderId.GOOGLE_FIT_STEPS -> false
             Constants.GlanceProviderId.NOTIFICATIONS -> Preferences.showNotifications
             Constants.GlanceProviderId.GREETINGS -> Preferences.showGreetings
             Constants.GlanceProviderId.EVENTS -> Preferences.showEventsAsGlanceProvider
@@ -162,12 +156,6 @@ class GlanceSettingsDialog(val context: Activity, val provider: Constants.Glance
                         Constants.GlanceProviderId.GREETINGS -> {
                             Preferences.showGreetings = isChecked
                             GreetingsHelper.toggleGreetings(context)
-                        }
-                        Constants.GlanceProviderId.GOOGLE_FIT_STEPS -> {
-                            // Kept only for legacy enum compatibility. The provider is no longer
-                            // exposed by GlanceProviderHelper and can never be enabled.
-                            Preferences.showDailySteps = false
-                            binding.providerSwitch.setCheckedImmediatelyNoEvent(false)
                         }
                         Constants.GlanceProviderId.EVENTS -> {
                             Preferences.showEventsAsGlanceProvider = isChecked
