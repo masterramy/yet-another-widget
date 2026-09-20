@@ -31,7 +31,7 @@
             android:padding="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
-            android:src="@mipmap/ic_launcher_foreground"
+            android:src="@drawable/ic_launcher_foreground"
             android:contentDescription="icon"
             android:id="@+id/icon"
             tools:ignore="HardcodedText" />
