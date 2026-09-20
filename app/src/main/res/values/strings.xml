@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name" translatable="false">Another Widget</string>
+    <string name="app_name" translatable="false">Yet Another Widget</string>
     <string name="add_widget">Add Widget</string>
 
     <!-- Display -->
@@ -278,6 +278,9 @@
     <string name="settings_subtitle_dark_theme_default">Default</string>
     <string name="search">Search</string>
     <string name="settings_app_version_title">App version</string>
+    <string name="settings_provenance_title">About Yet Another Widget</string>
+    <string name="settings_provenance_disclosure">Yet Another Widget is an independent restoration based on the MIT-licensed Another Widget source by Tommaso Berlose. It is not affiliated with or endorsed by the original developer.</string>
+    <string name="settings_publisher_identity">Publisher: Ramy Baheeg</string>
     <string name="settings_title_show_wallpaper">Show wallpaper</string>
     <string name="support_refresh_widget_subtitle">Force the restart of the widget service</string>
     <string name="settings_feedback_subtitle">Feel free to help our project!</string>

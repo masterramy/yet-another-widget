@@ -339,6 +339,32 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    android:paddingLeft="24dp"
+                    android:paddingRight="24dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/AnotherWidget.Settings.Title"
+                        android:text="@string/settings_provenance_title" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        style="@style/AnotherWidget.Settings.Subtitle"
+                        android:text="@string/settings_provenance_disclosure" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        style="@style/AnotherWidget.Settings.Subtitle"
+                        android:text="@string/settings_publisher_identity" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:paddingTop="12dp"
                     android:paddingBottom="12dp"
                     android:paddingLeft="8dp"

@@ -6,7 +6,7 @@ The goal is a simple, reliable home-screen glance widget for date/time, calendar
 
 ## Release status
 
-This project is still in release-integration and certification work. No production Google Play release is authorized from this branch. The final public app name, Android application ID, launcher icon, signing identity, store listing, and public privacy-policy URL must be settled before the release candidate is frozen.
+This project is still in release-integration and certification work. No production Google Play release is authorized from this branch. The approved public identity is **Yet Another Widget**, with independent Android package `com.ramybaheeg.yetanotherwidget`, first-release version `1.0.0` (`versionCode 1`), and original restoration-owned launcher/splash artwork. Signing identity, Play account actions, store activation, and the public privacy-policy route remain external release gates.
 
 The restoration intentionally minimizes permissions and inherited services. Current work includes API-36 compatibility, supported CalendarContract and WorkManager paths, foreground-only coarse location for optional weather geolocation, removal of obsolete Google Fit/Billing/remote-font paths, and publication hardening.
 

@@ -4,8 +4,8 @@
     android:viewportWidth="108" android:viewportHeight="108">
     <path android:fillColor="@android:color/transparent"
         android:pathData="M39,31H69A8,8 0,0 1,77 39V69A8,8 0,0 1,69 77H39A8,8 0,0 1,31 69V39A8,8 0,0 1,39 31Z"
-        android:strokeColor="#FFFFFFFF" android:strokeWidth="4" android:strokeLineJoin="round"/>
-    <path android:fillColor="#FFFFFFFF" android:pathData="M43,43a3,3 0,1 1,-6 0a3,3 0,1 1,6 0"/>
+        android:strokeColor="#FF000000" android:strokeWidth="4" android:strokeLineJoin="round"/>
+    <path android:fillColor="#FF000000" android:pathData="M43,43a3,3 0,1 1,-6 0a3,3 0,1 1,6 0"/>
     <path android:fillColor="@android:color/transparent" android:pathData="M50,43H68M40,54H68M40,64H62"
-        android:strokeColor="#FFFFFFFF" android:strokeWidth="4" android:strokeLineCap="round"/>
+        android:strokeColor="#FF000000" android:strokeWidth="4" android:strokeLineCap="round"/>
 </vector>
