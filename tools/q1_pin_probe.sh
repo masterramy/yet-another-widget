@@ -3,7 +3,7 @@ set -euo pipefail
 
 APP_APK="$(find app/build/outputs/apk/debug -maxdepth 1 -type f -name '*.apk' | head -n1)"
 TEST_APK="app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk"
-CLASS="com.tommasoberlose.anotherwidget.PinWidgetRequestTest"
+CLASS="com.ramybaheeg.yetanotherwidget.PinWidgetRequestTest"
 test -n "$APP_APK"
 source tools/q1_runtime_identity.sh
 yaw_read_app_identity "$APP_APK"

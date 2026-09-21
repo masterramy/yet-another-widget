@@ -3,7 +3,7 @@ set -euo pipefail
 
 APP_APK="$(find app/build/outputs/apk/debug -maxdepth 1 -type f -name '*.apk' | head -n1)"
 TEST_APK="app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk"
-TEST_CLASS="com.tommasoberlose.anotherwidget.LauncherWidgetDragTest"
+TEST_CLASS="com.ramybaheeg.yetanotherwidget.LauncherWidgetDragTest"
 test -n "$APP_APK"
 source tools/q1_runtime_identity.sh
 yaw_read_app_identity "$APP_APK"
@@ -30,7 +30,7 @@ echo "== Q1 placement recovery: UiAutomation coherent Launcher pointer drag =="
 TEST_SOURCE="app/src/androidTest/java/com/tommasoberlose/anotherwidget/LauncherWidgetDragTest.kt"
 mkdir -p "$(dirname "$TEST_SOURCE")"
 cat > "$TEST_SOURCE" <<'KOTLIN'
-package com.tommasoberlose.anotherwidget
+package com.ramybaheeg.yetanotherwidget
 
 import android.os.SystemClock
 import android.view.InputDevice
