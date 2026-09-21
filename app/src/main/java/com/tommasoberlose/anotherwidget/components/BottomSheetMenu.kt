@@ -1,4 +1,4 @@
-package com.tommasoberlose.anotherwidget.components
+package com.ramybaheeg.yetanotherwidget.components
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -9,9 +9,9 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.tommasoberlose.anotherwidget.R
-import com.tommasoberlose.anotherwidget.databinding.BottomSheetMenuBinding
-import com.tommasoberlose.anotherwidget.databinding.BottomSheetMenuItemBinding
+import com.ramybaheeg.yetanotherwidget.R
+import com.ramybaheeg.yetanotherwidget.databinding.BottomSheetMenuBinding
+import com.ramybaheeg.yetanotherwidget.databinding.BottomSheetMenuItemBinding
 
 /**
  * [BottomSheetDialogFragment] that uses a custom

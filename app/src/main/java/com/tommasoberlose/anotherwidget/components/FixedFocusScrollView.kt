@@ -1,4 +1,4 @@
-package com.tommasoberlose.anotherwidget.components
+package com.ramybaheeg.yetanotherwidget.components
 
 import android.content.Context
 import android.graphics.Rect

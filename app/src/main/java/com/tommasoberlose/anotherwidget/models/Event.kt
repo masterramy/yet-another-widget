@@ -1,4 +1,4 @@
-package com.tommasoberlose.anotherwidget.models
+package com.ramybaheeg.yetanotherwidget.models
 
 import android.provider.CalendarContract
 import androidx.room.Entity

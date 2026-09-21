@@ -5,7 +5,7 @@
     app:startDestination="@id/appMainFragment">
     <fragment
         android:id="@+id/appMainFragment"
-        android:name="com.tommasoberlose.anotherwidget.ui.fragments.MainFragment"
+        android:name="com.ramybaheeg.yetanotherwidget.ui.fragments.MainFragment"
         android:label="AppMainFragment" >
         <action
             android:id="@+id/action_appMainFragment_to_appSettingsFragment"
@@ -13,6 +13,6 @@
     </fragment>
     <fragment
         android:id="@+id/appSettingsFragment"
-        android:name="com.tommasoberlose.anotherwidget.ui.fragments.SettingsFragment"
+        android:name="com.ramybaheeg.yetanotherwidget.ui.fragments.SettingsFragment"
         android:label="AppSettingsFragment" />
 </navigation>

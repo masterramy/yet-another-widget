@@ -1,4 +1,4 @@
-package com.tommasoberlose.anotherwidget.ui.viewmodels
+package com.ramybaheeg.yetanotherwidget.ui.viewmodels
 
 import android.app.Application
 import android.content.ClipData
@@ -7,11 +7,11 @@ import android.content.Context
 import androidx.core.os.ConfigurationCompat
 import androidx.lifecycle.*
 import com.chibatching.kotpref.livedata.asLiveData
-import com.tommasoberlose.anotherwidget.R
-import com.tommasoberlose.anotherwidget.global.Constants
-import com.tommasoberlose.anotherwidget.global.Preferences
-import com.tommasoberlose.anotherwidget.helpers.ColorHelper.isColor
-import com.tommasoberlose.anotherwidget.utils.isMetric
+import com.ramybaheeg.yetanotherwidget.R
+import com.ramybaheeg.yetanotherwidget.global.Constants
+import com.ramybaheeg.yetanotherwidget.global.Preferences
+import com.ramybaheeg.yetanotherwidget.helpers.ColorHelper.isColor
+import com.ramybaheeg.yetanotherwidget.utils.isMetric
 
 class MainViewModel(context: Application) : AndroidViewModel(context) {
 

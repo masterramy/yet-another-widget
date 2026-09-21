@@ -1,4 +1,4 @@
-package com.tommasoberlose.anotherwidget.services
+package com.ramybaheeg.yetanotherwidget.services
 
 import android.Manifest
 import android.content.Context
@@ -10,16 +10,16 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.Worker
 import androidx.work.WorkerParameters
-import com.tommasoberlose.anotherwidget.db.EventRepository
-import com.tommasoberlose.anotherwidget.global.Preferences
-import com.tommasoberlose.anotherwidget.helpers.CalendarHelper
-import com.tommasoberlose.anotherwidget.helpers.CalendarHelper.applyFilters
-import com.tommasoberlose.anotherwidget.helpers.CalendarHelper.sortEvents
-import com.tommasoberlose.anotherwidget.models.Event
-import com.tommasoberlose.anotherwidget.receivers.UpdatesReceiver
-import com.tommasoberlose.anotherwidget.ui.fragments.MainFragment
-import com.tommasoberlose.anotherwidget.ui.widgets.MainWidget
-import com.tommasoberlose.anotherwidget.utils.checkGrantedPermission
+import com.ramybaheeg.yetanotherwidget.db.EventRepository
+import com.ramybaheeg.yetanotherwidget.global.Preferences
+import com.ramybaheeg.yetanotherwidget.helpers.CalendarHelper
+import com.ramybaheeg.yetanotherwidget.helpers.CalendarHelper.applyFilters
+import com.ramybaheeg.yetanotherwidget.helpers.CalendarHelper.sortEvents
+import com.ramybaheeg.yetanotherwidget.models.Event
+import com.ramybaheeg.yetanotherwidget.receivers.UpdatesReceiver
+import com.ramybaheeg.yetanotherwidget.ui.fragments.MainFragment
+import com.ramybaheeg.yetanotherwidget.ui.widgets.MainWidget
+import com.ramybaheeg.yetanotherwidget.utils.checkGrantedPermission
 import org.greenrobot.eventbus.EventBus
 import java.util.Calendar
 

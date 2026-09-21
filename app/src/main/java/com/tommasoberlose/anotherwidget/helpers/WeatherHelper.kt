@@ -1,17 +1,17 @@
-package com.tommasoberlose.anotherwidget.helpers
+package com.ramybaheeg.yetanotherwidget.helpers
 
 import android.Manifest
 import android.app.Activity
 import android.content.Context
 import com.chibatching.kotpref.Kotpref
 import com.google.android.gms.location.LocationServices
-import com.tommasoberlose.anotherwidget.R
-import com.tommasoberlose.anotherwidget.global.Constants
-import com.tommasoberlose.anotherwidget.global.Preferences
-import com.tommasoberlose.anotherwidget.network.WeatherNetworkApi
-import com.tommasoberlose.anotherwidget.ui.widgets.MainWidget
-import com.tommasoberlose.anotherwidget.utils.checkGrantedPermission
-import com.tommasoberlose.anotherwidget.utils.isDarkTheme
+import com.ramybaheeg.yetanotherwidget.R
+import com.ramybaheeg.yetanotherwidget.global.Constants
+import com.ramybaheeg.yetanotherwidget.global.Preferences
+import com.ramybaheeg.yetanotherwidget.network.WeatherNetworkApi
+import com.ramybaheeg.yetanotherwidget.ui.widgets.MainWidget
+import com.ramybaheeg.yetanotherwidget.utils.checkGrantedPermission
+import com.ramybaheeg.yetanotherwidget.utils.isDarkTheme
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 

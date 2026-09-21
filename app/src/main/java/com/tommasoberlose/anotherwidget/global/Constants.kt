@@ -1,4 +1,4 @@
-package com.tommasoberlose.anotherwidget.global
+package com.ramybaheeg.yetanotherwidget.global
 
 object Constants {
     const val RESULT_CODE_CUSTOM_LOCATION = 45

@@ -1,9 +1,9 @@
-package com.tommasoberlose.anotherwidget.ui.adapters
+package com.ramybaheeg.yetanotherwidget.ui.adapters
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.tommasoberlose.anotherwidget.ui.fragments.tabs.*
+import com.ramybaheeg.yetanotherwidget.ui.fragments.tabs.*
 
 class ViewPagerAdapter(fragmentActivity: FragmentActivity) :
     FragmentStateAdapter(fragmentActivity) {

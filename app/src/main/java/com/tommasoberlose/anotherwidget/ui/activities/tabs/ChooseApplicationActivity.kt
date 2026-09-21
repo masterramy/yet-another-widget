@@ -1,8 +1,8 @@
-package com.tommasoberlose.anotherwidget.ui.activities.tabs
+package com.ramybaheeg.yetanotherwidget.ui.activities.tabs
 
 import android.app.Activity
 import android.os.Bundle
-import com.tommasoberlose.anotherwidget.R
+import com.ramybaheeg.yetanotherwidget.R
 import android.content.Intent
 import android.content.pm.ResolveInfo
 import android.view.View
@@ -16,11 +16,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.google.android.material.card.MaterialCardView
-import com.tommasoberlose.anotherwidget.databinding.ActivityChooseApplicationBinding
-import com.tommasoberlose.anotherwidget.global.Constants
-import com.tommasoberlose.anotherwidget.helpers.IntentHelper
-import com.tommasoberlose.anotherwidget.helpers.MediaPlayerHelper
-import com.tommasoberlose.anotherwidget.ui.viewmodels.tabs.ChooseApplicationViewModel
+import com.ramybaheeg.yetanotherwidget.databinding.ActivityChooseApplicationBinding
+import com.ramybaheeg.yetanotherwidget.global.Constants
+import com.ramybaheeg.yetanotherwidget.helpers.IntentHelper
+import com.ramybaheeg.yetanotherwidget.helpers.MediaPlayerHelper
+import com.ramybaheeg.yetanotherwidget.ui.viewmodels.tabs.ChooseApplicationViewModel
 import kotlinx.coroutines.*
 import net.idik.lib.slimadapter.SlimAdapter
 import net.idik.lib.slimadapter.SlimAdapterEx

@@ -1,10 +1,10 @@
-package com.tommasoberlose.anotherwidget.helpers
+package com.ramybaheeg.yetanotherwidget.helpers
 
 import android.content.Context
 import android.content.Context.BATTERY_SERVICE
 import android.os.BatteryManager
 import androidx.core.content.ContextCompat.getSystemService
-import com.tommasoberlose.anotherwidget.global.Preferences
+import com.ramybaheeg.yetanotherwidget.global.Preferences
 
 
 object BatteryHelper {

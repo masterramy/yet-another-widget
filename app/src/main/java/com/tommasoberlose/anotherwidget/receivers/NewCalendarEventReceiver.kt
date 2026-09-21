@@ -1,12 +1,12 @@
-package com.tommasoberlose.anotherwidget.receivers
+package com.ramybaheeg.yetanotherwidget.receivers
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import com.tommasoberlose.anotherwidget.db.EventRepository
-import com.tommasoberlose.anotherwidget.global.Actions
-import com.tommasoberlose.anotherwidget.helpers.CalendarHelper
+import com.ramybaheeg.yetanotherwidget.db.EventRepository
+import com.ramybaheeg.yetanotherwidget.global.Actions
+import com.ramybaheeg.yetanotherwidget.helpers.CalendarHelper
 
 class NewCalendarEventReceiver : BroadcastReceiver() {
 

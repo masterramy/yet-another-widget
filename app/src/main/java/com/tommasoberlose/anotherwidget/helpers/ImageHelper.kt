@@ -1,4 +1,4 @@
-package com.tommasoberlose.anotherwidget.helpers
+package com.ramybaheeg.yetanotherwidget.helpers
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -10,7 +10,7 @@ import android.graphics.Rect
 import android.util.TypedValue
 import android.widget.ImageView
 import androidx.core.graphics.drawable.toBitmap
-import com.tommasoberlose.anotherwidget.utils.isDarkTheme
+import com.ramybaheeg.yetanotherwidget.utils.isDarkTheme
 import kotlin.math.min
 import kotlin.math.roundToInt
 
@@ -21,9 +21,9 @@ object ImageHelper {
             TypedValue.COMPLEX_UNIT_DIP,
             when (
                 if (context.isDarkTheme()) {
-                    com.tommasoberlose.anotherwidget.global.Preferences.textShadowDark
+                    com.ramybaheeg.yetanotherwidget.global.Preferences.textShadowDark
                 } else {
-                    com.tommasoberlose.anotherwidget.global.Preferences.textShadow
+                    com.ramybaheeg.yetanotherwidget.global.Preferences.textShadow
                 }
             ) {
                 0 -> 0f * factor
@@ -72,9 +72,9 @@ object ImageHelper {
 
         val opacity = when (
             if (context.isDarkTheme()) {
-                com.tommasoberlose.anotherwidget.global.Preferences.textShadowDark
+                com.ramybaheeg.yetanotherwidget.global.Preferences.textShadowDark
             } else {
-                com.tommasoberlose.anotherwidget.global.Preferences.textShadow
+                com.ramybaheeg.yetanotherwidget.global.Preferences.textShadow
             }
         ) {
             0 -> 0f

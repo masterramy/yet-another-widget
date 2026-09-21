@@ -1,13 +1,13 @@
-package com.tommasoberlose.anotherwidget.ui.viewmodels.tabs
+package com.ramybaheeg.yetanotherwidget.ui.viewmodels.tabs
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.chibatching.kotpref.livedata.asLiveData
-import com.tommasoberlose.anotherwidget.R
-import com.tommasoberlose.anotherwidget.global.Constants
-import com.tommasoberlose.anotherwidget.global.Preferences
+import com.ramybaheeg.yetanotherwidget.R
+import com.ramybaheeg.yetanotherwidget.global.Constants
+import com.ramybaheeg.yetanotherwidget.global.Preferences
 
 class WeatherProviderViewModel(application: Application) : AndroidViewModel(application) {
 

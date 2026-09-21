@@ -1,7 +1,7 @@
-package com.tommasoberlose.anotherwidget.helpers
+package com.ramybaheeg.yetanotherwidget.helpers
 
 import android.util.Log
-import com.tommasoberlose.anotherwidget.BuildConfig
+import com.ramybaheeg.yetanotherwidget.BuildConfig
 
 object RuntimeLog {
     fun caught(exception: Exception) {

@@ -1,4 +1,4 @@
-package com.tommasoberlose.anotherwidget.ui.activities.tabs
+package com.ramybaheeg.yetanotherwidget.ui.activities.tabs
 
 import android.content.pm.ResolveInfo
 import android.os.Bundle
@@ -11,11 +11,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-import com.tommasoberlose.anotherwidget.R
-import com.tommasoberlose.anotherwidget.databinding.ActivityAppNotificationsFilterBinding
-import com.tommasoberlose.anotherwidget.global.Preferences
-import com.tommasoberlose.anotherwidget.helpers.ActiveNotificationsHelper
-import com.tommasoberlose.anotherwidget.ui.viewmodels.tabs.AppNotificationsViewModel
+import com.ramybaheeg.yetanotherwidget.R
+import com.ramybaheeg.yetanotherwidget.databinding.ActivityAppNotificationsFilterBinding
+import com.ramybaheeg.yetanotherwidget.global.Preferences
+import com.ramybaheeg.yetanotherwidget.helpers.ActiveNotificationsHelper
+import com.ramybaheeg.yetanotherwidget.ui.viewmodels.tabs.AppNotificationsViewModel
 import kotlinx.coroutines.*
 import net.idik.lib.slimadapter.SlimAdapter
 

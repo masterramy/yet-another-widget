@@ -1,4 +1,4 @@
-package com.tommasoberlose.anotherwidget.ui.activities.tabs
+package com.ramybaheeg.yetanotherwidget.ui.activities.tabs
 
 import android.app.Activity
 import android.os.Bundle
@@ -8,11 +8,11 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.chibatching.kotpref.bulk
-import com.tommasoberlose.anotherwidget.R
-import com.tommasoberlose.anotherwidget.databinding.ActivityTimeZoneSelectorBinding
-import com.tommasoberlose.anotherwidget.global.Preferences
-import com.tommasoberlose.anotherwidget.ui.viewmodels.tabs.TimeZoneSelectorViewModel
-import com.tommasoberlose.anotherwidget.ui.widgets.MainWidget
+import com.ramybaheeg.yetanotherwidget.R
+import com.ramybaheeg.yetanotherwidget.databinding.ActivityTimeZoneSelectorBinding
+import com.ramybaheeg.yetanotherwidget.global.Preferences
+import com.ramybaheeg.yetanotherwidget.ui.viewmodels.tabs.TimeZoneSelectorViewModel
+import com.ramybaheeg.yetanotherwidget.ui.widgets.MainWidget
 import net.idik.lib.slimadapter.SlimAdapter
 
 class TimeZoneSelectorActivity : AppCompatActivity() {

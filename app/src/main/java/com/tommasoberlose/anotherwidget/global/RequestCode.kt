@@ -1,4 +1,4 @@
-package com.tommasoberlose.anotherwidget.global
+package com.ramybaheeg.yetanotherwidget.global
 
 enum class RequestCode(val code: Int) {
     CALENDAR_REQUEST_CODE(1),

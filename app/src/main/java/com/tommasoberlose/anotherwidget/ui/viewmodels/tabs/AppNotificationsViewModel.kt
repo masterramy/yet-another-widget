@@ -1,4 +1,4 @@
-package com.tommasoberlose.anotherwidget.ui.viewmodels.tabs
+package com.ramybaheeg.yetanotherwidget.ui.viewmodels.tabs
 
 import android.app.Application
 import android.content.Intent
@@ -8,7 +8,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.chibatching.kotpref.livedata.asLiveData
-import com.tommasoberlose.anotherwidget.global.Preferences
+import com.ramybaheeg.yetanotherwidget.global.Preferences
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

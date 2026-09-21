@@ -1,11 +1,11 @@
-package com.tommasoberlose.anotherwidget.global
+package com.ramybaheeg.yetanotherwidget.global
 
 import androidx.appcompat.app.AppCompatDelegate.*
 import androidx.core.os.ConfigurationCompat
 import com.chibatching.kotpref.KotprefModel
-import com.tommasoberlose.anotherwidget.helpers.IntentHelper
-import com.tommasoberlose.anotherwidget.helpers.MediaPlayerHelper
-import com.tommasoberlose.anotherwidget.utils.isMetric
+import com.ramybaheeg.yetanotherwidget.helpers.IntentHelper
+import com.ramybaheeg.yetanotherwidget.helpers.MediaPlayerHelper
+import com.ramybaheeg.yetanotherwidget.utils.isMetric
 import java.util.Locale
 
 object Preferences : KotprefModel() {

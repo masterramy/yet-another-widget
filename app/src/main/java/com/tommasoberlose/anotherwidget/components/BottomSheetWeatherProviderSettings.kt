@@ -1,14 +1,14 @@
-package com.tommasoberlose.anotherwidget.components
+package com.ramybaheeg.yetanotherwidget.components
 
 import android.content.Context
 import androidx.core.view.isVisible
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.tommasoberlose.anotherwidget.R
-import com.tommasoberlose.anotherwidget.databinding.WeatherProviderSettingsLayoutBinding
-import com.tommasoberlose.anotherwidget.global.Constants
-import com.tommasoberlose.anotherwidget.global.Preferences
-import com.tommasoberlose.anotherwidget.helpers.WeatherHelper
-import com.tommasoberlose.anotherwidget.utils.openURI
+import com.ramybaheeg.yetanotherwidget.R
+import com.ramybaheeg.yetanotherwidget.databinding.WeatherProviderSettingsLayoutBinding
+import com.ramybaheeg.yetanotherwidget.global.Constants
+import com.ramybaheeg.yetanotherwidget.global.Preferences
+import com.ramybaheeg.yetanotherwidget.helpers.WeatherHelper
+import com.ramybaheeg.yetanotherwidget.utils.openURI
 
 class BottomSheetWeatherProviderSettings(context: Context, private val callback: () -> Unit = {}) :
     BottomSheetDialog(context, R.style.BottomSheetDialogTheme) {

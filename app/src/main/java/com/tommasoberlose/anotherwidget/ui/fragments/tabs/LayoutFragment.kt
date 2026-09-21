@@ -1,4 +1,4 @@
-package com.tommasoberlose.anotherwidget.ui.fragments.tabs
+package com.ramybaheeg.yetanotherwidget.ui.fragments.tabs
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -11,18 +11,18 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.transition.MaterialSharedAxis
-import com.tommasoberlose.anotherwidget.R
-import com.tommasoberlose.anotherwidget.components.BottomSheetColorPicker
-import com.tommasoberlose.anotherwidget.components.BottomSheetMenu
-import com.tommasoberlose.anotherwidget.databinding.FragmentTabLayoutBinding
-import com.tommasoberlose.anotherwidget.global.Constants
-import com.tommasoberlose.anotherwidget.global.Preferences
-import com.tommasoberlose.anotherwidget.helpers.ColorHelper
-import com.tommasoberlose.anotherwidget.helpers.ColorHelper.toHexValue
-import com.tommasoberlose.anotherwidget.helpers.ColorHelper.toIntValue
-import com.tommasoberlose.anotherwidget.ui.activities.MainActivity
-import com.tommasoberlose.anotherwidget.ui.viewmodels.MainViewModel
-import com.tommasoberlose.anotherwidget.utils.isDarkTheme
+import com.ramybaheeg.yetanotherwidget.R
+import com.ramybaheeg.yetanotherwidget.components.BottomSheetColorPicker
+import com.ramybaheeg.yetanotherwidget.components.BottomSheetMenu
+import com.ramybaheeg.yetanotherwidget.databinding.FragmentTabLayoutBinding
+import com.ramybaheeg.yetanotherwidget.global.Constants
+import com.ramybaheeg.yetanotherwidget.global.Preferences
+import com.ramybaheeg.yetanotherwidget.helpers.ColorHelper
+import com.ramybaheeg.yetanotherwidget.helpers.ColorHelper.toHexValue
+import com.ramybaheeg.yetanotherwidget.helpers.ColorHelper.toIntValue
+import com.ramybaheeg.yetanotherwidget.ui.activities.MainActivity
+import com.ramybaheeg.yetanotherwidget.ui.viewmodels.MainViewModel
+import com.ramybaheeg.yetanotherwidget.utils.isDarkTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

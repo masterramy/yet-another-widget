@@ -1,4 +1,4 @@
-package com.tommasoberlose.anotherwidget.db
+package com.ramybaheeg.yetanotherwidget.db
 
 import android.content.Context
 import androidx.room.Dao
@@ -9,11 +9,11 @@ import androidx.room.Query
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.chibatching.kotpref.bulk
-import com.tommasoberlose.anotherwidget.global.Preferences
-import com.tommasoberlose.anotherwidget.helpers.CalendarHelper.applyFilters
-import com.tommasoberlose.anotherwidget.models.Event
-import com.tommasoberlose.anotherwidget.receivers.UpdatesReceiver
-import com.tommasoberlose.anotherwidget.ui.widgets.MainWidget
+import com.ramybaheeg.yetanotherwidget.global.Preferences
+import com.ramybaheeg.yetanotherwidget.helpers.CalendarHelper.applyFilters
+import com.ramybaheeg.yetanotherwidget.models.Event
+import com.ramybaheeg.yetanotherwidget.receivers.UpdatesReceiver
+import com.ramybaheeg.yetanotherwidget.ui.widgets.MainWidget
 import java.util.Calendar
 
 class EventRepository(private val context: Context) {

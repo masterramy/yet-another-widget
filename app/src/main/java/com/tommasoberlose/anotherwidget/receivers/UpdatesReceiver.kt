@@ -1,4 +1,4 @@
-package com.tommasoberlose.anotherwidget.receivers
+package com.ramybaheeg.yetanotherwidget.receivers
 
 import android.app.AlarmManager
 import android.app.PendingIntent
@@ -6,14 +6,14 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import com.tommasoberlose.anotherwidget.db.EventRepository
-import com.tommasoberlose.anotherwidget.global.Actions
-import com.tommasoberlose.anotherwidget.global.Constants
-import com.tommasoberlose.anotherwidget.global.Preferences
-import com.tommasoberlose.anotherwidget.helpers.*
-import com.tommasoberlose.anotherwidget.models.Event
-import com.tommasoberlose.anotherwidget.services.UpdateWeatherWorker
-import com.tommasoberlose.anotherwidget.ui.widgets.MainWidget
+import com.ramybaheeg.yetanotherwidget.db.EventRepository
+import com.ramybaheeg.yetanotherwidget.global.Actions
+import com.ramybaheeg.yetanotherwidget.global.Constants
+import com.ramybaheeg.yetanotherwidget.global.Preferences
+import com.ramybaheeg.yetanotherwidget.helpers.*
+import com.ramybaheeg.yetanotherwidget.models.Event
+import com.ramybaheeg.yetanotherwidget.services.UpdateWeatherWorker
+import com.ramybaheeg.yetanotherwidget.ui.widgets.MainWidget
 import org.joda.time.Period
 import java.util.*
 

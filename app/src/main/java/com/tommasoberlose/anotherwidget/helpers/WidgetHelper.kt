@@ -1,4 +1,4 @@
-package com.tommasoberlose.anotherwidget.helpers
+package com.ramybaheeg.yetanotherwidget.helpers
 
 import android.appwidget.AppWidgetManager
 import android.content.Context
@@ -7,8 +7,8 @@ import android.os.Handler
 import android.os.Looper
 import androidx.core.provider.FontRequest
 import androidx.core.provider.FontsContractCompat
-import com.tommasoberlose.anotherwidget.R
-import com.tommasoberlose.anotherwidget.global.Preferences
+import com.ramybaheeg.yetanotherwidget.R
+import com.ramybaheeg.yetanotherwidget.global.Preferences
 
 object WidgetHelper {
     class WidgetSizeProvider(

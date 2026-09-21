@@ -1,4 +1,4 @@
-package com.tommasoberlose.anotherwidget.helpers
+package com.ramybaheeg.yetanotherwidget.helpers
 
 import android.content.Context
 import android.graphics.*

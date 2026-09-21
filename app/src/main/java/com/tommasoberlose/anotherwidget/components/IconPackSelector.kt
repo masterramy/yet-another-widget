@@ -1,4 +1,4 @@
-package com.tommasoberlose.anotherwidget.components
+package com.ramybaheeg.yetanotherwidget.components
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -6,12 +6,12 @@ import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.tommasoberlose.anotherwidget.R
-import com.tommasoberlose.anotherwidget.databinding.BottomSheetMenuBinding
-import com.tommasoberlose.anotherwidget.databinding.IconPackMenuItemBinding
-import com.tommasoberlose.anotherwidget.global.Constants
-import com.tommasoberlose.anotherwidget.global.Preferences
-import com.tommasoberlose.anotherwidget.helpers.WeatherHelper
+import com.ramybaheeg.yetanotherwidget.R
+import com.ramybaheeg.yetanotherwidget.databinding.BottomSheetMenuBinding
+import com.ramybaheeg.yetanotherwidget.databinding.IconPackMenuItemBinding
+import com.ramybaheeg.yetanotherwidget.global.Constants
+import com.ramybaheeg.yetanotherwidget.global.Preferences
+import com.ramybaheeg.yetanotherwidget.helpers.WeatherHelper
 
 class IconPackSelector(context: Context, private val header: String? = null) : BottomSheetDialog(context, R.style.BottomSheetDialogTheme) {
 

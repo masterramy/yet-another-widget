@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/colorPrimaryDark"
-    tools:context="com.tommasoberlose.anotherwidget.ui.activities.tabs.WeatherProviderActivity">
+    tools:context="com.ramybaheeg.yetanotherwidget.ui.activities.tabs.WeatherProviderActivity">
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

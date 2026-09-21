@@ -669,6 +669,31 @@ jobs:
           fi
           echo "Public app label is controlled by one default non-translatable resource."
 
+      - name: Q4 release identity must be frozen
+        shell: bash
+        run: |
+          set -euo pipefail
+          gradle=app/build.gradle
+          strings=app/src/main/res/values/strings.xml
+          grep -Fq 'namespace "com.ramybaheeg.yetanotherwidget"' "$gradle"
+          grep -Fq 'applicationId "com.ramybaheeg.yetanotherwidget"' "$gradle"
+          grep -Fq 'versionCode 1' "$gradle"
+          grep -Fq 'versionName "1.0.0"' "$gradle"
+          grep -Fq '<string name="app_name" translatable="false">Yet Another Widget</string>' "$strings"
+          grep -Fq '<string name="settings_publisher_identity">Publisher: Ramy Baheeg</string>' "$strings"
+          grep -Fq 'Yet Another Widget is an independent restoration based on the MIT-licensed Another Widget source by Tommaso Berlose.' "$strings"
+          grep -Fq 'package com.ramybaheeg.yetanotherwidget' app/src/main/java/com/tommasoberlose/anotherwidget/AWApplication.kt
+          grep -Fq 'package com.ramybaheeg.yetanotherwidget' app/src/androidTest/java/com/tommasoberlose/anotherwidget/ExampleInstrumentedTest.kt
+          if grep -R -n -F 'com.tommasoberlose.anotherwidget' app/src/main/java/com/tommasoberlose/anotherwidget app/src/androidTest/java/com/tommasoberlose/anotherwidget app/src/main/res/layout app/src/main/res/navigation; then
+            echo "ERROR: historical runtime/source namespace residue remains" >&2
+            exit 1
+          fi
+          test -f brand/yet-another-widget-icon.svg
+          grep -Fq '#2F5BFF' brand/yet-another-widget-icon.svg
+          test -f app/src/main/res/drawable/ic_launcher_monochrome.xml
+          test -f app/src/main/res/mipmap-anydpi-v33/ic_launcher.xml
+          echo "Q4 public name, package, namespace, version, publisher, provenance, and icon contracts are frozen."
+
       - name: Runtime QA harness must discover public app identity from APK
         shell: bash
         run: |

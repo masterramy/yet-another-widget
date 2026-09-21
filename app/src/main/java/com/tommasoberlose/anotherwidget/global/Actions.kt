@@ -1,6 +1,6 @@
-package com.tommasoberlose.anotherwidget.global
+package com.ramybaheeg.yetanotherwidget.global
 
-import com.tommasoberlose.anotherwidget.BuildConfig
+import com.ramybaheeg.yetanotherwidget.BuildConfig
 
 object Actions {
     const val ACTION_EXTRA_OPEN_WEATHER_PROVIDER = "ACTION_EXTRA_OPEN_WEATHER_PROVIDER"

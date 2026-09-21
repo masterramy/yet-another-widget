@@ -3,7 +3,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.tommasoberlose.anotherwidget.ui.viewmodels.tabs.TimeZoneSelectorViewModel" />
+            type="com.ramybaheeg.yetanotherwidget.ui.viewmodels.tabs.TimeZoneSelectorViewModel" />
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -13,7 +13,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:background="@color/colorPrimaryDark"
-        tools:context="com.tommasoberlose.anotherwidget.ui.activities.tabs.TimeZoneSelectorActivity">
+        tools:context="com.ramybaheeg.yetanotherwidget.ui.activities.tabs.TimeZoneSelectorActivity">
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -1,4 +1,4 @@
-package com.tommasoberlose.anotherwidget.services
+package com.ramybaheeg.yetanotherwidget.services
 
 import android.content.Context
 import androidx.work.CoroutineWorker
@@ -6,7 +6,7 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
-import com.tommasoberlose.anotherwidget.helpers.WeatherHelper
+import com.ramybaheeg.yetanotherwidget.helpers.WeatherHelper
 
 class UpdateWeatherWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
     override suspend fun doWork(): Result {

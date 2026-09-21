@@ -1,4 +1,4 @@
-package com.tommasoberlose.anotherwidget
+package com.ramybaheeg.yetanotherwidget
 
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
@@ -16,7 +16,7 @@ class PinWidgetRequestTest {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
         val manager = AppWidgetManager.getInstance(context)
         assertTrue("Launcher does not support requestPinAppWidget", manager.isRequestPinAppWidgetSupported)
-        val provider = ComponentName(context.packageName, "com.tommasoberlose.anotherwidget.ui.widgets.MainWidget")
+        val provider = ComponentName(context.packageName, "com.ramybaheeg.yetanotherwidget.ui.widgets.MainWidget")
         assertTrue("Launcher rejected MainWidget pin request", manager.requestPinAppWidget(provider, null, null))
     }
 }

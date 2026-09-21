@@ -1,12 +1,12 @@
-package com.tommasoberlose.anotherwidget.helpers
+package com.ramybaheeg.yetanotherwidget.helpers
 
 import android.Manifest
 import android.content.Context
 import android.provider.CalendarContract
-import com.tommasoberlose.anotherwidget.global.Preferences
-import com.tommasoberlose.anotherwidget.models.Event
-import com.tommasoberlose.anotherwidget.services.UpdateCalendarWorker
-import com.tommasoberlose.anotherwidget.utils.checkGrantedPermission
+import com.ramybaheeg.yetanotherwidget.global.Preferences
+import com.ramybaheeg.yetanotherwidget.models.Event
+import com.ramybaheeg.yetanotherwidget.services.UpdateCalendarWorker
+import com.ramybaheeg.yetanotherwidget.utils.checkGrantedPermission
 import java.util.Calendar
 
 data class CalendarInfo(

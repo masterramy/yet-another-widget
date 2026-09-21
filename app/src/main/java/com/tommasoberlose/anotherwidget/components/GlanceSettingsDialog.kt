@@ -1,4 +1,4 @@
-package com.tommasoberlose.anotherwidget.components
+package com.ramybaheeg.yetanotherwidget.components
 
 import android.Manifest
 import android.app.Activity
@@ -9,19 +9,19 @@ import android.content.pm.PackageManager
 import android.view.LayoutInflater
 import androidx.core.view.isVisible
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.tommasoberlose.anotherwidget.R
-import com.tommasoberlose.anotherwidget.databinding.GlanceProviderSettingsLayoutBinding
-import com.tommasoberlose.anotherwidget.global.Constants
-import com.tommasoberlose.anotherwidget.global.Preferences
-import com.tommasoberlose.anotherwidget.helpers.ActiveNotificationsHelper
-import com.tommasoberlose.anotherwidget.helpers.AlarmHelper
-import com.tommasoberlose.anotherwidget.helpers.GreetingsHelper
-import com.tommasoberlose.anotherwidget.helpers.MediaPlayerHelper
-import com.tommasoberlose.anotherwidget.ui.activities.tabs.AppNotificationsFilterActivity
-import com.tommasoberlose.anotherwidget.ui.activities.tabs.MediaInfoFormatActivity
-import com.tommasoberlose.anotherwidget.ui.activities.tabs.MusicPlayersFilterActivity
-import com.tommasoberlose.anotherwidget.ui.fragments.MainFragment
-import com.tommasoberlose.anotherwidget.utils.checkGrantedPermission
+import com.ramybaheeg.yetanotherwidget.R
+import com.ramybaheeg.yetanotherwidget.databinding.GlanceProviderSettingsLayoutBinding
+import com.ramybaheeg.yetanotherwidget.global.Constants
+import com.ramybaheeg.yetanotherwidget.global.Preferences
+import com.ramybaheeg.yetanotherwidget.helpers.ActiveNotificationsHelper
+import com.ramybaheeg.yetanotherwidget.helpers.AlarmHelper
+import com.ramybaheeg.yetanotherwidget.helpers.GreetingsHelper
+import com.ramybaheeg.yetanotherwidget.helpers.MediaPlayerHelper
+import com.ramybaheeg.yetanotherwidget.ui.activities.tabs.AppNotificationsFilterActivity
+import com.ramybaheeg.yetanotherwidget.ui.activities.tabs.MediaInfoFormatActivity
+import com.ramybaheeg.yetanotherwidget.ui.activities.tabs.MusicPlayersFilterActivity
+import com.ramybaheeg.yetanotherwidget.ui.fragments.MainFragment
+import com.ramybaheeg.yetanotherwidget.utils.checkGrantedPermission
 import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
 

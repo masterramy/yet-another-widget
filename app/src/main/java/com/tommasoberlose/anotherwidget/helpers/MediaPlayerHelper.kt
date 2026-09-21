@@ -1,4 +1,4 @@
-package com.tommasoberlose.anotherwidget.helpers
+package com.ramybaheeg.yetanotherwidget.helpers
 
 import android.content.ComponentName
 import android.content.Context
@@ -9,10 +9,10 @@ import android.media.session.PlaybackState
 import com.chibatching.kotpref.Kotpref
 import com.chibatching.kotpref.blockingBulk
 import com.chibatching.kotpref.bulk
-import com.tommasoberlose.anotherwidget.global.Preferences
-import com.tommasoberlose.anotherwidget.receivers.NotificationListener
-import com.tommasoberlose.anotherwidget.ui.widgets.MainWidget
-import com.tommasoberlose.anotherwidget.utils.ignoreExceptions
+import com.ramybaheeg.yetanotherwidget.global.Preferences
+import com.ramybaheeg.yetanotherwidget.receivers.NotificationListener
+import com.ramybaheeg.yetanotherwidget.ui.widgets.MainWidget
+import com.ramybaheeg.yetanotherwidget.utils.ignoreExceptions
 import java.lang.Exception
 
 object MediaPlayerHelper {

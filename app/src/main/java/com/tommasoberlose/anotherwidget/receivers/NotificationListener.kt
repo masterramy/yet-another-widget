@@ -1,4 +1,4 @@
-package com.tommasoberlose.anotherwidget.receivers
+package com.ramybaheeg.yetanotherwidget.receivers
 
 import android.app.*
 import android.content.Context
@@ -10,12 +10,12 @@ import android.service.notification.StatusBarNotification
 import android.util.Log
 import android.widget.Toast
 import com.google.gson.Gson
-import com.tommasoberlose.anotherwidget.global.Actions
-import com.tommasoberlose.anotherwidget.global.Constants
-import com.tommasoberlose.anotherwidget.global.Preferences
-import com.tommasoberlose.anotherwidget.helpers.ActiveNotificationsHelper
-import com.tommasoberlose.anotherwidget.helpers.MediaPlayerHelper
-import com.tommasoberlose.anotherwidget.ui.widgets.MainWidget
+import com.ramybaheeg.yetanotherwidget.global.Actions
+import com.ramybaheeg.yetanotherwidget.global.Constants
+import com.ramybaheeg.yetanotherwidget.global.Preferences
+import com.ramybaheeg.yetanotherwidget.helpers.ActiveNotificationsHelper
+import com.ramybaheeg.yetanotherwidget.helpers.MediaPlayerHelper
+import com.ramybaheeg.yetanotherwidget.ui.widgets.MainWidget
 import java.lang.Exception
 import java.util.*
 

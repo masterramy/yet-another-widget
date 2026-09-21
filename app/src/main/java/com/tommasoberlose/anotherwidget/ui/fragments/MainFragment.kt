@@ -1,4 +1,4 @@
-package com.tommasoberlose.anotherwidget.ui.fragments
+package com.ramybaheeg.yetanotherwidget.ui.fragments
 
 import android.animation.ValueAnimator
 import android.content.Intent
@@ -24,18 +24,18 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.transition.MaterialSharedAxis
-import com.tommasoberlose.anotherwidget.R
-import com.tommasoberlose.anotherwidget.components.MaterialBottomSheetDialog
-import com.tommasoberlose.anotherwidget.databinding.FragmentAppMainBinding
-import com.tommasoberlose.anotherwidget.global.Constants
-import com.tommasoberlose.anotherwidget.global.Preferences
-import com.tommasoberlose.anotherwidget.helpers.*
-import com.tommasoberlose.anotherwidget.helpers.ColorHelper.isColorDark
-import com.tommasoberlose.anotherwidget.ui.activities.MainActivity
-import com.tommasoberlose.anotherwidget.ui.viewmodels.MainViewModel
-import com.tommasoberlose.anotherwidget.ui.widgets.MainWidget
-import com.tommasoberlose.anotherwidget.ui.widgets.StandardWidget
-import com.tommasoberlose.anotherwidget.utils.*
+import com.ramybaheeg.yetanotherwidget.R
+import com.ramybaheeg.yetanotherwidget.components.MaterialBottomSheetDialog
+import com.ramybaheeg.yetanotherwidget.databinding.FragmentAppMainBinding
+import com.ramybaheeg.yetanotherwidget.global.Constants
+import com.ramybaheeg.yetanotherwidget.global.Preferences
+import com.ramybaheeg.yetanotherwidget.helpers.*
+import com.ramybaheeg.yetanotherwidget.helpers.ColorHelper.isColorDark
+import com.ramybaheeg.yetanotherwidget.ui.activities.MainActivity
+import com.ramybaheeg.yetanotherwidget.ui.viewmodels.MainViewModel
+import com.ramybaheeg.yetanotherwidget.ui.widgets.MainWidget
+import com.ramybaheeg.yetanotherwidget.ui.widgets.StandardWidget
+import com.ramybaheeg.yetanotherwidget.utils.*
 import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe

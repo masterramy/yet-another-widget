@@ -1,4 +1,4 @@
-package com.tommasoberlose.anotherwidget.models
+package com.ramybaheeg.yetanotherwidget.models
 
 /**
  * Created by tommaso on 08/10/17.

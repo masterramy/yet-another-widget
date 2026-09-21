@@ -1,4 +1,4 @@
-package com.tommasoberlose.anotherwidget.ui.activities.tabs
+package com.ramybaheeg.yetanotherwidget.ui.activities.tabs
 
 import android.os.Bundle
 import android.view.View
@@ -9,13 +9,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.chibatching.kotpref.blockingBulk
-import com.tommasoberlose.anotherwidget.R
-import com.tommasoberlose.anotherwidget.databinding.ActivityCustomDateBinding
-import com.tommasoberlose.anotherwidget.global.Preferences
-import com.tommasoberlose.anotherwidget.ui.viewmodels.tabs.CustomDateViewModel
-import com.tommasoberlose.anotherwidget.utils.getCapWordString
-import com.tommasoberlose.anotherwidget.utils.openURI
-import com.tommasoberlose.anotherwidget.utils.toast
+import com.ramybaheeg.yetanotherwidget.R
+import com.ramybaheeg.yetanotherwidget.databinding.ActivityCustomDateBinding
+import com.ramybaheeg.yetanotherwidget.global.Preferences
+import com.ramybaheeg.yetanotherwidget.ui.viewmodels.tabs.CustomDateViewModel
+import com.ramybaheeg.yetanotherwidget.utils.getCapWordString
+import com.ramybaheeg.yetanotherwidget.utils.openURI
+import com.ramybaheeg.yetanotherwidget.utils.toast
 import kotlinx.coroutines.*
 import net.idik.lib.slimadapter.SlimAdapter
 import java.lang.Exception

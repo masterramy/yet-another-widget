@@ -1,4 +1,4 @@
-package com.tommasoberlose.anotherwidget.ui.activities.tabs
+package com.ramybaheeg.yetanotherwidget.ui.activities.tabs
 
 import android.app.Activity
 import android.os.Bundle
@@ -11,14 +11,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
-import com.tommasoberlose.anotherwidget.R
-import com.tommasoberlose.anotherwidget.components.BottomSheetWeatherProviderSettings
-import com.tommasoberlose.anotherwidget.databinding.ActivityWeatherProviderBinding
-import com.tommasoberlose.anotherwidget.global.Constants
-import com.tommasoberlose.anotherwidget.global.Preferences
-import com.tommasoberlose.anotherwidget.helpers.WeatherHelper
-import com.tommasoberlose.anotherwidget.ui.fragments.MainFragment
-import com.tommasoberlose.anotherwidget.ui.viewmodels.tabs.WeatherProviderViewModel
+import com.ramybaheeg.yetanotherwidget.R
+import com.ramybaheeg.yetanotherwidget.components.BottomSheetWeatherProviderSettings
+import com.ramybaheeg.yetanotherwidget.databinding.ActivityWeatherProviderBinding
+import com.ramybaheeg.yetanotherwidget.global.Constants
+import com.ramybaheeg.yetanotherwidget.global.Preferences
+import com.ramybaheeg.yetanotherwidget.helpers.WeatherHelper
+import com.ramybaheeg.yetanotherwidget.ui.fragments.MainFragment
+import com.ramybaheeg.yetanotherwidget.ui.viewmodels.tabs.WeatherProviderViewModel
 import kotlinx.coroutines.launch
 import net.idik.lib.slimadapter.SlimAdapter
 import org.greenrobot.eventbus.EventBus

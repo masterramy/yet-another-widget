@@ -1,7 +1,7 @@
-package com.tommasoberlose.anotherwidget.ui.activities.tabs
+package com.ramybaheeg.yetanotherwidget.ui.activities.tabs
 
 import android.os.Bundle
-import com.tommasoberlose.anotherwidget.R
+import com.ramybaheeg.yetanotherwidget.R
 import android.content.pm.ResolveInfo
 import android.view.View
 import android.widget.ImageView
@@ -12,10 +12,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-import com.tommasoberlose.anotherwidget.databinding.ActivityMusicPlayersFilterBinding
-import com.tommasoberlose.anotherwidget.global.Preferences
-import com.tommasoberlose.anotherwidget.helpers.MediaPlayerHelper
-import com.tommasoberlose.anotherwidget.ui.viewmodels.tabs.MusicPlayersFilterViewModel
+import com.ramybaheeg.yetanotherwidget.databinding.ActivityMusicPlayersFilterBinding
+import com.ramybaheeg.yetanotherwidget.global.Preferences
+import com.ramybaheeg.yetanotherwidget.helpers.MediaPlayerHelper
+import com.ramybaheeg.yetanotherwidget.ui.viewmodels.tabs.MusicPlayersFilterViewModel
 import kotlinx.coroutines.*
 import net.idik.lib.slimadapter.SlimAdapter
 

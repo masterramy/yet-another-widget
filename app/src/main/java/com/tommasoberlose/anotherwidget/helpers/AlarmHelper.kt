@@ -1,4 +1,4 @@
-package com.tommasoberlose.anotherwidget.helpers
+package com.ramybaheeg.yetanotherwidget.helpers
 
 import android.app.AlarmManager
 import android.app.PendingIntent
@@ -7,8 +7,8 @@ import android.content.Intent
 import android.os.Build
 import android.text.format.DateFormat
 import android.util.Log
-import com.tommasoberlose.anotherwidget.global.Actions
-import com.tommasoberlose.anotherwidget.receivers.UpdatesReceiver
+import com.ramybaheeg.yetanotherwidget.global.Actions
+import com.ramybaheeg.yetanotherwidget.receivers.UpdatesReceiver
 import java.text.SimpleDateFormat
 import java.util.*
 

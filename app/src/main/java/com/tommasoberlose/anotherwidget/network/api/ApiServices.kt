@@ -1,4 +1,4 @@
-package com.tommasoberlose.anotherwidget.network.api
+package com.ramybaheeg.yetanotherwidget.network.api
 
 import com.haroldadmin.cnradapter.NetworkResponse
 import retrofit2.http.GET

@@ -3,11 +3,11 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
 android {
-    namespace "com.tommasoberlose.anotherwidget"
+    namespace "com.ramybaheeg.yetanotherwidget"
     compileSdkVersion 36
 
     defaultConfig {
-        applicationId "com.tommasoberlose.anotherwidget"
+        applicationId "com.ramybaheeg.yetanotherwidget"
         minSdkVersion 23
         targetSdkVersion 36
         versionCode 1

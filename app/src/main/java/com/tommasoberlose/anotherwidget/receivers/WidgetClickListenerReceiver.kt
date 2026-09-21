@@ -1,14 +1,14 @@
-package com.tommasoberlose.anotherwidget.receivers
+package com.ramybaheeg.yetanotherwidget.receivers
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import com.tommasoberlose.anotherwidget.R
-import com.tommasoberlose.anotherwidget.global.Actions
-import com.tommasoberlose.anotherwidget.global.Preferences
-import com.tommasoberlose.anotherwidget.helpers.IntentHelper
-import com.tommasoberlose.anotherwidget.utils.toast
+import com.ramybaheeg.yetanotherwidget.R
+import com.ramybaheeg.yetanotherwidget.global.Actions
+import com.ramybaheeg.yetanotherwidget.global.Preferences
+import com.ramybaheeg.yetanotherwidget.helpers.IntentHelper
+import com.ramybaheeg.yetanotherwidget.utils.toast
 
 
 class WidgetClickListenerReceiver : BroadcastReceiver() {

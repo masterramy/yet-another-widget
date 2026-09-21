@@ -1,11 +1,11 @@
-package com.tommasoberlose.anotherwidget.ui.viewmodels.tabs
+package com.ramybaheeg.yetanotherwidget.ui.viewmodels.tabs
 
 import android.app.Application
 import android.content.pm.ApplicationInfo
 import android.location.Address
 import android.location.Geocoder
 import androidx.lifecycle.*
-import com.tommasoberlose.anotherwidget.global.Preferences
+import com.ramybaheeg.yetanotherwidget.global.Preferences
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus

@@ -1,10 +1,10 @@
-package com.tommasoberlose.anotherwidget
+package com.ramybaheeg.yetanotherwidget
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
 import com.chibatching.kotpref.Kotpref
-import com.tommasoberlose.anotherwidget.global.Constants
-import com.tommasoberlose.anotherwidget.global.Preferences
+import com.ramybaheeg.yetanotherwidget.global.Constants
+import com.ramybaheeg.yetanotherwidget.global.Preferences
 
 class AWApplication : Application() {
     override fun onCreate() {

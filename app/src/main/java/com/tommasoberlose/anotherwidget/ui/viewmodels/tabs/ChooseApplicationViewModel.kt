@@ -1,4 +1,4 @@
-package com.tommasoberlose.anotherwidget.ui.viewmodels.tabs
+package com.ramybaheeg.yetanotherwidget.ui.viewmodels.tabs
 
 import android.app.Application
 import android.content.Intent

@@ -1,13 +1,13 @@
-package com.tommasoberlose.anotherwidget.helpers
+package com.ramybaheeg.yetanotherwidget.helpers
 
 import android.Manifest
 import android.content.Context
-import com.tommasoberlose.anotherwidget.R
-import com.tommasoberlose.anotherwidget.db.EventRepository
-import com.tommasoberlose.anotherwidget.global.Constants
-import com.tommasoberlose.anotherwidget.global.Preferences
-import com.tommasoberlose.anotherwidget.models.GlanceProvider
-import com.tommasoberlose.anotherwidget.utils.checkGrantedPermission
+import com.ramybaheeg.yetanotherwidget.R
+import com.ramybaheeg.yetanotherwidget.db.EventRepository
+import com.ramybaheeg.yetanotherwidget.global.Constants
+import com.ramybaheeg.yetanotherwidget.global.Preferences
+import com.ramybaheeg.yetanotherwidget.models.GlanceProvider
+import com.ramybaheeg.yetanotherwidget.utils.checkGrantedPermission
 import java.util.ArrayList
 
 object GlanceProviderHelper {

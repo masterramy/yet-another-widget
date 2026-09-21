@@ -1,4 +1,4 @@
-package com.tommasoberlose.anotherwidget.ui.widgets
+package com.ramybaheeg.yetanotherwidget.ui.widgets
 
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
@@ -8,11 +8,11 @@ import android.content.res.Resources
 import android.graphics.Typeface
 import android.os.Bundle
 import androidx.viewbinding.ViewBinding
-import com.tommasoberlose.anotherwidget.global.Constants
-import com.tommasoberlose.anotherwidget.global.Preferences
-import com.tommasoberlose.anotherwidget.helpers.*
-import com.tommasoberlose.anotherwidget.receivers.*
-import com.tommasoberlose.anotherwidget.utils.toPixel
+import com.ramybaheeg.yetanotherwidget.global.Constants
+import com.ramybaheeg.yetanotherwidget.global.Preferences
+import com.ramybaheeg.yetanotherwidget.helpers.*
+import com.ramybaheeg.yetanotherwidget.receivers.*
+import com.ramybaheeg.yetanotherwidget.utils.toPixel
 import java.lang.Exception
 import kotlin.math.min
 

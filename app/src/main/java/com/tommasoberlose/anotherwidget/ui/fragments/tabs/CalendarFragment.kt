@@ -1,4 +1,4 @@
-package com.tommasoberlose.anotherwidget.ui.fragments.tabs
+package com.ramybaheeg.yetanotherwidget.ui.fragments.tabs
 
 import android.Manifest
 import android.os.Bundle
@@ -10,19 +10,19 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.transition.MaterialSharedAxis
-import com.tommasoberlose.anotherwidget.R
-import com.tommasoberlose.anotherwidget.components.BottomSheetMenu
-import com.tommasoberlose.anotherwidget.models.CalendarSelector
-import com.tommasoberlose.anotherwidget.databinding.FragmentTabCalendarBinding
-import com.tommasoberlose.anotherwidget.global.Constants
-import com.tommasoberlose.anotherwidget.global.Preferences
-import com.tommasoberlose.anotherwidget.ui.activities.MainActivity
-import com.tommasoberlose.anotherwidget.ui.viewmodels.MainViewModel
-import com.tommasoberlose.anotherwidget.helpers.CalendarHelper
-import com.tommasoberlose.anotherwidget.helpers.SettingsStringHelper
-import com.tommasoberlose.anotherwidget.ui.widgets.MainWidget
-import com.tommasoberlose.anotherwidget.utils.checkGrantedPermission
-import com.tommasoberlose.anotherwidget.utils.toast
+import com.ramybaheeg.yetanotherwidget.R
+import com.ramybaheeg.yetanotherwidget.components.BottomSheetMenu
+import com.ramybaheeg.yetanotherwidget.models.CalendarSelector
+import com.ramybaheeg.yetanotherwidget.databinding.FragmentTabCalendarBinding
+import com.ramybaheeg.yetanotherwidget.global.Constants
+import com.ramybaheeg.yetanotherwidget.global.Preferences
+import com.ramybaheeg.yetanotherwidget.ui.activities.MainActivity
+import com.ramybaheeg.yetanotherwidget.ui.viewmodels.MainViewModel
+import com.ramybaheeg.yetanotherwidget.helpers.CalendarHelper
+import com.ramybaheeg.yetanotherwidget.helpers.SettingsStringHelper
+import com.ramybaheeg.yetanotherwidget.ui.widgets.MainWidget
+import com.ramybaheeg.yetanotherwidget.utils.checkGrantedPermission
+import com.ramybaheeg.yetanotherwidget.utils.toast
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 

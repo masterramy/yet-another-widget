@@ -1,18 +1,18 @@
-package com.tommasoberlose.anotherwidget.ui.widgets
+package com.ramybaheeg.yetanotherwidget.ui.widgets
 
 import android.app.PendingIntent
 import android.content.Context
 import android.util.TypedValue
 import android.view.View
 import android.widget.RemoteViews
-import com.tommasoberlose.anotherwidget.R
-import com.tommasoberlose.anotherwidget.global.Constants
-import com.tommasoberlose.anotherwidget.global.Preferences
-import com.tommasoberlose.anotherwidget.helpers.ColorHelper
-import com.tommasoberlose.anotherwidget.helpers.IntentHelper
-import com.tommasoberlose.anotherwidget.helpers.RuntimeLog
-import com.tommasoberlose.anotherwidget.utils.isDarkTheme
-import com.tommasoberlose.anotherwidget.utils.toPixel
+import com.ramybaheeg.yetanotherwidget.R
+import com.ramybaheeg.yetanotherwidget.global.Constants
+import com.ramybaheeg.yetanotherwidget.global.Preferences
+import com.ramybaheeg.yetanotherwidget.helpers.ColorHelper
+import com.ramybaheeg.yetanotherwidget.helpers.IntentHelper
+import com.ramybaheeg.yetanotherwidget.helpers.RuntimeLog
+import com.ramybaheeg.yetanotherwidget.utils.isDarkTheme
+import com.ramybaheeg.yetanotherwidget.utils.toPixel
 
 class ClockWidget(val context: Context) {
     fun updateClockView(views: RemoteViews, widgetID: Int): RemoteViews {

@@ -5,27 +5,27 @@
 
     <fragment
         android:id="@+id/calendarTabFragment"
-        android:name="com.tommasoberlose.anotherwidget.ui.fragments.tabs.CalendarFragment"
+        android:name="com.ramybaheeg.yetanotherwidget.ui.fragments.tabs.CalendarFragment"
         android:label="@string/settings_calendar_title" />
     <fragment
         android:id="@+id/clockTabFragment"
-        android:name="com.tommasoberlose.anotherwidget.ui.fragments.tabs.ClockFragment"
+        android:name="com.ramybaheeg.yetanotherwidget.ui.fragments.tabs.ClockFragment"
         android:label="@string/settings_clock_title" />
     <fragment
         android:id="@+id/glanceTabFragment"
-        android:name="com.tommasoberlose.anotherwidget.ui.fragments.tabs.GlanceTabFragment"
+        android:name="com.ramybaheeg.yetanotherwidget.ui.fragments.tabs.GlanceTabFragment"
         android:label="@string/settings_at_a_glance_title" />
     <fragment
         android:id="@+id/generalTabFragment"
-        android:name="com.tommasoberlose.anotherwidget.ui.fragments.tabs.LayoutFragment"
+        android:name="com.ramybaheeg.yetanotherwidget.ui.fragments.tabs.LayoutFragment"
         android:label="@string/layout_settings_title" />
     <fragment
         android:id="@+id/weatherTabFragment"
-        android:name="com.tommasoberlose.anotherwidget.ui.fragments.tabs.WeatherFragment"
+        android:name="com.ramybaheeg.yetanotherwidget.ui.fragments.tabs.WeatherFragment"
         android:label="@string/settings_weather_title" />
     <fragment
         android:id="@+id/tabSelectorFragment"
-        android:name="com.tommasoberlose.anotherwidget.ui.fragments.tabs.PreferencesFragment"
+        android:name="com.ramybaheeg.yetanotherwidget.ui.fragments.tabs.PreferencesFragment"
         android:label="TabSelectorFragment" >
         <action
             android:id="@+id/action_tabSelectorFragment_to_generalTabFragment"
@@ -51,10 +51,10 @@
     </fragment>
     <fragment
         android:id="@+id/typographyTabFragment"
-        android:name="com.tommasoberlose.anotherwidget.ui.fragments.tabs.TypographyFragment"
+        android:name="com.ramybaheeg.yetanotherwidget.ui.fragments.tabs.TypographyFragment"
         android:label="@string/typography_settings_title" />
     <fragment
         android:id="@+id/gesturesFragment"
-        android:name="com.tommasoberlose.anotherwidget.ui.fragments.tabs.GesturesFragment"
+        android:name="com.ramybaheeg.yetanotherwidget.ui.fragments.tabs.GesturesFragment"
         android:label="@string/gestures_settings_title" />
 </navigation>

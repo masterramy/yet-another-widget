@@ -1,10 +1,10 @@
-package com.tommasoberlose.anotherwidget.ui.viewmodels.tabs
+package com.ramybaheeg.yetanotherwidget.ui.viewmodels.tabs
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.chibatching.kotpref.livedata.asLiveData
-import com.tommasoberlose.anotherwidget.global.Preferences
+import com.ramybaheeg.yetanotherwidget.global.Preferences
 
 class CustomDateViewModel(application: Application) : AndroidViewModel(application) {
     val dateInput: MutableLiveData<String> = MutableLiveData(if (Preferences.dateFormat == "") "EEEE, MMM dd" else Preferences.dateFormat)

@@ -1,8 +1,8 @@
-package com.tommasoberlose.anotherwidget.network.repository
+package com.ramybaheeg.yetanotherwidget.network.repository
 
 import com.haroldadmin.cnradapter.NetworkResponseAdapterFactory
-import com.tommasoberlose.anotherwidget.BuildConfig
-import com.tommasoberlose.anotherwidget.network.api.ApiServices
+import com.ramybaheeg.yetanotherwidget.BuildConfig
+import com.ramybaheeg.yetanotherwidget.network.api.ApiServices
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 

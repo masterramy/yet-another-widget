@@ -1,9 +1,9 @@
-package com.tommasoberlose.anotherwidget.helpers
+package com.ramybaheeg.yetanotherwidget.helpers
 
 import android.content.Context
 import android.text.format.DateUtils
-import com.tommasoberlose.anotherwidget.global.Preferences
-import com.tommasoberlose.anotherwidget.utils.getCapWordString
+import com.ramybaheeg.yetanotherwidget.global.Preferences
+import com.ramybaheeg.yetanotherwidget.utils.getCapWordString
 import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*

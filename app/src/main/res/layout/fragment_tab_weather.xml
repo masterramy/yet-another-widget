@@ -3,12 +3,12 @@
     <data>
         <variable
             name="viewModel"
-            type="com.tommasoberlose.anotherwidget.ui.viewmodels.MainViewModel" />
+            type="com.ramybaheeg.yetanotherwidget.ui.viewmodels.MainViewModel" />
         <variable
             name="isWeatherVisible"
             type="Boolean" />
     </data>
-    <com.tommasoberlose.anotherwidget.components.FixedFocusScrollView
+    <com.ramybaheeg.yetanotherwidget.components.FixedFocusScrollView
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -288,5 +288,5 @@
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-    </com.tommasoberlose.anotherwidget.components.FixedFocusScrollView>
+    </com.ramybaheeg.yetanotherwidget.components.FixedFocusScrollView>
 </layout>

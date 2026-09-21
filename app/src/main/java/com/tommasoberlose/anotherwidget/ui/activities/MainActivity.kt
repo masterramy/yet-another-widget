@@ -1,4 +1,4 @@
-package com.tommasoberlose.anotherwidget.ui.activities
+package com.ramybaheeg.yetanotherwidget.ui.activities
 
 import android.Manifest
 import android.app.Activity
@@ -11,15 +11,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import com.tommasoberlose.anotherwidget.R
-import com.tommasoberlose.anotherwidget.databinding.ActivityMainBinding
-import com.tommasoberlose.anotherwidget.global.Actions
-import com.tommasoberlose.anotherwidget.global.Preferences
-import com.tommasoberlose.anotherwidget.global.RequestCode
-import com.tommasoberlose.anotherwidget.ui.activities.tabs.WeatherProviderActivity
-import com.tommasoberlose.anotherwidget.ui.viewmodels.MainViewModel
-import com.tommasoberlose.anotherwidget.ui.widgets.MainWidget
-import com.tommasoberlose.anotherwidget.utils.checkGrantedPermission
+import com.ramybaheeg.yetanotherwidget.R
+import com.ramybaheeg.yetanotherwidget.databinding.ActivityMainBinding
+import com.ramybaheeg.yetanotherwidget.global.Actions
+import com.ramybaheeg.yetanotherwidget.global.Preferences
+import com.ramybaheeg.yetanotherwidget.global.RequestCode
+import com.ramybaheeg.yetanotherwidget.ui.activities.tabs.WeatherProviderActivity
+import com.ramybaheeg.yetanotherwidget.ui.viewmodels.MainViewModel
+import com.ramybaheeg.yetanotherwidget.ui.widgets.MainWidget
+import com.ramybaheeg.yetanotherwidget.utils.checkGrantedPermission
 
 class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
 

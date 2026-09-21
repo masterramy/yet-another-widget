@@ -1,4 +1,4 @@
-package com.tommasoberlose.anotherwidget.components
+package com.ramybaheeg.yetanotherwidget.components
 
 import android.content.Context
 import android.content.res.ColorStateList
@@ -13,15 +13,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.card.MaterialCardView
-import com.tommasoberlose.anotherwidget.R
-import com.tommasoberlose.anotherwidget.databinding.BottomSheetMenuHorBinding
-import com.tommasoberlose.anotherwidget.databinding.BottomSheetMenuListBinding
-import com.tommasoberlose.anotherwidget.helpers.ColorHelper.copyToClipboard
-import com.tommasoberlose.anotherwidget.helpers.ColorHelper.isClipboardColor
-import com.tommasoberlose.anotherwidget.helpers.ColorHelper.isColorDark
-import com.tommasoberlose.anotherwidget.helpers.ColorHelper.pasteFromClipboard
-import com.tommasoberlose.anotherwidget.helpers.ColorHelper.toIntValue
-import com.tommasoberlose.anotherwidget.utils.isDarkTheme
+import com.ramybaheeg.yetanotherwidget.R
+import com.ramybaheeg.yetanotherwidget.databinding.BottomSheetMenuHorBinding
+import com.ramybaheeg.yetanotherwidget.databinding.BottomSheetMenuListBinding
+import com.ramybaheeg.yetanotherwidget.helpers.ColorHelper.copyToClipboard
+import com.ramybaheeg.yetanotherwidget.helpers.ColorHelper.isClipboardColor
+import com.ramybaheeg.yetanotherwidget.helpers.ColorHelper.isColorDark
+import com.ramybaheeg.yetanotherwidget.helpers.ColorHelper.pasteFromClipboard
+import com.ramybaheeg.yetanotherwidget.helpers.ColorHelper.toIntValue
+import com.ramybaheeg.yetanotherwidget.utils.isDarkTheme
 import com.warkiz.widget.IndicatorSeekBar
 import com.warkiz.widget.OnSeekChangeListener
 import com.warkiz.widget.SeekParams

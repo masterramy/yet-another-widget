@@ -1,4 +1,4 @@
-package com.tommasoberlose.anotherwidget.helpers
+package com.ramybaheeg.yetanotherwidget.helpers
 
 import android.annotation.SuppressLint
 import android.content.ClipData
@@ -8,10 +8,10 @@ import android.content.Context.CLIPBOARD_SERVICE
 import android.graphics.Color
 import android.util.Log
 import androidx.core.content.ContextCompat
-import com.tommasoberlose.anotherwidget.R
-import com.tommasoberlose.anotherwidget.global.Preferences
-import com.tommasoberlose.anotherwidget.utils.isDarkTheme
-import com.tommasoberlose.anotherwidget.utils.toast
+import com.ramybaheeg.yetanotherwidget.R
+import com.ramybaheeg.yetanotherwidget.global.Preferences
+import com.ramybaheeg.yetanotherwidget.utils.isDarkTheme
+import com.ramybaheeg.yetanotherwidget.utils.toast
 import kotlin.math.roundToInt
 
 

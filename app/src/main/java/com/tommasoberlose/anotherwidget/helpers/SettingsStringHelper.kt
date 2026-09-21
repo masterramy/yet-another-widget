@@ -1,10 +1,10 @@
-package com.tommasoberlose.anotherwidget.helpers
+package com.ramybaheeg.yetanotherwidget.helpers
 
 import android.content.Context
 import android.text.format.DateUtils
-import com.tommasoberlose.anotherwidget.R
-import com.tommasoberlose.anotherwidget.global.Constants
-import com.tommasoberlose.anotherwidget.global.Preferences
+import com.ramybaheeg.yetanotherwidget.R
+import com.ramybaheeg.yetanotherwidget.global.Constants
+import com.ramybaheeg.yetanotherwidget.global.Preferences
 import org.joda.time.DateTime
 import java.util.concurrent.TimeUnit
 

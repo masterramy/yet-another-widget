@@ -4,13 +4,13 @@
     <data>
         <variable
             name="viewModel"
-            type="com.tommasoberlose.anotherwidget.ui.viewmodels.MainViewModel" />
+            type="com.ramybaheeg.yetanotherwidget.ui.viewmodels.MainViewModel" />
         <variable
             name="isDarkModeEnabled"
             type="Boolean" />
         <import type="android.view.View" />
     </data>
-    <com.tommasoberlose.anotherwidget.components.FixedFocusScrollView
+    <com.ramybaheeg.yetanotherwidget.components.FixedFocusScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/scrollView"
@@ -372,5 +372,5 @@
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-    </com.tommasoberlose.anotherwidget.components.FixedFocusScrollView>
+    </com.ramybaheeg.yetanotherwidget.components.FixedFocusScrollView>
 </layout>

@@ -1,4 +1,4 @@
-package com.tommasoberlose.anotherwidget.ui.fragments.tabs
+package com.ramybaheeg.yetanotherwidget.ui.fragments.tabs
 
 import android.Manifest
 import android.os.Bundle
@@ -18,15 +18,15 @@ import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
-import com.tommasoberlose.anotherwidget.R
-import com.tommasoberlose.anotherwidget.components.MaterialBottomSheetDialog
-import com.tommasoberlose.anotherwidget.databinding.FragmentPreferencesBinding
-import com.tommasoberlose.anotherwidget.global.Preferences
-import com.tommasoberlose.anotherwidget.helpers.CalendarHelper
-import com.tommasoberlose.anotherwidget.receivers.WeatherReceiver
-import com.tommasoberlose.anotherwidget.ui.activities.MainActivity
-import com.tommasoberlose.anotherwidget.ui.viewmodels.MainViewModel
-import com.tommasoberlose.anotherwidget.utils.*
+import com.ramybaheeg.yetanotherwidget.R
+import com.ramybaheeg.yetanotherwidget.components.MaterialBottomSheetDialog
+import com.ramybaheeg.yetanotherwidget.databinding.FragmentPreferencesBinding
+import com.ramybaheeg.yetanotherwidget.global.Preferences
+import com.ramybaheeg.yetanotherwidget.helpers.CalendarHelper
+import com.ramybaheeg.yetanotherwidget.receivers.WeatherReceiver
+import com.ramybaheeg.yetanotherwidget.ui.activities.MainActivity
+import com.ramybaheeg.yetanotherwidget.ui.viewmodels.MainViewModel
+import com.ramybaheeg.yetanotherwidget.utils.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 

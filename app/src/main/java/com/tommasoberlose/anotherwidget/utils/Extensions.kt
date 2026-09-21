@@ -1,4 +1,4 @@
-package com.tommasoberlose.anotherwidget.utils
+package com.ramybaheeg.yetanotherwidget.utils
 
 import android.animation.*
 import android.content.pm.PackageManager
@@ -27,8 +27,8 @@ import androidx.annotation.UiThread
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.core.animation.addListener
 import androidx.core.view.isVisible
-import com.tommasoberlose.anotherwidget.R
-import com.tommasoberlose.anotherwidget.components.OnSingleClickListener
+import com.ramybaheeg.yetanotherwidget.R
+import com.ramybaheeg.yetanotherwidget.components.OnSingleClickListener
 import java.util.*
 
 

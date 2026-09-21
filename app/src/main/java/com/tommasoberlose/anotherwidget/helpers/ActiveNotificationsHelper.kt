@@ -1,4 +1,4 @@
-package com.tommasoberlose.anotherwidget.helpers
+package com.ramybaheeg.yetanotherwidget.helpers
 
 import android.content.ContentResolver
 import android.content.Context
@@ -7,9 +7,9 @@ import android.util.Log
 import androidx.core.app.NotificationManagerCompat
 import com.chibatching.kotpref.Kotpref
 import com.chibatching.kotpref.blockingBulk
-import com.tommasoberlose.anotherwidget.global.Preferences
-import com.tommasoberlose.anotherwidget.receivers.NotificationListener
-import com.tommasoberlose.anotherwidget.ui.widgets.MainWidget
+import com.ramybaheeg.yetanotherwidget.global.Preferences
+import com.ramybaheeg.yetanotherwidget.receivers.NotificationListener
+import com.ramybaheeg.yetanotherwidget.ui.widgets.MainWidget
 
 object ActiveNotificationsHelper {
     fun showLastNotification(): Boolean {

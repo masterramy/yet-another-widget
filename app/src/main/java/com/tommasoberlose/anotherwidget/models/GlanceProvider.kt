@@ -1,4 +1,4 @@
-package com.tommasoberlose.anotherwidget.models
+package com.ramybaheeg.yetanotherwidget.models
 
 class GlanceProvider(
     val id: String,

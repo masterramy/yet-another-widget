@@ -1,4 +1,4 @@
-package com.tommasoberlose.anotherwidget.ui.activities.tabs
+package com.ramybaheeg.yetanotherwidget.ui.activities.tabs
 
 import android.Manifest
 import android.app.Activity
@@ -6,7 +6,7 @@ import android.location.Address
 import android.location.Geocoder
 import android.os.Bundle
 import android.util.Log
-import com.tommasoberlose.anotherwidget.R
+import com.ramybaheeg.yetanotherwidget.R
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -20,10 +20,10 @@ import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
-import com.tommasoberlose.anotherwidget.databinding.ActivityCustomLocationBinding
-import com.tommasoberlose.anotherwidget.global.Preferences
-import com.tommasoberlose.anotherwidget.helpers.WeatherHelper
-import com.tommasoberlose.anotherwidget.ui.viewmodels.tabs.CustomLocationViewModel
+import com.ramybaheeg.yetanotherwidget.databinding.ActivityCustomLocationBinding
+import com.ramybaheeg.yetanotherwidget.global.Preferences
+import com.ramybaheeg.yetanotherwidget.helpers.WeatherHelper
+import com.ramybaheeg.yetanotherwidget.ui.viewmodels.tabs.CustomLocationViewModel
 import kotlinx.coroutines.*
 import net.idik.lib.slimadapter.SlimAdapter
 
