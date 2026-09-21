@@ -710,7 +710,10 @@ jobs:
           fi
           grep -Fq 'TEST_CLASS="com.ramybaheeg.yetanotherwidget.LauncherWidgetDragTest"' tools/q1_emulator_smoke_recover.sh
           grep -Fq 'CLASS="com.ramybaheeg.yetanotherwidget.PinWidgetRequestTest"' tools/q1_pin_probe.sh
-          grep -Fq 'aapt dump badging "$apk"' "$helper"
+          grep -Fq 'find "$ANDROID_HOME/build-tools"' "$helper"
+          grep -Fq 'find "$ANDROID_SDK_ROOT/build-tools"' "$helper"
+          grep -Fq 'dump badging "$apk"' "$helper"
+          grep -Fq 'dump badging "$test_apk"' "$helper"
           grep -Fq 'YAW_PACKAGE=' "$helper"
           grep -Fq 'YAW_ACTIVITY_CLASS=' "$helper"
           grep -Fq 'YAW_APP_LABEL=' "$helper"
