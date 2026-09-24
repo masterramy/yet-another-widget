@@ -720,6 +720,9 @@ jobs:
           grep -Fq 'YAW_TEST_PACKAGE=' "$helper"
           grep -Fq 'YAW_TEST_RUNNER_CLASS=' "$helper"
           grep -Fq 'yaw_read_app_identity "$APK"' tools/q1_emulator_smoke.sh
+          ! grep -Fq 'pm path com.android.launcher3' tools/q1_emulator_smoke.sh
+          grep -Fq 'pm path android' tools/q1_emulator_smoke.sh
+          grep -Fq 'exact-candidate-identity.txt' tools/q1_emulator_smoke.sh
           grep -Fq 'APP_LABEL="$YAW_APP_LABEL"' tools/q1_emulator_smoke.sh
           grep -Fq 'yaw_read_app_identity "$APP_APK"' tools/q1_emulator_smoke_recover.sh
           grep -Fq 'yaw_read_test_identity "$TEST_APK"' tools/q1_emulator_smoke_recover.sh
@@ -837,9 +840,19 @@ jobs:
         run: |
           yes | sdkmanager --licenses >/dev/null || true
           sdkmanager 'platforms;android-36' 'build-tools;36.0.0' 'platform-tools' 'emulator' 'system-images;android-36;google_apis;x86_64'
-      - name: Rebuild exact Q5 candidate
+      - name: Download exact-head debug APK from passing build job
+        uses: actions/download-artifact@v7
+        with:
+          name: q2-debug-apk
+          path: app/build/outputs/apk/debug
+      - name: Assert Q5 APK provenance
         shell: bash
-        run: bash tools/q1_build.sh
+        run: |
+          set -euo pipefail
+          apk="$(find app/build/outputs/apk/debug -maxdepth 1 -type f -name '*.apk' -print -quit)"
+          test -s "$apk"
+          printf '%s\n' "$GITHUB_SHA" > q5-source-sha.txt
+          sha256sum "$apk" | tee q5-debug-apk-sha256.txt
       - name: API 36 exact-final runtime core
         uses: reactivecircus/android-emulator-runner@v2
         with:
