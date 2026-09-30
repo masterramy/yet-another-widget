@@ -10,11 +10,13 @@ if [ "$rc" -eq 0 ]; then
   exit 0
 fi
 
-# Only the known launcher-widget placement failure class may use the independent
-# platform requestPinAppWidget fallback. Any unrelated launch/render/crash error
-# remains RED instead of being masked by a second path.
-if [ "$rc" -eq 22 ]; then
-  echo "Primary hosted-widget placement returned rc=22; trying bounded public pin fallback."
+# Only known launcher-widget placement failure classes may use the independent
+# platform requestPinAppWidget fallback. rc=21 means the hosted picker did not
+# expose a draggable preview for the app; rc=22 means picker placement/binding
+# did not complete. Any unrelated launch/render/crash error remains RED instead
+# of being masked by a second path.
+if [ "$rc" -eq 21 ] || [ "$rc" -eq 22 ]; then
+  echo "Primary hosted-widget placement returned rc=$rc; trying bounded public pin fallback."
   exec bash tools/q1_pin_probe.sh
 fi
 
