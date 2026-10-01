@@ -733,6 +733,30 @@ jobs:
       - name: Q2 deterministic build
         shell: bash
         run: bash tools/q1_build.sh
+      - name: Build matched androidTest APK for Q5
+        shell: bash
+        run: |
+          set -euo pipefail
+          ./gradlew --no-daemon :app:assembleDebugAndroidTest
+          app_apk="$(find app/build/outputs/apk/debug -maxdepth 1 -type f -name '*.apk' -print -quit)"
+          test_apk="app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk"
+          test -s "$app_apk"
+          test -s "$test_apk"
+          app_cert="$(apksigner verify --print-certs "$app_apk" | sed -n 's/^Signer #1 certificate SHA-256 digest: //p' | head -n1)"
+          test_cert="$(apksigner verify --print-certs "$test_apk" | sed -n 's/^Signer #1 certificate SHA-256 digest: //p' | head -n1)"
+          test -n "$app_cert"
+          test -n "$test_cert"
+          if [ "$app_cert" != "$test_cert" ]; then
+            echo "ERROR: build-job app/androidTest debug signing identities differ" >&2
+            exit 1
+          fi
+          {
+            echo "source_sha=$GITHUB_SHA"
+            sha256sum "$app_apk"
+            sha256sum "$test_apk"
+            echo "debug_signer_sha256=$app_cert"
+          } | tee q5-matched-debug-pair.txt
+          echo "Q5 app/androidTest pair built under one ephemeral CI debug signing identity."
       - name: Built APK must contain redistribution license bundle
         shell: bash
         run: |
@@ -802,6 +826,15 @@ jobs:
           path: app/build/outputs/apk/debug/*.apk
           if-no-files-found: warn
 
+      - name: Upload matched androidTest APK
+        if: always()
+        uses: actions/upload-artifact@v7
+        continue-on-error: true
+        with:
+          name: q2-debug-androidtest
+          path: app/build/outputs/apk/androidTest/debug/*.apk
+          if-no-files-found: warn
+
       - name: Upload unsigned release evidence
         if: always()
         uses: actions/upload-artifact@v7
@@ -845,14 +878,31 @@ jobs:
         with:
           name: q2-debug-apk
           path: app/build/outputs/apk/debug
-      - name: Assert Q5 APK provenance
+      - name: Download matched androidTest APK from same build job
+        uses: actions/download-artifact@v7
+        with:
+          name: q2-debug-androidtest
+          path: app/build/outputs/apk/androidTest/debug
+      - name: Assert Q5 matched-pair provenance and signing identity
         shell: bash
         run: |
           set -euo pipefail
+          mkdir -p q1-evidence
           apk="$(find app/build/outputs/apk/debug -maxdepth 1 -type f -name '*.apk' -print -quit)"
+          test_apk="app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk"
           test -s "$apk"
-          printf '%s\n' "$GITHUB_SHA" > q5-source-sha.txt
-          sha256sum "$apk" | tee q5-debug-apk-sha256.txt
+          test -s "$test_apk"
+          printf '%s\n' "$GITHUB_SHA" > q1-evidence/q5-source-sha.txt
+          sha256sum "$apk" "$test_apk" | tee q1-evidence/q5-debug-pair-sha256.txt
+          app_cert="$(apksigner verify --print-certs "$apk" | sed -n 's/^Signer #1 certificate SHA-256 digest: //p' | head -n1)"
+          test_cert="$(apksigner verify --print-certs "$test_apk" | sed -n 's/^Signer #1 certificate SHA-256 digest: //p' | head -n1)"
+          test -n "$app_cert"
+          test -n "$test_cert"
+          if [ "$app_cert" != "$test_cert" ]; then
+            echo "ERROR: downloaded Q5 app/androidTest signing identities differ" >&2
+            exit 1
+          fi
+          printf 'debug_signer_sha256=%s\n' "$app_cert" | tee q1-evidence/q5-debug-pair-signing.txt
       - name: API 36 exact-final runtime core
         uses: reactivecircus/android-emulator-runner@v2
         with:

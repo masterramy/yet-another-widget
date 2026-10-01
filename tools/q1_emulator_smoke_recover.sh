@@ -23,97 +23,15 @@ fi
 
 echo "== Q1 placement recovery: UiAutomation coherent Launcher pointer drag =="
 # The base smoke has already proved build/install/render/provider discovery.
-# Runs 40-43 also proved that one-shot draganddrop and separate shell motionevent
-# processes do not establish Launcher3's widget drag lifecycle reliably. Build
-# and install a Q1-only instrumentation helper, then inject one coherent pointer
-# stream from a single UiAutomation process. Shipping app source is untouched.
-TEST_SOURCE="app/src/androidTest/java/com/tommasoberlose/anotherwidget/LauncherWidgetDragTest.kt"
-mkdir -p "$(dirname "$TEST_SOURCE")"
-cat > "$TEST_SOURCE" <<'KOTLIN'
-package com.ramybaheeg.yetanotherwidget
-
-import android.os.SystemClock
-import android.view.InputDevice
-import android.view.MotionEvent
-import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.platform.app.InstrumentationRegistry
-import org.junit.Assert.assertTrue
-import org.junit.Test
-import org.junit.runner.RunWith
-
-/** Q1-only launcher harness. It injects one coherent touchscreen pointer stream globally. */
-@RunWith(AndroidJUnit4::class)
-class LauncherWidgetDragTest {
-    @Test
-    fun injectWidgetDrag() {
-        val instrumentation = InstrumentationRegistry.getInstrumentation()
-        val args = InstrumentationRegistry.getArguments()
-
-        fun coordinate(name: String): Float = requireNotNull(args.getString(name)) {
-            "Missing instrumentation argument: $name"
-        }.toFloat()
-
-        val sourceX = coordinate("sourceX")
-        val sourceY = coordinate("sourceY")
-        val edgeY = coordinate("edgeY")
-        val targetX = coordinate("targetX")
-        val targetY = coordinate("targetY")
-        val ui = instrumentation.uiAutomation
-        val downTime = SystemClock.uptimeMillis()
-
-        fun inject(action: Int, x: Float, y: Float) {
-            val event = MotionEvent.obtain(
-                downTime,
-                SystemClock.uptimeMillis(),
-                action,
-                x,
-                y,
-                0
-            )
-            event.source = InputDevice.SOURCE_TOUCHSCREEN
-            try {
-                assertTrue("UiAutomation rejected MotionEvent action=$action x=$x y=$y", ui.injectInputEvent(event, true))
-            } finally {
-                event.recycle()
-            }
-        }
-
-        fun movePath(fromX: Float, fromY: Float, toX: Float, toY: Float, steps: Int, delayMs: Long) {
-            for (step in 1..steps) {
-                val fraction = step.toFloat() / steps.toFloat()
-                inject(
-                    MotionEvent.ACTION_MOVE,
-                    fromX + (toX - fromX) * fraction,
-                    fromY + (toY - fromY) * fraction
-                )
-                SystemClock.sleep(delayMs)
-            }
-        }
-
-        inject(MotionEvent.ACTION_DOWN, sourceX, sourceY)
-        // Hold well past Launcher3's widget-preview long-press threshold.
-        SystemClock.sleep(1600)
-
-        // Cross the picker-to-workspace boundary while the same pointer remains down.
-        movePath(sourceX, sourceY, targetX, edgeY, steps = 24, delayMs = 30)
-        SystemClock.sleep(800)
-
-        // Once HOME is exposed, move into the known-empty 4x1 row and release there.
-        movePath(targetX, edgeY, targetX, targetY, steps = 12, delayMs = 35)
-        SystemClock.sleep(300)
-        inject(MotionEvent.ACTION_UP, targetX, targetY)
-        SystemClock.sleep(1000)
-    }
-}
-KOTLIN
-
-# Rebuild only the Q1 test APK after adding the harness source. This mutation is
-# runner-local and does not alter shipping app/product source bytes.
-./gradlew --no-daemon :app:assembleDebugAndroidTest | tee q1-evidence/androidtest-rebuild.txt
+# LauncherWidgetDragTest is tracked androidTest harness source. Q5 consumes the
+# exact androidTest APK built beside the target debug APK in the build job so
+# Android sees one matched ephemeral CI debug signing identity.
+mkdir -p q1-evidence
 if [ ! -f "$TEST_APK" ]; then
-  echo "Missing Q1 androidTest APK after harness rebuild: $TEST_APK" >&2
+  echo "Missing matched Q1 androidTest APK from build job: $TEST_APK" >&2
   exit 30
 fi
+sha256sum "$TEST_APK" | tee q1-evidence/androidtest-apk-sha256.txt
 yaw_read_test_identity "$TEST_APK"
 TEST_RUNNER="$YAW_TEST_PACKAGE/$YAW_TEST_RUNNER_CLASS"
 adb install -r "$TEST_APK" | tee q1-evidence/androidtest-install.txt

@@ -67,12 +67,11 @@ stabilize_launcher() {
 
 echo "== Q1 bounded recovery: self-contained platform requestPinAppWidget flow =="
 
-# The primary recovery path may fail before it reaches its runner-local
-# androidTest build/install step (for example when a Launcher3 ANR steals window
-# focus). Therefore this fallback owns its own complete test precondition.
-./gradlew --no-daemon :app:assembleDebugAndroidTest | tee q1-evidence/pin-request-test-rebuild.txt
+# Q5 supplies the exact androidTest APK built beside the target debug APK in
+# the build job. Do not rebuild it on this runner or Android will see a
+# different ephemeral debug signing identity and reject instrumentation.
 if [ ! -f "$TEST_APK" ]; then
-  echo "Missing androidTest APK after pin-probe rebuild: $TEST_APK" >&2
+  echo "Missing matched androidTest APK from build job: $TEST_APK" >&2
   exit 30
 fi
 sha256sum "$TEST_APK" | tee q1-evidence/pin-request-test-apk-sha256.txt
