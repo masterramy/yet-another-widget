@@ -29,6 +29,8 @@ jobs:
         run: |
           yes | sdkmanager --licenses >/dev/null || true
           sdkmanager 'platforms;android-36' 'build-tools;36.0.0' 'platform-tools'
+          test -x "$ANDROID_HOME/build-tools/36.0.0/apksigner"
+          echo "$ANDROID_HOME/build-tools/36.0.0" >> "$GITHUB_PATH"
       - name: Wallpaper preview permission compatibility contract
         shell: bash
         run: |
@@ -873,6 +875,8 @@ jobs:
         run: |
           yes | sdkmanager --licenses >/dev/null || true
           sdkmanager 'platforms;android-36' 'build-tools;36.0.0' 'platform-tools' 'emulator' 'system-images;android-36;google_apis;x86_64'
+          test -x "$ANDROID_HOME/build-tools/36.0.0/apksigner"
+          echo "$ANDROID_HOME/build-tools/36.0.0" >> "$GITHUB_PATH"
       - name: Download exact-head debug APK from passing build job
         uses: actions/download-artifact@v7
         with:
