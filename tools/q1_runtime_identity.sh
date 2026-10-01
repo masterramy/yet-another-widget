@@ -46,11 +46,35 @@ yaw_read_test_identity() {
   test -n "$aapt_bin" && test -x "$aapt_bin"
   badging="$("$aapt_bin" dump badging "$test_apk")"
 
-  YAW_TEST_PACKAGE="$(sed -n "s/^package: name='\([^']*\)'.*/\1/p" <<<"$badging" | head -n1)"
-  YAW_TEST_RUNNER_CLASS="$(sed -n "s/^instrumentation: name='\([^']*\)'.*/\1/p" <<<"$badging" | head -n1)"
+  YAW_TEST_PACKAGE="$(sed -n "s/^package: name='\\([^']*\\)'.*/\\1/p" <<<"$badging" | head -n1)"
+  YAW_TEST_RUNNER_CLASS="$(sed -n "s/^instrumentation: name='\\([^']*\\)'.*/\\1/p" <<<"$badging" | head -n1)"
 
-  test -n "$YAW_TEST_PACKAGE"
-  test -n "$YAW_TEST_RUNNER_CLASS"
+  # aapt "dump badging" is not consistent about emitting instrumentation
+  # metadata for modern androidTest APKs. If the packaged test APK has no
+  # badging instrumentation line, read android:name from the instrumentation
+  # element in its binary AndroidManifest.xml. This remains fail-closed on the
+  # exact built test artifact; it does not hard-code a runner or manufacture
+  # placement success.
+  if [ -z "$YAW_TEST_RUNNER_CLASS" ]; then
+    local manifest_tree
+    manifest_tree="$("$aapt_bin" dump xmltree "$test_apk" AndroidManifest.xml)"
+    YAW_TEST_RUNNER_CLASS="$(awk '
+      /^[[:space:]]*E: instrumentation([[:space:]]|$)/ { in_instrumentation=1; next }
+      in_instrumentation && /^[[:space:]]*E:/ { exit }
+      in_instrumentation && /android:name\\(0x01010003\\)=/ {
+        line=$0
+        sub(/^.*android:name\\(0x01010003\\)="/, "", line)
+        sub(/".*$/, "", line)
+        print line
+        exit
+      }
+    ' <<<"$manifest_tree")"
+  fi
+
+  if [ -z "$YAW_TEST_PACKAGE" ] || [ -z "$YAW_TEST_RUNNER_CLASS" ]; then
+    echo "Could not read packaged androidTest identity: package='$YAW_TEST_PACKAGE' runner='$YAW_TEST_RUNNER_CLASS'" >&2
+    return 1
+  fi
 
   export YAW_TEST_PACKAGE YAW_TEST_RUNNER_CLASS
 }
