@@ -39,7 +39,10 @@ object ImageHelper {
             originalView.drawable.intrinsicHeight > 0
         ) {
             val source = originalView.drawable.toBitmap().copy(Bitmap.Config.ARGB_8888, false)
-            val combined = Bitmap.createBitmap(source)
+            // Canvas requires a mutable destination. Bitmap.createBitmap(source) may return
+            // the immutable source itself when no transformation is needed on newer Android.
+            val combined = Bitmap.createBitmap(source.width, source.height, Bitmap.Config.ARGB_8888)
+            Canvas(combined).drawBitmap(source, 0f, 0f, null)
             val shadowBitmap = generateShadowBitmap(context, cElevation, source, factor)
 
             shadowBitmap?.let {
