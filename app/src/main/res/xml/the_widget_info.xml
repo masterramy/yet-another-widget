@@ -5,7 +5,7 @@
     android:initialLayout="@layout/the_widget"
     android:minHeight="30dp"
     android:minWidth="250dp"
-    android:configure="com.tommasoberlose.anotherwidget.ui.activities.MainActivity"
+    android:configure="com.ramybaheeg.yetanotherwidget.ui.activities.MainActivity"
     android:minResizeHeight="30dp"
     android:minResizeWidth="250dp"
     android:previewImage="@drawable/widget_preview"

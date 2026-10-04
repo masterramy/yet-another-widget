@@ -686,7 +686,7 @@ jobs:
           grep -Fq 'Yet Another Widget is an independent restoration based on the MIT-licensed Another Widget source by Tommaso Berlose.' "$strings"
           grep -Fq 'package com.ramybaheeg.yetanotherwidget' app/src/main/java/com/tommasoberlose/anotherwidget/AWApplication.kt
           grep -Fq 'package com.ramybaheeg.yetanotherwidget' app/src/androidTest/java/com/tommasoberlose/anotherwidget/ExampleInstrumentedTest.kt
-          if grep -R -n -F 'com.tommasoberlose.anotherwidget' app/src/main/java/com/tommasoberlose/anotherwidget app/src/androidTest/java/com/tommasoberlose/anotherwidget app/src/main/res/layout app/src/main/res/navigation; then
+          if grep -R -n -F 'com.tommasoberlose.anotherwidget' app/src/main/java/com/tommasoberlose/anotherwidget app/src/androidTest/java/com/tommasoberlose/anotherwidget app/src/main/res/layout app/src/main/res/navigation app/src/main/res/xml; then
             echo "ERROR: historical runtime/source namespace residue remains" >&2
             exit 1
           fi
@@ -694,7 +694,10 @@ jobs:
           grep -Fq '#2F5BFF' brand/yet-another-widget-icon.svg
           test -f app/src/main/res/drawable/ic_launcher_monochrome.xml
           test -f app/src/main/res/mipmap-anydpi-v33/ic_launcher.xml
-          echo "Q4 public name, package, namespace, version, publisher, provenance, and icon contracts are frozen."
+          widget_info=app/src/main/res/xml/the_widget_info.xml
+          grep -Fq 'android:configure="com.ramybaheeg.yetanotherwidget.ui.activities.MainActivity"' "$widget_info"
+          ! grep -Fq 'com.tommasoberlose.anotherwidget' "$widget_info"
+          echo "Q4 public name, package, namespace, version, publisher, provenance, widget configure activity, and icon contracts are frozen."
 
       - name: Runtime QA harness must discover public app identity from APK
         shell: bash
