@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - q2-publication-hardening-api36
+  pull_request:
+    branches:
+      - q2-publication-hardening-api36
   workflow_dispatch:
 
 permissions:
