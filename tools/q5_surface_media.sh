@@ -351,6 +351,9 @@ theme_follow_system_dark_to_light=PASS
 about_provenance_publisher_version=PASS
 privacy_row_hidden=PASS
 settings_back_to_main=PASS
+warm_relaunch_background_resume=PASS
+process_death_cold_restart=PASS
+fresh_install_first_launch=PASS
 bounded_app_fatal_anr_scan=PASS
 shipping_source_mutated_by_this_test=NO
 EOF
