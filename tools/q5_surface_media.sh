@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# PR-only validation marker for d78 shipping-equivalent Q5 evidence.
 set -euo pipefail
 
 APP_APK="$(find app/build/outputs/apk/debug -maxdepth 1 -type f -name '*.apk' | head -n1)"
