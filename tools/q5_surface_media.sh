@@ -268,6 +268,67 @@ assert_text "$EVIDENCE_DIR/q5-main-after-settings-back.xml" "$YAW_APP_LABEL"
 assert_text "$EVIDENCE_DIR/q5-main-after-settings-back.xml" "Typography"
 adb exec-out screencap -p > "$EVIDENCE_DIR/q5-main-after-settings-back.png"
 
+echo "== Q5 lifecycle resilience tranche =="
+
+assert_main_system_state() {
+  local stem="$1"
+  adb shell pidof "$PACKAGE" > "$EVIDENCE_DIR/${stem}-pidof.txt" 2>&1 || true
+  adb shell dumpsys activity activities > "$EVIDENCE_DIR/${stem}-activities.txt" 2>&1 || true
+  adb shell dumpsys window > "$EVIDENCE_DIR/${stem}-window.txt" 2>&1 || true
+  test -s "$EVIDENCE_DIR/${stem}-pidof.txt"
+  grep -E -q "topResumedActivity=.*${PACKAGE//./\\.}.*MainActivity|mResumedActivity=.*${PACKAGE//./\\.}.*MainActivity|ResumedActivity.*${PACKAGE//./\\.}.*MainActivity" "$EVIDENCE_DIR/${stem}-activities.txt"
+  grep -q 'state=RESUMED' "$EVIDENCE_DIR/${stem}-activities.txt"
+  grep -E -q "mCurrentFocus=.*${PACKAGE//./\\.}.*MainActivity" "$EVIDENCE_DIR/${stem}-window.txt"
+}
+
+# Background/resume + warm re-entry with the live process retained.
+pid_before_background="$(adb shell pidof "$PACKAGE" || true)"
+test -n "$pid_before_background"
+adb shell input keyevent KEYCODE_HOME
+sleep 3
+adb shell dumpsys window > "$EVIDENCE_DIR/q5-lifecycle-background-window.txt" 2>&1 || true
+adb shell am start -W -n "$PACKAGE/$ACTIVITY" | tee "$EVIDENCE_DIR/q5-lifecycle-resume-start.txt"
+sleep 4
+pid_after_resume="$(adb shell pidof "$PACKAGE" || true)"
+test "$pid_after_resume" = "$pid_before_background"
+dump_ui "q5-lifecycle-resume"
+assert_text "$EVIDENCE_DIR/q5-lifecycle-resume.xml" "$YAW_APP_LABEL"
+assert_main_system_state "q5-lifecycle-resume"
+adb exec-out screencap -p > "$EVIDENCE_DIR/q5-lifecycle-resume.png"
+
+# Explicit process-death/cold restart.
+adb shell am force-stop "$PACKAGE"
+sleep 2
+if adb shell pidof "$PACKAGE" | grep -q .; then
+  echo "Target process still alive after force-stop" >&2
+  exit 43
+fi
+adb shell am start -W -n "$PACKAGE/$ACTIVITY" | tee "$EVIDENCE_DIR/q5-lifecycle-cold-restart-start.txt"
+sleep 4
+dump_ui "q5-lifecycle-cold-restart"
+assert_text "$EVIDENCE_DIR/q5-lifecycle-cold-restart.xml" "$YAW_APP_LABEL"
+assert_main_system_state "q5-lifecycle-cold-restart"
+adb exec-out screencap -p > "$EVIDENCE_DIR/q5-lifecycle-cold-restart.png"
+
+# Fresh install + true first launch from cleared package state. This is last
+# because uninstalling correctly removes the previously-bound launcher widget.
+adb shell am force-stop "$PACKAGE" >/dev/null 2>&1 || true
+adb uninstall "$PACKAGE" | tee "$EVIDENCE_DIR/q5-fresh-uninstall.txt"
+grep -Fq "Success" "$EVIDENCE_DIR/q5-fresh-uninstall.txt"
+adb install "$APP_APK" | tee "$EVIDENCE_DIR/q5-fresh-install.txt"
+grep -Fq "Success" "$EVIDENCE_DIR/q5-fresh-install.txt"
+adb shell dumpsys package "$PACKAGE" > "$EVIDENCE_DIR/q5-fresh-package.txt" 2>&1
+grep -Fq "versionName=1.0.0" "$EVIDENCE_DIR/q5-fresh-package.txt"
+adb shell am start -W -n "$PACKAGE/$ACTIVITY" | tee "$EVIDENCE_DIR/q5-first-launch-start.txt"
+sleep 5
+dump_ui "q5-first-launch"
+assert_text "$EVIDENCE_DIR/q5-first-launch.xml" "$YAW_APP_LABEL"
+assert_text "$EVIDENCE_DIR/q5-first-launch.xml" "Typography"
+assert_text "$EVIDENCE_DIR/q5-first-launch.xml" "Calendar"
+assert_text "$EVIDENCE_DIR/q5-first-launch.xml" "Weather"
+assert_main_system_state "q5-first-launch"
+adb exec-out screencap -p > "$EVIDENCE_DIR/q5-first-launch.png"
+
 adb shell dumpsys window > "$EVIDENCE_DIR/q5-surface-window.txt" 2>&1 || true
 adb logcat -d > "$EVIDENCE_DIR/q5-surface-logcat.txt" 2>&1 || true
 if grep -E -q "FATAL EXCEPTION:.*|Process: ${PACKAGE//./\\.}|ANR in ${PACKAGE//./\\.}" "$EVIDENCE_DIR/q5-surface-logcat.txt"; then
