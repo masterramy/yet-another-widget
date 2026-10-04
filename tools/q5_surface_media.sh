@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# PR-only normalized-rebuild validation marker 2.
 set -euo pipefail
 
 APP_APK="$(find app/build/outputs/apk/debug -maxdepth 1 -type f -name '*.apk' | head -n1)"
