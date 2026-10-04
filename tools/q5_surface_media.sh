@@ -296,19 +296,74 @@ assert_text "$EVIDENCE_DIR/q5-lifecycle-resume.xml" "$YAW_APP_LABEL"
 assert_main_system_state "q5-lifecycle-resume"
 adb exec-out screencap -p > "$EVIDENCE_DIR/q5-lifecycle-resume.png"
 
-# Explicit process-death/cold restart.
+assert_widget_bound() {
+  local stem="$1"
+  adb shell dumpsys appwidget > "$EVIDENCE_DIR/${stem}-appwidget.txt" 2>&1
+  grep -Fq "pkg:com.google.android.apps.nexuslauncher" "$EVIDENCE_DIR/${stem}-appwidget.txt"
+  grep -Fq "com.ramybaheeg.yetanotherwidget/com.ramybaheeg.yetanotherwidget.ui.widgets.MainWidget" "$EVIDENCE_DIR/${stem}-appwidget.txt"
+  grep -Fq "views=android.widget.RemoteViews" "$EVIDENCE_DIR/${stem}-appwidget.txt"
+}
+
+# Explicit process-death/cold restart. Before restarting the app, prove that the
+# launcher still hosts and renders the exact widget while the app process is dead.
 adb shell am force-stop "$PACKAGE"
 sleep 2
 if adb shell pidof "$PACKAGE" | grep -q .; then
   echo "Target process still alive after force-stop" >&2
   exit 43
 fi
+adb shell input keyevent KEYCODE_HOME
+sleep 4
+assert_widget_bound "q5-widget-app-process-dead"
+adb exec-out screencap -p > "$EVIDENCE_DIR/q5-widget-app-process-dead.png"
+
 adb shell am start -W -n "$PACKAGE/$ACTIVITY" | tee "$EVIDENCE_DIR/q5-lifecycle-cold-restart-start.txt"
 sleep 4
 dump_ui "q5-lifecycle-cold-restart"
 assert_text "$EVIDENCE_DIR/q5-lifecycle-cold-restart.xml" "$YAW_APP_LABEL"
 assert_main_system_state "q5-lifecycle-cold-restart"
 adb exec-out screencap -p > "$EVIDENCE_DIR/q5-lifecycle-cold-restart.png"
+
+# Restart the real Pixel Launcher process and prove that its hosted widget
+# binding and rendered RemoteViews survive host-process recreation.
+adb shell input keyevent KEYCODE_HOME
+sleep 3
+launcher_pid_before="$(adb shell pidof com.google.android.apps.nexuslauncher || true)"
+test -n "$launcher_pid_before"
+adb shell am force-stop com.google.android.apps.nexuslauncher
+sleep 2
+adb shell input keyevent KEYCODE_HOME
+sleep 8
+launcher_pid_after="$(adb shell pidof com.google.android.apps.nexuslauncher || true)"
+test -n "$launcher_pid_after"
+test "$launcher_pid_after" != "$launcher_pid_before"
+printf 'before=%s\nafter=%s\n' "$launcher_pid_before" "$launcher_pid_after" > "$EVIDENCE_DIR/q5-launcher-restart-pids.txt"
+assert_widget_bound "q5-widget-after-launcher-restart"
+adb exec-out screencap -p > "$EVIDENCE_DIR/q5-widget-after-launcher-restart.png"
+
+# Full emulator reboot: wait for Android boot completion, return to Launcher,
+# then prove the same widget provider/host binding and visible RemoteViews survive.
+adb reboot
+adb wait-for-device
+boot_ok=0
+for _ in $(seq 1 90); do
+  if adb shell getprop sys.boot_completed 2>/dev/null | tr -d '\r' | grep -qx '1'; then
+    boot_ok=1
+    break
+  fi
+  sleep 2
+done
+if [ "$boot_ok" -ne 1 ]; then
+  echo "Emulator did not complete boot in bounded wait" >&2
+  exit 44
+fi
+adb shell input keyevent KEYCODE_WAKEUP >/dev/null 2>&1 || true
+adb shell input keyevent 82 >/dev/null 2>&1 || true
+adb shell input keyevent KEYCODE_HOME
+sleep 10
+adb shell getprop sys.boot_completed > "$EVIDENCE_DIR/q5-reboot-boot-completed.txt"
+assert_widget_bound "q5-widget-after-reboot"
+adb exec-out screencap -p > "$EVIDENCE_DIR/q5-widget-after-reboot.png"
 
 # Fresh install + true first launch from cleared package state. This is last
 # because uninstalling correctly removes the previously-bound launcher widget.
@@ -353,6 +408,9 @@ privacy_row_hidden=PASS
 settings_back_to_main=PASS
 warm_relaunch_background_resume=PASS
 process_death_cold_restart=PASS
+widget_survives_app_process_death=PASS
+widget_survives_launcher_restart=PASS
+widget_survives_emulator_reboot=PASS
 fresh_install_first_launch=PASS
 bounded_app_fatal_anr_scan=PASS
 shipping_source_mutated_by_this_test=NO
