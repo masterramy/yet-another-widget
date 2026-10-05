@@ -106,6 +106,52 @@ raise SystemExit(1)
 PY
 }
 
+assert_attr_by_id() {
+  local xml="$1"
+  local suffix="$2"
+  local attr="$3"
+  local expected="$4"
+  python3 - "$xml" "$suffix" "$attr" "$expected" <<'PY'
+import sys, xml.etree.ElementTree as ET
+path, suffix, attr, expected = sys.argv[1:5]
+root = ET.parse(path).getroot()
+for node in root.iter("node"):
+    rid = node.attrib.get("resource-id", "")
+    if rid.endswith("/" + suffix) or rid.endswith(":id/" + suffix):
+        actual = node.attrib.get(attr, "")
+        if actual == expected:
+            raise SystemExit(0)
+        print(f"Unexpected {suffix} {attr}: expected={expected!r} actual={actual!r}", file=sys.stderr)
+        raise SystemExit(1)
+print(f"Could not find visible resource id: {suffix}", file=sys.stderr)
+raise SystemExit(1)
+PY
+}
+
+assert_id_absent() {
+  local xml="$1"
+  local suffix="$2"
+  python3 - "$xml" "$suffix" <<'PY'
+import sys, xml.etree.ElementTree as ET
+path, suffix = sys.argv[1:3]
+root = ET.parse(path).getroot()
+for node in root.iter("node"):
+    rid = node.attrib.get("resource-id", "")
+    if rid.endswith("/" + suffix) or rid.endswith(":id/" + suffix):
+        print(f"Unexpected visible resource id: {suffix}", file=sys.stderr)
+        raise SystemExit(1)
+raise SystemExit(0)
+PY
+}
+
+assert_permission_state() {
+  local permission="$1"
+  local expected="$2"
+  local stem="$3"
+  adb shell dumpsys package "$PACKAGE" > "$EVIDENCE_DIR/${stem}-package.txt" 2>&1
+  grep -Fq "$permission: granted=$expected" "$EVIDENCE_DIR/${stem}-package.txt"
+}
+
 tap_text() {
   local xml="$1"
   local expected="$2"
@@ -406,6 +452,122 @@ assert_text "$EVIDENCE_DIR/q5-first-launch.xml" "Weather"
 assert_main_system_state "q5-first-launch"
 adb exec-out screencap -p > "$EVIDENCE_DIR/q5-first-launch.png"
 
+echo "== Q5 calendar/location permission lifecycle tranche =="
+
+# Calendar: denied -> granted/enabled -> revoked/normalized-off -> re-granted/enabled.
+adb shell pm revoke "$PACKAGE" android.permission.READ_CALENDAR >/dev/null 2>&1 || true
+adb shell am force-stop "$PACKAGE" >/dev/null 2>&1 || true
+adb shell am start -W -n "$PACKAGE/$ACTIVITY" | tee "$EVIDENCE_DIR/q5-calendar-denied-start.txt"
+sleep 4
+dump_ui "q5-calendar-denied-main"
+assert_permission_state "android.permission.READ_CALENDAR" "false" "q5-calendar-denied"
+assert_attr_by_id "$EVIDENCE_DIR/q5-calendar-denied-main.xml" "show_events_switch" "checked" "false"
+adb exec-out screencap -p > "$EVIDENCE_DIR/q5-calendar-denied-main.png"
+
+adb shell pm grant "$PACKAGE" android.permission.READ_CALENDAR
+assert_permission_state "android.permission.READ_CALENDAR" "true" "q5-calendar-granted"
+tap_id "$EVIDENCE_DIR/q5-calendar-denied-main.xml" "show_events_switch"
+sleep 4
+dump_ui "q5-calendar-granted-enabled-main"
+assert_attr_by_id "$EVIDENCE_DIR/q5-calendar-granted-enabled-main.xml" "show_events_switch" "checked" "true"
+tap_id "$EVIDENCE_DIR/q5-calendar-granted-enabled-main.xml" "action_show_events"
+sleep 3
+dump_ui "q5-calendar-granted-screen"
+assert_text "$EVIDENCE_DIR/q5-calendar-granted-screen.xml" "Calendar"
+adb exec-out screencap -p > "$EVIDENCE_DIR/q5-calendar-granted-screen.png"
+
+adb shell pm revoke "$PACKAGE" android.permission.READ_CALENDAR
+adb shell am force-stop "$PACKAGE" >/dev/null 2>&1 || true
+adb shell am start -W -n "$PACKAGE/$ACTIVITY" | tee "$EVIDENCE_DIR/q5-calendar-revoked-start.txt"
+sleep 4
+dump_ui "q5-calendar-revoked-main"
+assert_permission_state "android.permission.READ_CALENDAR" "false" "q5-calendar-revoked"
+assert_attr_by_id "$EVIDENCE_DIR/q5-calendar-revoked-main.xml" "show_events_switch" "checked" "false"
+adb exec-out screencap -p > "$EVIDENCE_DIR/q5-calendar-revoked-main.png"
+
+adb shell pm grant "$PACKAGE" android.permission.READ_CALENDAR
+assert_permission_state "android.permission.READ_CALENDAR" "true" "q5-calendar-regranted"
+tap_id "$EVIDENCE_DIR/q5-calendar-revoked-main.xml" "show_events_switch"
+sleep 4
+dump_ui "q5-calendar-regranted-enabled-main"
+assert_attr_by_id "$EVIDENCE_DIR/q5-calendar-regranted-enabled-main.xml" "show_events_switch" "checked" "true"
+adb exec-out screencap -p > "$EVIDENCE_DIR/q5-calendar-regranted-enabled-main.png"
+
+# Weather/location: enable weather while coarse location is denied, prove the
+# real Weather permission alert, then grant -> revoke -> re-grant and prove the
+# alert tracks package permission state. This does not claim live provider data.
+adb shell pm revoke "$PACKAGE" android.permission.ACCESS_COARSE_LOCATION >/dev/null 2>&1 || true
+adb shell am force-stop "$PACKAGE" >/dev/null 2>&1 || true
+adb shell am start -W -n "$PACKAGE/$ACTIVITY" | tee "$EVIDENCE_DIR/q5-location-denied-start.txt"
+sleep 4
+dump_ui "q5-location-denied-main"
+assert_permission_state "android.permission.ACCESS_COARSE_LOCATION" "false" "q5-location-denied"
+weather_checked="$(python3 - "$EVIDENCE_DIR/q5-location-denied-main.xml" <<'PY'
+import xml.etree.ElementTree as ET, sys
+root = ET.parse(sys.argv[1]).getroot()
+for node in root.iter("node"):
+    if node.attrib.get("resource-id","").endswith("/show_weather_switch"):
+        print(node.attrib.get("checked","false"))
+        raise SystemExit(0)
+raise SystemExit(1)
+PY
+)"
+if [ "$weather_checked" != "true" ]; then
+  tap_id "$EVIDENCE_DIR/q5-location-denied-main.xml" "show_weather_switch"
+  sleep 3
+  dump_ui "q5-location-denied-weather-enabled-main"
+else
+  cp "$EVIDENCE_DIR/q5-location-denied-main.xml" "$EVIDENCE_DIR/q5-location-denied-weather-enabled-main.xml"
+fi
+assert_attr_by_id "$EVIDENCE_DIR/q5-location-denied-weather-enabled-main.xml" "show_weather_switch" "checked" "true"
+tap_id "$EVIDENCE_DIR/q5-location-denied-weather-enabled-main.xml" "action_show_weather"
+sleep 4
+dump_ui "q5-location-denied-weather-screen"
+assert_text "$EVIDENCE_DIR/q5-location-denied-weather-screen.xml" "Weather"
+assert_attr_by_id "$EVIDENCE_DIR/q5-location-denied-weather-screen.xml" "location_permission_alert" "enabled" "true"
+adb exec-out screencap -p > "$EVIDENCE_DIR/q5-location-denied-weather-screen.png"
+
+adb shell pm grant "$PACKAGE" android.permission.ACCESS_COARSE_LOCATION
+adb shell am force-stop "$PACKAGE" >/dev/null 2>&1 || true
+adb shell am start -W -n "$PACKAGE/$ACTIVITY" | tee "$EVIDENCE_DIR/q5-location-granted-start.txt"
+sleep 4
+dump_ui "q5-location-granted-main"
+assert_permission_state "android.permission.ACCESS_COARSE_LOCATION" "true" "q5-location-granted"
+assert_attr_by_id "$EVIDENCE_DIR/q5-location-granted-main.xml" "show_weather_switch" "checked" "true"
+tap_id "$EVIDENCE_DIR/q5-location-granted-main.xml" "action_show_weather"
+sleep 5
+dump_ui "q5-location-granted-weather-screen"
+assert_text "$EVIDENCE_DIR/q5-location-granted-weather-screen.xml" "Weather"
+assert_id_absent "$EVIDENCE_DIR/q5-location-granted-weather-screen.xml" "location_permission_alert"
+adb exec-out screencap -p > "$EVIDENCE_DIR/q5-location-granted-weather-screen.png"
+
+adb shell pm revoke "$PACKAGE" android.permission.ACCESS_COARSE_LOCATION
+adb shell am force-stop "$PACKAGE" >/dev/null 2>&1 || true
+adb shell am start -W -n "$PACKAGE/$ACTIVITY" | tee "$EVIDENCE_DIR/q5-location-revoked-start.txt"
+sleep 4
+dump_ui "q5-location-revoked-main"
+assert_permission_state "android.permission.ACCESS_COARSE_LOCATION" "false" "q5-location-revoked"
+assert_attr_by_id "$EVIDENCE_DIR/q5-location-revoked-main.xml" "show_weather_switch" "checked" "true"
+tap_id "$EVIDENCE_DIR/q5-location-revoked-main.xml" "action_show_weather"
+sleep 4
+dump_ui "q5-location-revoked-weather-screen"
+assert_attr_by_id "$EVIDENCE_DIR/q5-location-revoked-weather-screen.xml" "location_permission_alert" "enabled" "true"
+adb exec-out screencap -p > "$EVIDENCE_DIR/q5-location-revoked-weather-screen.png"
+
+adb shell pm grant "$PACKAGE" android.permission.ACCESS_COARSE_LOCATION
+adb shell am force-stop "$PACKAGE" >/dev/null 2>&1 || true
+adb shell am start -W -n "$PACKAGE/$ACTIVITY" | tee "$EVIDENCE_DIR/q5-location-regranted-start.txt"
+sleep 4
+dump_ui "q5-location-regranted-main"
+assert_permission_state "android.permission.ACCESS_COARSE_LOCATION" "true" "q5-location-regranted"
+assert_attr_by_id "$EVIDENCE_DIR/q5-location-regranted-main.xml" "show_weather_switch" "checked" "true"
+tap_id "$EVIDENCE_DIR/q5-location-regranted-main.xml" "action_show_weather"
+sleep 5
+dump_ui "q5-location-regranted-weather-screen"
+assert_text "$EVIDENCE_DIR/q5-location-regranted-weather-screen.xml" "Weather"
+assert_id_absent "$EVIDENCE_DIR/q5-location-regranted-weather-screen.xml" "location_permission_alert"
+adb exec-out screencap -p > "$EVIDENCE_DIR/q5-location-regranted-weather-screen.png"
+
 adb shell dumpsys window > "$EVIDENCE_DIR/q5-surface-window.txt" 2>&1 || true
 adb logcat -d > "$EVIDENCE_DIR/q5-surface-logcat.txt" 2>&1 || true
 if grep -E -q "FATAL EXCEPTION:.*|Process: ${PACKAGE//./\\.}|ANR in ${PACKAGE//./\\.}" "$EVIDENCE_DIR/q5-surface-logcat.txt"; then
@@ -434,6 +596,8 @@ widget_survives_app_process_death=PASS
 widget_survives_launcher_restart=PASS
 widget_survives_emulator_reboot=PASS
 fresh_install_first_launch=PASS
+calendar_permission_denied_granted_revoked_regranted=PASS
+coarse_location_permission_denied_granted_revoked_regranted=PASS
 bounded_app_fatal_anr_scan=PASS
 shipping_source_mutated_by_this_test=NO
 EOF
