@@ -188,6 +188,24 @@ public class SlimAdapter extends AbstractSlimAdapter {
         return this;
     }
 
+    public <T> SlimAdapter register(final Class<T> dataClass, final int layoutRes, final SlimInjector<T> slimInjector) {
+        if (dataClass == null) {
+            throw new IllegalArgumentException("dataClass == null");
+        }
+        creators.put(dataClass, new IViewHolderCreator<T>() {
+            @Override
+            public SlimTypeViewHolder<T> create(ViewGroup parent) {
+                return new SlimTypeViewHolder<T>(parent, layoutRes) {
+                    @Override
+                    protected void onBind(T data, IViewInjector injector) {
+                        slimInjector.onInject(data, injector);
+                    }
+                };
+            }
+        });
+        return this;
+    }
+
     public <T> SlimAdapter register(final int layoutRes, final SlimInjector<T> slimInjector) {
         Type type = getSlimInjectorActualTypeArguments(slimInjector);
         if (type == null) {
