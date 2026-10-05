@@ -572,6 +572,18 @@ jobs:
           grep -Fq 'SlimAdapter' THIRD_PARTY_NOTICES.md
           grep -Fq '3e00f876906019ac224e29159ff1a777c4a47d4b' THIRD_PARTY_NOTICES.md
           echo "SlimAdapter is pinned, vendored, provenance-documented durable shipping source."
+      - name: Kotlin SlimAdapter registrations must be explicit
+        shell: bash
+        run: |
+          set -euo pipefail
+          slim=app/src/main/java/net/idik/lib/slimadapter/SlimAdapter.java
+          grep -Fq 'register(final Class<T> dataClass' "$slim"
+          if grep -R -n -E '\.register<[^>]+>\(' app/src/main/java --include='*.kt'; then
+            echo "ERROR: reflective Kotlin SlimAdapter registration remains; use explicit Class token or registerDefault." >&2
+            exit 1
+          fi
+          echo "All Kotlin SlimAdapter registrations avoid fragile runtime generic reflection."
+
       - name: Widget PendingIntent compatibility must be durable source
         shell: bash
         run: |
