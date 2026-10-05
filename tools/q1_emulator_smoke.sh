@@ -342,6 +342,19 @@ sleep 2
 adb shell input motionevent UP 540 650
 sleep 8
 ui_dump post-widget-drag || true
+
+# A provider with android:configure is not durably placed until the config
+# Activity returns RESULT_OK for the allocated appWidgetId. Complete the real
+# YAW configuration flow instead of treating the provisional host binding as final.
+if [ -s q1-evidence/post-widget-drag.xml ] && grep -q 'action_add_widget' q1-evidence/post-widget-drag.xml; then
+  adb exec-out screencap -p > q1-evidence/widget-configure-before-confirm.png || true
+  tap_node q1-evidence/post-widget-drag.xml "action_add_widget"
+  sleep 5
+  adb shell input keyevent KEYCODE_HOME >/dev/null 2>&1 || true
+  sleep 3
+  ui_dump widget-home-configured || true
+fi
+
 adb shell dumpsys appwidget > q1-evidence/appwidget-after-placement.txt
 adb shell dumpsys window > q1-evidence/window-after-placement.txt 2>&1 || true
 adb exec-out screencap -p > q1-evidence/widget-home.png || true
