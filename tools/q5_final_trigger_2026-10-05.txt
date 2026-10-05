@@ -1,0 +1,4 @@
+Exact-head production certification trigger.
+Shipping/customer-byte candidate: c73e307ca1481afcae3e0a06c9d99fba9128c150
+QA head before trigger: 2f406495fd4ba10110b65a4543495adcdd2e2195
+Purpose: rerun the complete gated Q5 matrix after the BottomSheetPicker runtime repair and API32 wallpaper-test timing repair.
