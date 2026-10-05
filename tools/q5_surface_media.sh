@@ -734,6 +734,62 @@ for spec in \
   assert_text "$EVIDENCE_DIR/q5-nav-${child_stem}-back.xml" "Typography"
 done
 
+echo "== Q5 typography control surfaces =="
+adb shell am force-stop "$PACKAGE" >/dev/null 2>&1 || true
+adb shell am start -W -n "$PACKAGE/$ACTIVITY" >/dev/null
+sleep 4
+dump_ui "q5-typography-main"
+tap_id "$EVIDENCE_DIR/q5-typography-main.xml" "action_typography"
+sleep 3
+dump_ui "q5-typography"
+
+tap_id "$EVIDENCE_DIR/q5-typography.xml" "action_main_text_size"
+sleep 2
+dump_ui "q5-main-text-size-menu"
+assert_text "$EVIDENCE_DIR/q5-main-text-size-menu.xml" "40sp"
+assert_text "$EVIDENCE_DIR/q5-main-text-size-menu.xml" "10sp"
+adb exec-out screencap -p > "$EVIDENCE_DIR/q5-main-text-size-menu.png"
+adb shell input keyevent KEYCODE_BACK
+sleep 1
+
+dump_ui "q5-typography-second-entry"
+tap_id "$EVIDENCE_DIR/q5-typography-second-entry.xml" "action_second_text_size"
+sleep 2
+dump_ui "q5-second-text-size-menu"
+assert_text "$EVIDENCE_DIR/q5-second-text-size-menu.xml" "40sp"
+assert_text "$EVIDENCE_DIR/q5-second-text-size-menu.xml" "10sp"
+adb shell input keyevent KEYCODE_BACK
+sleep 1
+
+dump_ui "q5-typography-shadow-entry"
+tap_id "$EVIDENCE_DIR/q5-typography-shadow-entry.xml" "action_text_shadow"
+sleep 2
+dump_ui "q5-text-shadow-menu"
+assert_text "$EVIDENCE_DIR/q5-text-shadow-menu.xml" "Text shadow"
+assert_text "$EVIDENCE_DIR/q5-text-shadow-menu.xml" "None"
+assert_text "$EVIDENCE_DIR/q5-text-shadow-menu.xml" "High"
+adb shell input keyevent KEYCODE_BACK
+sleep 1
+
+dump_ui "q5-typography-font-entry"
+tap_id "$EVIDENCE_DIR/q5-typography-font-entry.xml" "action_custom_font"
+sleep 2
+dump_ui "q5-font-menu"
+assert_text "$EVIDENCE_DIR/q5-font-menu.xml" "Widget font"
+assert_text "$EVIDENCE_DIR/q5-font-menu.xml" "Device font"
+adb shell input keyevent KEYCODE_BACK
+sleep 1
+
+dump_ui "q5-typography-date-entry"
+tap_id "$EVIDENCE_DIR/q5-typography-date-entry.xml" "action_date_format"
+sleep 2
+dump_ui "q5-date-format-menu"
+assert_text "$EVIDENCE_DIR/q5-date-format-menu.xml" "Date format"
+assert_text "$EVIDENCE_DIR/q5-date-format-menu.xml" "Custom date format"
+adb exec-out screencap -p > "$EVIDENCE_DIR/q5-date-format-menu.png"
+adb shell input keyevent KEYCODE_BACK
+sleep 1
+
 adb shell dumpsys window > "$EVIDENCE_DIR/q5-surface-window.txt" 2>&1 || true
 adb logcat -d > "$EVIDENCE_DIR/q5-surface-logcat.txt" 2>&1 || true
 if grep -E -q "FATAL EXCEPTION:.*|Process: ${PACKAGE//./\\.}|ANR in ${PACKAGE//./\\.}" "$EVIDENCE_DIR/q5-surface-logcat.txt"; then
@@ -769,6 +825,7 @@ calendar_permission_denied_granted_revoked_regranted=PASS
 coarse_location_permission_denied_granted_revoked_regranted=PASS
 notification_listener_denied_granted_revoked_regranted=PASS
 all_main_child_navigation_and_back=PASS
+typography_size_shadow_font_date_control_surfaces=PASS
 bounded_app_fatal_anr_scan=PASS
 shipping_source_mutated_by_this_test=NO
 EOF
