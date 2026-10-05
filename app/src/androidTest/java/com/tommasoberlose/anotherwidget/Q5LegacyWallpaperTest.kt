@@ -35,6 +35,8 @@ class Q5LegacyWallpaperTest {
         Preferences.showWallpaper = false
         ActivityScenario.launch(MainActivity::class.java).use {
             onView(withId(R.id.action_settings)).perform(click())
+            instrumentation.waitForIdleSync()
+            Thread.sleep(750)
             onView(withId(R.id.action_show_wallpaper)).check(matches(isDisplayed()))
             onView(withId(R.id.show_wallpaper_toggle)).check(matches(isNotChecked()))
 
