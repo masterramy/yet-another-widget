@@ -5,6 +5,8 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.scrollTo
+import androidx.test.espresso.action.ViewActions.swipeDown
+import androidx.test.espresso.action.ViewActions.swipeUp
 import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
 import androidx.test.espresso.assertion.ViewAssertions.matches
@@ -52,12 +54,16 @@ class Q5ControlsTest {
             openRow(R.id.action_typography)
 
             openRow(R.id.action_main_text_size)
+            onView(withId(R.id.menu)).perform(swipeDown(), swipeDown())
             onView(withText("40sp")).check(matches(isDisplayed()))
+            onView(withId(R.id.menu)).perform(swipeUp(), swipeUp(), swipeUp(), swipeUp())
             onView(withText("10sp")).check(matches(isDisplayed()))
             pressBack()
 
             openRow(R.id.action_second_text_size)
+            onView(withId(R.id.menu)).perform(swipeDown(), swipeDown())
             onView(withText("40sp")).check(matches(isDisplayed()))
+            onView(withId(R.id.menu)).perform(swipeUp(), swipeUp(), swipeUp(), swipeUp())
             onView(withText("10sp")).check(matches(isDisplayed()))
             pressBack()
 
