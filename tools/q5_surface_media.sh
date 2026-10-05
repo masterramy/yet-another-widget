@@ -590,7 +590,7 @@ open_latest_notifications_dialog() {
   sleep 4
   dump_ui "${stem}-main"
   assert_text "$EVIDENCE_DIR/${stem}-main.xml" "At a glance"
-  tap_text "$EVIDENCE_DIR/${stem}-main.xml" "At a glance"
+  tap_id "$EVIDENCE_DIR/${stem}-main.xml" "action_show_glance"
   sleep 4
   dump_ui "${stem}-glance"
   assert_text "$EVIDENCE_DIR/${stem}-glance.xml" "Latest notifications"
