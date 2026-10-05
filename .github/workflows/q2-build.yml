@@ -973,7 +973,7 @@ jobs:
           target: google_apis
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
-          script: bash tools/q5_locale_accessibility.sh
+          script: adb root && adb wait-for-device && bash tools/q5_locale_accessibility.sh
       - name: Upload Q5 locale/accessibility evidence
         if: always()
         uses: actions/upload-artifact@v7
