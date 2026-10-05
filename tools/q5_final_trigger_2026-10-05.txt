@@ -1,4 +1,4 @@
-Exact-head production certification trigger.
-Shipping/customer-byte candidate: c73e307ca1481afcae3e0a06c9d99fba9128c150
-QA head before trigger: 2f406495fd4ba10110b65a4543495adcdd2e2195
-Purpose: rerun the complete gated Q5 matrix after the BottomSheetPicker runtime repair and API32 wallpaper-test timing repair.
+Exact-head production certification trigger — repaired candidate rerun.
+Shipping/customer-byte candidate: bf2ac34bac54939b01f74bd7818d04e4f3620e79
+QA head before trigger: ff9a9eadb5caa04bf58dad6444aaf499912675e8
+Purpose: run the complete gated Q5 matrix after systematic explicit SlimAdapter registration repair, API32 coordinate repair, text-picker visibility repair, real AppWidget configuration completion, locale PackageManager readiness repair, and expanded glance/provider/control coverage.
