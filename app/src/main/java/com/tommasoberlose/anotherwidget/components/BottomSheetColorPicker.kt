@@ -107,7 +107,7 @@ class BottomSheetColorPicker(
             listBinding.root.layoutManager = mLayoutManager
 
             adapter
-                .register<Int>(R.layout.color_picker_menu_item) { item, injector ->
+                .register(Int::class.javaObjectType, R.layout.color_picker_menu_item) { item, injector ->
                     injector
                         .with<MaterialCardView>(R.id.color) {
                             it.setCardBackgroundColor(ColorStateList.valueOf(item))
