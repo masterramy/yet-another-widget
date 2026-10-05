@@ -837,6 +837,33 @@ adb exec-out screencap -p > "$EVIDENCE_DIR/q5-background-color-picker.png"
 adb shell input keyevent KEYCODE_BACK
 sleep 1
 
+echo "== Q5 clock controls =="
+adb shell am force-stop "$PACKAGE" >/dev/null 2>&1 || true
+adb shell am start -W -n "$PACKAGE/$ACTIVITY" >/dev/null
+sleep 4
+dump_ui "q5-clock-main"
+tap_id "$EVIDENCE_DIR/q5-clock-main.xml" "action_show_clock"
+sleep 3
+dump_ui "q5-clock"
+assert_text "$EVIDENCE_DIR/q5-clock.xml" "Clock"
+
+tap_id "$EVIDENCE_DIR/q5-clock.xml" "action_clock_text_size"
+sleep 2
+dump_ui "q5-clock-size-menu"
+assert_text "$EVIDENCE_DIR/q5-clock-size-menu.xml" "Text size"
+adb exec-out screencap -p > "$EVIDENCE_DIR/q5-clock-size-menu.png"
+adb shell input keyevent KEYCODE_BACK
+sleep 1
+
+dump_ui "q5-clock-timezone-entry"
+tap_id "$EVIDENCE_DIR/q5-clock-timezone-entry.xml" "action_alt_timezone_clock"
+sleep 3
+adb shell dumpsys activity activities > "$EVIDENCE_DIR/q5-timezone-activities.txt" 2>&1
+grep -Fq "TimeZoneSelectorActivity" "$EVIDENCE_DIR/q5-timezone-activities.txt"
+adb exec-out screencap -p > "$EVIDENCE_DIR/q5-timezone-selector.png"
+adb shell input keyevent KEYCODE_BACK
+sleep 2
+
 adb shell dumpsys window > "$EVIDENCE_DIR/q5-surface-window.txt" 2>&1 || true
 adb logcat -d > "$EVIDENCE_DIR/q5-surface-logcat.txt" 2>&1 || true
 if grep -E -q "FATAL EXCEPTION:.*|Process: ${PACKAGE//./\\.}|ANR in ${PACKAGE//./\\.}" "$EVIDENCE_DIR/q5-surface-logcat.txt"; then
@@ -874,6 +901,7 @@ notification_listener_denied_granted_revoked_regranted=PASS
 all_main_child_navigation_and_back=PASS
 typography_size_shadow_font_date_control_surfaces=PASS
 layout_alignment_spacing_background_surfaces=PASS
+clock_text_size_and_timezone_surfaces=PASS
 bounded_app_fatal_anr_scan=PASS
 shipping_source_mutated_by_this_test=NO
 EOF
