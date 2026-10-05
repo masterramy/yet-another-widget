@@ -5,6 +5,8 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.scrollTo
+import androidx.test.espresso.action.ViewActions.replaceText
+import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isChecked
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
@@ -208,6 +210,33 @@ class Q5ControlsTest {
 
             openRow(R.id.action_weather_app)
             onView(withText("Choose application")).check(matches(isDisplayed()))
+        }
+    }
+
+
+    @Test
+    fun glanceNotificationAndMediaConfigurationSurfacesOpen() {
+        ActivityScenario.launch(MainActivity::class.java).use {
+            openRow(R.id.action_show_glance)
+            onView(withText("Latest notifications")).perform(scrollTo(), click())
+            onView(withId(R.id.action_filter_notifications_app)).perform(click())
+            onView(withText("Applications")).check(matches(isDisplayed()))
+            pressBack()
+
+            onView(withText("Latest notifications")).perform(scrollTo(), click())
+            onView(withId(R.id.action_change_notification_timer)).perform(click())
+            onView(withText("Hide the notification after")).check(matches(isDisplayed()))
+            pressBack()
+            pressBack()
+
+            onView(withText("Current playing song")).perform(scrollTo(), click())
+            onView(withId(R.id.action_filter_music_players)).perform(click())
+            onView(withText("Music Players")).check(matches(isDisplayed()))
+            pressBack()
+
+            onView(withText("Current playing song")).perform(scrollTo(), click())
+            onView(withId(R.id.action_change_media_info_format)).perform(click())
+            onView(withId(R.id.media_info_format_input)).check(matches(isDisplayed()))
         }
     }
 
