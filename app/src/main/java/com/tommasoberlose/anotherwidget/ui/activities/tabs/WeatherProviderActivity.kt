@@ -43,7 +43,7 @@ class WeatherProviderActivity : AppCompatActivity() {
 
         adapter = SlimAdapter.create()
         adapter
-            .register<Constants.WeatherProvider>(R.layout.weather_provider_list_item) { provider, injector ->
+            .register(Constants.WeatherProvider::class.java, R.layout.weather_provider_list_item) { provider, injector ->
                 injector
                     .text(R.id.text, WeatherHelper.getProviderName(this, provider))
                     .clicked(R.id.item) {
