@@ -38,7 +38,7 @@ class MusicPlayersFilterActivity : AppCompatActivity() {
 
         adapter = SlimAdapter.create()
         adapter
-            .register<ResolveInfo>(R.layout.application_info_layout) { item, injector ->
+            .register(ResolveInfo::class.java, R.layout.application_info_layout) { item, injector ->
                 injector
                     .text(R.id.text, item.loadLabel(viewModel.pm))
                     .with<ImageView>(R.id.icon) {
