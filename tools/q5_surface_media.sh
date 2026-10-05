@@ -705,6 +705,35 @@ open_latest_notifications_dialog "q5-notification-regranted"
 assert_absent "$EVIDENCE_DIR/q5-notification-regranted-notifications-dialog.xml" "We need the notification access permission to check your last notifications."
 adb exec-out screencap -p > "$EVIDENCE_DIR/q5-notification-regranted-notifications-dialog.png"
 
+echo "== Q5 child navigation/back tranche =="
+# Close the notification dialog before each bounded child traversal by
+# force-stopping/relaunching MainActivity. Exercise the actual clickable rows,
+# render each child, then use the app toolbar Back control and prove main returns.
+for spec in \
+  "action_typography|Typography|typography" \
+  "action_general_settings|Layout|layout" \
+  "action_show_clock|Clock|clock" \
+  "action_show_events|Calendar|calendar" \
+  "action_show_weather|Weather|weather" \
+  "action_show_glance|At a glance|glance" \
+  "action_tab_default_app|Gestures|gestures"; do
+  IFS='|' read -r child_id child_title child_stem <<<"$spec"
+  adb shell am force-stop "$PACKAGE" >/dev/null 2>&1 || true
+  adb shell am start -W -n "$PACKAGE/$ACTIVITY" > "$EVIDENCE_DIR/q5-nav-${child_stem}-start.txt"
+  sleep 4
+  dump_ui "q5-nav-${child_stem}-main"
+  tap_id "$EVIDENCE_DIR/q5-nav-${child_stem}-main.xml" "$child_id"
+  sleep 3
+  dump_ui "q5-nav-${child_stem}-child"
+  assert_text "$EVIDENCE_DIR/q5-nav-${child_stem}-child.xml" "$child_title"
+  adb exec-out screencap -p > "$EVIDENCE_DIR/q5-nav-${child_stem}-child.png"
+  tap_id "$EVIDENCE_DIR/q5-nav-${child_stem}-child.xml" "action_back"
+  sleep 3
+  dump_ui "q5-nav-${child_stem}-back"
+  assert_text "$EVIDENCE_DIR/q5-nav-${child_stem}-back.xml" "$YAW_APP_LABEL"
+  assert_text "$EVIDENCE_DIR/q5-nav-${child_stem}-back.xml" "Typography"
+done
+
 adb shell dumpsys window > "$EVIDENCE_DIR/q5-surface-window.txt" 2>&1 || true
 adb logcat -d > "$EVIDENCE_DIR/q5-surface-logcat.txt" 2>&1 || true
 if grep -E -q "FATAL EXCEPTION:.*|Process: ${PACKAGE//./\\.}|ANR in ${PACKAGE//./\\.}" "$EVIDENCE_DIR/q5-surface-logcat.txt"; then
@@ -739,6 +768,7 @@ fresh_install_first_launch=PASS
 calendar_permission_denied_granted_revoked_regranted=PASS
 coarse_location_permission_denied_granted_revoked_regranted=PASS
 notification_listener_denied_granted_revoked_regranted=PASS
+all_main_child_navigation_and_back=PASS
 bounded_app_fatal_anr_scan=PASS
 shipping_source_mutated_by_this_test=NO
 EOF
