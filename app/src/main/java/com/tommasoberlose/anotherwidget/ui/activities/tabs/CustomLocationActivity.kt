@@ -46,14 +46,14 @@ class CustomLocationActivity : AppCompatActivity() {
 
         adapter = SlimAdapter.create()
         adapter
-            .register<String>(R.layout.custom_location_item) { _, injector ->
+            .register(String::class.java, R.layout.custom_location_item) { _, injector ->
                 injector
                     .text(R.id.text, getString(R.string.custom_location_gps))
                     .clicked(R.id.text) {
                         requirePermission()
                     }
             }
-            .register<Address>(R.layout.custom_location_item) { item, injector ->
+            .register(Address::class.java, R.layout.custom_location_item) { item, injector ->
                 injector.text(R.id.text, item.getAddressLine(0) ?: "")
                 injector.clicked(R.id.item) {
                     Preferences.bulk {
