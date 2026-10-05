@@ -160,4 +160,55 @@ class Q5ControlsTest {
             onView(anyOf(withText("Default event app"), withText("Default calendar app"))).check(matches(isDisplayed()))
         }
     }
+
+    @Test
+    fun weatherSecondarySurfacesOpen() {
+        ActivityScenario.launch(MainActivity::class.java).use {
+            openRow(R.id.action_show_weather)
+            onView(withText("Weather")).check(matches(isDisplayed()))
+
+            openRow(R.id.action_weather_provider)
+            onView(withText("Weather provider")).check(matches(isDisplayed()))
+            pressBack()
+
+            openRow(R.id.action_custom_location)
+            onView(withText("Location")).check(matches(isDisplayed()))
+            pressBack()
+
+            openRow(R.id.action_weather_icon_pack)
+            onView(withText("Icon pack")).check(matches(isDisplayed()))
+        }
+    }
+
+    @Test
+    fun customDateCapitalizationSurfaceOpensAndCycles() {
+        ActivityScenario.launch(MainActivity::class.java).use {
+            openRow(R.id.action_typography)
+            openRow(R.id.action_date_format)
+            onView(withText("Custom date format")).perform(click())
+            onView(withId(R.id.date_format)).check(matches(isDisplayed()))
+            onView(withId(R.id.action_capitalize)).check(matches(isDisplayed()))
+            onView(withId(R.id.action_capitalize)).perform(click(), click(), click())
+        }
+    }
+
+    @Test
+    fun defaultApplicationChoosersOpenFromGestures() {
+        ActivityScenario.launch(MainActivity::class.java).use {
+            openRow(R.id.action_tab_default_app)
+            onView(withText("Gestures")).check(matches(isDisplayed()))
+
+            openRow(R.id.action_calendar_app)
+            onView(withText("Choose application")).check(matches(isDisplayed()))
+            pressBack()
+
+            openRow(R.id.action_clock_app)
+            onView(withText("Choose application")).check(matches(isDisplayed()))
+            pressBack()
+
+            openRow(R.id.action_weather_app)
+            onView(withText("Choose application")).check(matches(isDisplayed()))
+        }
+    }
+
 }
