@@ -65,7 +65,8 @@ class BottomSheetPicker<T>(
             listBinding.root.layoutManager = mLayoutManager
 
             adapter
-                .register<Int>(R.layout.bottom_sheet_menu_item) { position, injector ->
+                .registerDefault(R.layout.bottom_sheet_menu_item) { data, injector ->
+                    val position = data.toString().toInt()
                     val item = items[position]
                     val isSelected = item.value == getSelected?.invoke()
                     injector
@@ -76,8 +77,8 @@ class BottomSheetPicker<T>(
                             val oldIdx = items.toList().indexOfFirst { it.value == getSelected?.invoke() }
                             onItemSelected?.invoke(item.value)
                             adapter.notifyItemChanged(position)
-                            adapter.notifyItemChanged(oldIdx)
-                            (listBinding.root.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(position,0)
+                            if (oldIdx >= 0) adapter.notifyItemChanged(oldIdx)
+                            (listBinding.root.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(position, 0)
                         }
                 }
                 .attachTo(listBinding.root)
