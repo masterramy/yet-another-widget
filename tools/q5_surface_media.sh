@@ -568,6 +568,94 @@ assert_text "$EVIDENCE_DIR/q5-location-regranted-weather-screen.xml" "Weather"
 assert_id_absent "$EVIDENCE_DIR/q5-location-regranted-weather-screen.xml" "location_permission_alert"
 adb exec-out screencap -p > "$EVIDENCE_DIR/q5-location-regranted-weather-screen.png"
 
+echo "== Q5 notification-listener special-access lifecycle tranche =="
+
+NOTIFICATION_LISTENER_COMPONENT="$PACKAGE/com.ramybaheeg.yetanotherwidget.receivers.NotificationListener"
+
+assert_listener_state() {
+  local expected="$1"
+  local stem="$2"
+  adb shell settings get secure enabled_notification_listeners > "$EVIDENCE_DIR/${stem}-enabled-listeners.txt" 2>&1 || true
+  if [ "$expected" = "true" ]; then
+    grep -Fq "$NOTIFICATION_LISTENER_COMPONENT" "$EVIDENCE_DIR/${stem}-enabled-listeners.txt"
+  else
+    ! grep -Fq "$NOTIFICATION_LISTENER_COMPONENT" "$EVIDENCE_DIR/${stem}-enabled-listeners.txt"
+  fi
+}
+
+open_latest_notifications_dialog() {
+  local stem="$1"
+  adb shell am force-stop "$PACKAGE" >/dev/null 2>&1 || true
+  adb shell am start -W -n "$PACKAGE/$ACTIVITY" | tee "$EVIDENCE_DIR/${stem}-start.txt"
+  sleep 4
+  dump_ui "${stem}-main"
+  assert_text "$EVIDENCE_DIR/${stem}-main.xml" "At a glance"
+  tap_text "$EVIDENCE_DIR/${stem}-main.xml" "At a glance"
+  sleep 4
+  dump_ui "${stem}-glance"
+  assert_text "$EVIDENCE_DIR/${stem}-glance.xml" "Latest notifications"
+  tap_text "$EVIDENCE_DIR/${stem}-glance.xml" "Latest notifications"
+  sleep 3
+  dump_ui "${stem}-notifications-dialog"
+  assert_text "$EVIDENCE_DIR/${stem}-notifications-dialog.xml" "Latest notifications"
+}
+
+# Start denied and turn the provider on through its real UI so the app must
+# expose its own recovery warning rather than merely reflecting shell state.
+adb shell cmd notification disallow_listener "$NOTIFICATION_LISTENER_COMPONENT" >/dev/null 2>&1 || true
+assert_listener_state "false" "q5-notification-denied"
+open_latest_notifications_dialog "q5-notification-denied"
+notification_checked="$(get_text_by_id "$EVIDENCE_DIR/q5-notification-denied-notifications-dialog.xml" "provider_switch" 2>/dev/null || true)"
+# SwitchButton exposes checked state, not text; inspect XML directly.
+python3 - "$EVIDENCE_DIR/q5-notification-denied-notifications-dialog.xml" <<'PY'
+import sys, xml.etree.ElementTree as ET
+root=ET.parse(sys.argv[1]).getroot()
+for n in root.iter("node"):
+    if n.attrib.get("resource-id","").endswith("/provider_switch"):
+        raise SystemExit(0 if n.attrib.get("checked") in ("true","false") else 1)
+raise SystemExit(1)
+PY
+provider_checked="$(python3 - "$EVIDENCE_DIR/q5-notification-denied-notifications-dialog.xml" <<'PY'
+import sys, xml.etree.ElementTree as ET
+root=ET.parse(sys.argv[1]).getroot()
+for n in root.iter("node"):
+    if n.attrib.get("resource-id","").endswith("/provider_switch"):
+        print(n.attrib.get("checked","false"))
+        raise SystemExit(0)
+raise SystemExit(1)
+PY
+)"
+if [ "$provider_checked" != "true" ]; then
+  tap_id "$EVIDENCE_DIR/q5-notification-denied-notifications-dialog.xml" "provider_switch"
+  sleep 3
+  dump_ui "q5-notification-denied-enabled-dialog"
+else
+  cp "$EVIDENCE_DIR/q5-notification-denied-notifications-dialog.xml" "$EVIDENCE_DIR/q5-notification-denied-enabled-dialog.xml"
+fi
+assert_text "$EVIDENCE_DIR/q5-notification-denied-enabled-dialog.xml" "We need the notification access permission to check your last notifications."
+adb exec-out screencap -p > "$EVIDENCE_DIR/q5-notification-denied-enabled-dialog.png"
+
+adb shell cmd notification allow_listener "$NOTIFICATION_LISTENER_COMPONENT"
+sleep 2
+assert_listener_state "true" "q5-notification-granted"
+open_latest_notifications_dialog "q5-notification-granted"
+assert_absent "$EVIDENCE_DIR/q5-notification-granted-notifications-dialog.xml" "We need the notification access permission to check your last notifications."
+adb exec-out screencap -p > "$EVIDENCE_DIR/q5-notification-granted-notifications-dialog.png"
+
+adb shell cmd notification disallow_listener "$NOTIFICATION_LISTENER_COMPONENT"
+sleep 2
+assert_listener_state "false" "q5-notification-revoked"
+open_latest_notifications_dialog "q5-notification-revoked"
+assert_text "$EVIDENCE_DIR/q5-notification-revoked-notifications-dialog.xml" "We need the notification access permission to check your last notifications."
+adb exec-out screencap -p > "$EVIDENCE_DIR/q5-notification-revoked-notifications-dialog.png"
+
+adb shell cmd notification allow_listener "$NOTIFICATION_LISTENER_COMPONENT"
+sleep 2
+assert_listener_state "true" "q5-notification-regranted"
+open_latest_notifications_dialog "q5-notification-regranted"
+assert_absent "$EVIDENCE_DIR/q5-notification-regranted-notifications-dialog.xml" "We need the notification access permission to check your last notifications."
+adb exec-out screencap -p > "$EVIDENCE_DIR/q5-notification-regranted-notifications-dialog.png"
+
 adb shell dumpsys window > "$EVIDENCE_DIR/q5-surface-window.txt" 2>&1 || true
 adb logcat -d > "$EVIDENCE_DIR/q5-surface-logcat.txt" 2>&1 || true
 if grep -E -q "FATAL EXCEPTION:.*|Process: ${PACKAGE//./\\.}|ANR in ${PACKAGE//./\\.}" "$EVIDENCE_DIR/q5-surface-logcat.txt"; then
@@ -598,6 +686,7 @@ widget_survives_emulator_reboot=PASS
 fresh_install_first_launch=PASS
 calendar_permission_denied_granted_revoked_regranted=PASS
 coarse_location_permission_denied_granted_revoked_regranted=PASS
+notification_listener_denied_granted_revoked_regranted=PASS
 bounded_app_fatal_anr_scan=PASS
 shipping_source_mutated_by_this_test=NO
 EOF
