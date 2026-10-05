@@ -33,8 +33,10 @@ class Q5LegacyWallpaperTest {
         )
 
         Preferences.showWallpaper = false
-        ActivityScenario.launch(MainActivity::class.java).use {
-            onView(withId(R.id.action_settings)).perform(click())
+        ActivityScenario.launch(MainActivity::class.java).use { scenario ->
+            scenario.onActivity { activity ->
+                activity.findViewById<android.view.View>(R.id.action_settings).performClick()
+            }
             instrumentation.waitForIdleSync()
             Thread.sleep(750)
             onView(withId(R.id.action_show_wallpaper)).check(matches(isDisplayed()))
