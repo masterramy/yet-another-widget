@@ -240,4 +240,26 @@ class Q5ControlsTest {
         }
     }
 
+
+    @Test
+    fun customNotesCreateEditAndClear() {
+        ActivityScenario.launch(MainActivity::class.java).use {
+            openRow(R.id.action_show_glance)
+
+            onView(withText("Custom notes")).perform(scrollTo(), click())
+            onView(withId(R.id.notes)).perform(replaceText("Q5 note"), closeSoftKeyboard())
+            onView(withId(R.id.action_positive)).perform(click())
+
+            onView(withText("Custom notes")).perform(scrollTo(), click())
+            onView(withId(R.id.notes)).check(matches(withText("Q5 note")))
+            onView(withId(R.id.notes)).perform(replaceText("Q5 edited"), closeSoftKeyboard())
+            onView(withId(R.id.action_positive)).perform(click())
+
+            onView(withText("Custom notes")).perform(scrollTo(), click())
+            onView(withId(R.id.notes)).check(matches(withText("Q5 edited")))
+            onView(withId(R.id.notes)).perform(replaceText(""), closeSoftKeyboard())
+            onView(withId(R.id.action_positive)).perform(click())
+        }
+    }
+
 }
