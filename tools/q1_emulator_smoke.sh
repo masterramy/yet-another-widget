@@ -298,11 +298,31 @@ fi
 sleep 3
 ui_dump widget-picker || exit 19
 
-if tap_node q1-evidence/widget-picker.xml "$APP_LABEL"; then
+picker_xml="q1-evidence/widget-picker.xml"
+if ! grep -Fqi "$APP_LABEL" "$picker_xml"; then
+  if ! tap_node "$picker_xml" "widgets_search_bar_edit_text"; then
+    echo "Launcher widget search field not found while app label is off-screen" >&2
+    exit 21
+  fi
+  search_text="${APP_LABEL// /%s}"
+  adb shell input text "$search_text"
+  sleep 3
+  ui_dump widget-picker-search || exit 19
+  picker_xml="q1-evidence/widget-picker-search.xml"
+  if ! grep -Fqi "$APP_LABEL" "$picker_xml"; then
+    echo "App label not found in real widget-picker search results: $APP_LABEL" >&2
+    exit 21
+  fi
+fi
+
+cp "$picker_xml" q1-evidence/widget-picker-app-visible.xml
+adb exec-out screencap -p > q1-evidence/widget-picker-app-visible.png || true
+
+if tap_node "$picker_xml" "$APP_LABEL"; then
   sleep 2
   ui_dump widget-picker-expanded || exit 19
 else
-  cp q1-evidence/widget-picker.xml q1-evidence/widget-picker-expanded.xml
+  cp "$picker_xml" q1-evidence/widget-picker-expanded.xml
 fi
 
 source_xy="$(find_drag_source q1-evidence/widget-picker-expanded.xml)" || {
