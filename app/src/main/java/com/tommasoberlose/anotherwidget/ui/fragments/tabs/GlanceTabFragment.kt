@@ -61,7 +61,7 @@ class GlanceTabFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         binding.providersList.hasFixedSize(); binding.providersList.isNestedScrollingEnabled = false; binding.providersList.layoutManager = LinearLayoutManager(context)
         adapter = SlimAdapter.create()
-        adapter.register<GlanceProvider>(R.layout.glance_provider_item) { item, injector ->
+        adapter.register(GlanceProvider::class.java, R.layout.glance_provider_item) { item, injector ->
             val provider = Constants.GlanceProviderId.from(item.id)!!
             injector.text(R.id.title, item.title).with<ImageView>(R.id.icon) { it.setImageDrawable(ContextCompat.getDrawable(requireContext(), item.icon)) }.clicked(R.id.item) {
                 if (provider == Constants.GlanceProviderId.CUSTOM_INFO) CustomNotesDialog(requireContext()) { adapter.notifyItemRangeChanged(0, adapter.data.size) }.show()
