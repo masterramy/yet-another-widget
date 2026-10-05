@@ -372,12 +372,15 @@ wait_widget_bound() {
   fi
 }
 
-# Explicit process-death/cold restart. Before restarting the app, prove that the
-# launcher still hosts and renders the exact widget while the app process is dead.
-adb shell am force-stop "$PACKAGE"
+# Explicit background process death without setting Android's package-stopped
+# flag. K5 force-stop/cold-restart is already independently proven; H12 must
+# model process death while preserving normal widget-provider eligibility.
+adb shell input keyevent KEYCODE_HOME
+sleep 2
+adb shell am kill "$PACKAGE"
 sleep 2
 if adb shell pidof "$PACKAGE" | grep -q .; then
-  echo "Target process still alive after force-stop" >&2
+  echo "Target process still alive after background am kill" >&2
   exit 43
 fi
 adb shell input keyevent KEYCODE_HOME
