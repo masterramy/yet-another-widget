@@ -48,7 +48,7 @@ class ChooseApplicationActivity : AppCompatActivity() {
 
         adapter = SlimAdapterEx.create()
         adapter
-            .register<String>(R.layout.application_info_layout) { item, injector ->
+            .register(String::class.java, R.layout.application_info_layout) { item, injector ->
                 when (item) {
                     IntentHelper.DO_NOTHING_OPTION -> {
                         injector
@@ -115,7 +115,7 @@ class ChooseApplicationActivity : AppCompatActivity() {
                     }
                 }
             }
-            .register<ResolveInfo>(R.layout.application_info_layout) { item, injector ->
+            .register(ResolveInfo::class.java, R.layout.application_info_layout) { item, injector ->
                 injector
                     .text(R.id.text, item.loadLabel(viewModel.pm))
                     .with<ImageView>(R.id.icon) {
