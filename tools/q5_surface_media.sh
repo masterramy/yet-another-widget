@@ -304,6 +304,28 @@ assert_widget_bound() {
   grep -Fq "views=android.widget.RemoteViews" "$EVIDENCE_DIR/${stem}-appwidget.txt"
 }
 
+wait_widget_bound() {
+  local stem="$1"
+  local ok=0
+  for attempt in $(seq 1 20); do
+    adb shell dumpsys appwidget > "$EVIDENCE_DIR/${stem}-appwidget-${attempt}.txt" 2>&1
+    if grep -Fq "pkg:com.google.android.apps.nexuslauncher" "$EVIDENCE_DIR/${stem}-appwidget-${attempt}.txt" &&
+       grep -Fq "com.ramybaheeg.yetanotherwidget/com.ramybaheeg.yetanotherwidget.ui.widgets.MainWidget" "$EVIDENCE_DIR/${stem}-appwidget-${attempt}.txt" &&
+       grep -Fq "views=android.widget.RemoteViews" "$EVIDENCE_DIR/${stem}-appwidget-${attempt}.txt"; then
+      cp "$EVIDENCE_DIR/${stem}-appwidget-${attempt}.txt" "$EVIDENCE_DIR/${stem}-appwidget.txt"
+      printf 'attempt=%s\n' "$attempt" > "$EVIDENCE_DIR/${stem}-ready-attempt.txt"
+      ok=1
+      break
+    fi
+    sleep 3
+  done
+  if [ "$ok" -ne 1 ]; then
+    cp "$EVIDENCE_DIR/${stem}-appwidget-20.txt" "$EVIDENCE_DIR/${stem}-appwidget.txt" 2>/dev/null || true
+    echo "Hosted widget binding remained present but RemoteViews never repopulated after bounded reboot wait" >&2
+    return 1
+  fi
+}
+
 # Explicit process-death/cold restart. Before restarting the app, prove that the
 # launcher still hosts and renders the exact widget while the app process is dead.
 adb shell am force-stop "$PACKAGE"
@@ -362,7 +384,7 @@ adb shell input keyevent 82 >/dev/null 2>&1 || true
 adb shell input keyevent KEYCODE_HOME
 sleep 10
 adb shell getprop sys.boot_completed > "$EVIDENCE_DIR/q5-reboot-boot-completed.txt"
-assert_widget_bound "q5-widget-after-reboot"
+wait_widget_bound "q5-widget-after-reboot"
 adb exec-out screencap -p > "$EVIDENCE_DIR/q5-widget-after-reboot.png"
 
 # Fresh install + true first launch from cleared package state. This is last
