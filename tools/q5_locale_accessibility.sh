@@ -25,6 +25,22 @@ wait_boot() {
   sleep 3
 }
 
+wait_package_ready() {
+  local ok=0
+  for _ in $(seq 1 60); do
+    if adb shell pm path "$PACKAGE" 2>/dev/null | grep -q '^package:' &&
+       adb shell dumpsys package "$PACKAGE" 2>/dev/null | grep -Fq "$PACKAGE/.ui.activities.MainActivity"; then
+      ok=1
+      break
+    fi
+    sleep 2
+  done
+  if [ "$ok" -ne 1 ]; then
+    echo "PackageManager did not republish YAW after locale framework restart" >&2
+    return 1
+  fi
+}
+
 dump_ui() {
   local stem="$1" remote="/data/local/tmp/${stem}.xml"
   for attempt in $(seq 1 8); do
@@ -89,6 +105,7 @@ set_locale_and_capture() {
   local tag="$1" qualifier="$2" stem="$3"
   adb shell "setprop persist.sys.locale '$tag'; stop; sleep 4; start"
   wait_boot
+  wait_package_ready
   actual="$(adb shell getprop persist.sys.locale | tr -d '\r')"
   printf 'requested=%s\nactual=%s\n' "$tag" "$actual" >"$EVIDENCE_DIR/${stem}-locale.txt"
   test "$actual" = "$tag"
