@@ -790,6 +790,53 @@ adb exec-out screencap -p > "$EVIDENCE_DIR/q5-date-format-menu.png"
 adb shell input keyevent KEYCODE_BACK
 sleep 1
 
+echo "== Q5 layout control surfaces =="
+adb shell am force-stop "$PACKAGE" >/dev/null 2>&1 || true
+adb shell am start -W -n "$PACKAGE/$ACTIVITY" >/dev/null
+sleep 4
+dump_ui "q5-layout-main"
+tap_id "$EVIDENCE_DIR/q5-layout-main.xml" "action_general_settings"
+sleep 3
+dump_ui "q5-layout"
+
+tap_id "$EVIDENCE_DIR/q5-layout.xml" "action_widget_align"
+sleep 2
+dump_ui "q5-widget-align-menu"
+assert_text "$EVIDENCE_DIR/q5-widget-align-menu.xml" "Left"
+assert_text "$EVIDENCE_DIR/q5-widget-align-menu.xml" "Center"
+assert_text "$EVIDENCE_DIR/q5-widget-align-menu.xml" "Right"
+adb exec-out screencap -p > "$EVIDENCE_DIR/q5-widget-align-menu.png"
+adb shell input keyevent KEYCODE_BACK
+sleep 1
+
+dump_ui "q5-layout-row-entry"
+tap_id "$EVIDENCE_DIR/q5-layout-row-entry.xml" "action_second_row_top_margin_size"
+sleep 2
+dump_ui "q5-row-spacing-menu"
+assert_text "$EVIDENCE_DIR/q5-row-spacing-menu.xml" "Rows spacing"
+assert_text "$EVIDENCE_DIR/q5-row-spacing-menu.xml" "None"
+assert_text "$EVIDENCE_DIR/q5-row-spacing-menu.xml" "Large"
+adb shell input keyevent KEYCODE_BACK
+sleep 1
+
+dump_ui "q5-layout-clock-margin-entry"
+tap_id "$EVIDENCE_DIR/q5-layout-clock-margin-entry.xml" "action_clock_bottom_margin_size"
+sleep 2
+dump_ui "q5-clock-margin-menu"
+assert_text "$EVIDENCE_DIR/q5-clock-margin-menu.xml" "Clock bottom margin"
+assert_text "$EVIDENCE_DIR/q5-clock-margin-menu.xml" "None"
+assert_text "$EVIDENCE_DIR/q5-clock-margin-menu.xml" "Large"
+adb shell input keyevent KEYCODE_BACK
+sleep 1
+
+dump_ui "q5-layout-background-entry"
+tap_id "$EVIDENCE_DIR/q5-layout-background-entry.xml" "action_background_color"
+sleep 2
+dump_ui "q5-background-color-picker"
+adb exec-out screencap -p > "$EVIDENCE_DIR/q5-background-color-picker.png"
+adb shell input keyevent KEYCODE_BACK
+sleep 1
+
 adb shell dumpsys window > "$EVIDENCE_DIR/q5-surface-window.txt" 2>&1 || true
 adb logcat -d > "$EVIDENCE_DIR/q5-surface-logcat.txt" 2>&1 || true
 if grep -E -q "FATAL EXCEPTION:.*|Process: ${PACKAGE//./\\.}|ANR in ${PACKAGE//./\\.}" "$EVIDENCE_DIR/q5-surface-logcat.txt"; then
@@ -826,6 +873,7 @@ coarse_location_permission_denied_granted_revoked_regranted=PASS
 notification_listener_denied_granted_revoked_regranted=PASS
 all_main_child_navigation_and_back=PASS
 typography_size_shadow_font_date_control_surfaces=PASS
+layout_alignment_spacing_background_surfaces=PASS
 bounded_app_fatal_anr_scan=PASS
 shipping_source_mutated_by_this_test=NO
 EOF
