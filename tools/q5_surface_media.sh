@@ -645,8 +645,16 @@ open_latest_notifications_dialog() {
   tap_id "$EVIDENCE_DIR/${stem}-main.xml" "action_show_glance"
   sleep 4
   dump_ui "${stem}-glance"
-  assert_text "$EVIDENCE_DIR/${stem}-glance.xml" "Latest notifications"
-  tap_text "$EVIDENCE_DIR/${stem}-glance.xml" "Latest notifications"
+  if ! grep -Fq "Latest notifications" "$EVIDENCE_DIR/${stem}-glance.xml"; then
+    adb shell input swipe 540 1800 540 700 350
+    sleep 2
+    dump_ui "${stem}-glance-scrolled"
+    glance_xml="$EVIDENCE_DIR/${stem}-glance-scrolled.xml"
+  else
+    glance_xml="$EVIDENCE_DIR/${stem}-glance.xml"
+  fi
+  assert_text "$glance_xml" "Latest notifications"
+  tap_text "$glance_xml" "Latest notifications"
   sleep 3
   dump_ui "${stem}-notifications-dialog"
   assert_text "$EVIDENCE_DIR/${stem}-notifications-dialog.xml" "Latest notifications"
