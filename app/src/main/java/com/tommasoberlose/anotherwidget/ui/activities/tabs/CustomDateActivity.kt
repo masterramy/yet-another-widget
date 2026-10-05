@@ -41,7 +41,7 @@ class CustomDateActivity : AppCompatActivity() {
 
         adapter = SlimAdapter.create()
         adapter
-            .register<String>(R.layout.custom_date_example_item) { item, injector ->
+            .register(String::class.java, R.layout.custom_date_example_item) { item, injector ->
                 injector
                     .text(R.id.custom_date_example_format, item)
                     .text(R.id.custom_date_example_value, SimpleDateFormat(item, Locale.getDefault()).format(
