@@ -1165,7 +1165,9 @@ jobs:
           target: google_apis
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
-          script: ./gradlew --no-daemon connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.ramybaheeg.yetanotherwidget.Q5MigrationTest
+          script: |
+            ./gradlew --no-daemon connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.ramybaheeg.yetanotherwidget.Q5MigrationTest
+            ./gradlew --no-daemon connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.ramybaheeg.yetanotherwidget.Q5CalendarRepositoryTest
       - name: Upload migration reports
         if: always()
         uses: actions/upload-artifact@v7
