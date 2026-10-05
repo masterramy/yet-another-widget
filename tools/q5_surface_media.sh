@@ -433,6 +433,55 @@ adb shell getprop sys.boot_completed > "$EVIDENCE_DIR/q5-reboot-boot-completed.t
 wait_widget_bound "q5-widget-after-reboot"
 adb exec-out screencap -p > "$EVIDENCE_DIR/q5-widget-after-reboot.png"
 
+# Full app acceptance after the same reboot: launch the exact candidate and
+# prove its primary shell/focus state in addition to the already-proven host widget.
+adb shell am start -W -n "$PACKAGE/$ACTIVITY" | tee "$EVIDENCE_DIR/q5-reboot-app-start.txt"
+sleep 5
+dump_ui "q5-reboot-app-main"
+assert_text "$EVIDENCE_DIR/q5-reboot-app-main.xml" "$YAW_APP_LABEL"
+assert_text "$EVIDENCE_DIR/q5-reboot-app-main.xml" "Calendar"
+assert_text "$EVIDENCE_DIR/q5-reboot-app-main.xml" "Weather"
+assert_main_system_state "q5-reboot-app"
+adb exec-out screencap -p > "$EVIDENCE_DIR/q5-reboot-app-main.png"
+
+# Real Settings manual-refresh path while the launcher widget remains bound.
+open_settings_from_main "q5-manual-refresh"
+adb shell input keyevent KEYCODE_HOME
+sleep 2
+assert_widget_bound "q5-manual-refresh-before"
+adb shell am start -W -n "$PACKAGE/$ACTIVITY" >/dev/null
+sleep 2
+dump_ui "q5-manual-refresh-main-return"
+tap_id "$EVIDENCE_DIR/q5-manual-refresh-main-return.xml" "action_settings"
+sleep 3
+dump_ui "q5-manual-refresh-settings"
+assert_text "$EVIDENCE_DIR/q5-manual-refresh-settings.xml" "Refresh widget"
+tap_id "$EVIDENCE_DIR/q5-manual-refresh-settings.xml" "action_refresh_widget"
+sleep 1
+adb exec-out screencap -p > "$EVIDENCE_DIR/q5-manual-refresh-feedback.png"
+sleep 4
+adb shell input keyevent KEYCODE_HOME
+sleep 3
+assert_widget_bound "q5-manual-refresh-after"
+adb exec-out screencap -p > "$EVIDENCE_DIR/q5-manual-refresh-widget-after.png"
+
+# Replace the exact APK over existing installed state. This exercises the real
+# package-replaced path without inventing a version mutation, then proves both
+# app launch and the existing launcher-hosted widget survive replacement.
+adb install -r "$APP_APK" | tee "$EVIDENCE_DIR/q5-package-replace-install.txt"
+grep -Fq "Success" "$EVIDENCE_DIR/q5-package-replace-install.txt"
+sleep 8
+adb shell input keyevent KEYCODE_HOME
+sleep 3
+assert_widget_bound "q5-package-replace-widget"
+adb exec-out screencap -p > "$EVIDENCE_DIR/q5-package-replace-widget.png"
+adb shell am start -W -n "$PACKAGE/$ACTIVITY" | tee "$EVIDENCE_DIR/q5-package-replace-start.txt"
+sleep 5
+dump_ui "q5-package-replace-main"
+assert_text "$EVIDENCE_DIR/q5-package-replace-main.xml" "$YAW_APP_LABEL"
+assert_main_system_state "q5-package-replace"
+adb exec-out screencap -p > "$EVIDENCE_DIR/q5-package-replace-main.png"
+
 # Fresh install + true first launch from cleared package state. This is last
 # because uninstalling correctly removes the previously-bound launcher widget.
 adb shell am force-stop "$PACKAGE" >/dev/null 2>&1 || true
@@ -683,6 +732,9 @@ process_death_cold_restart=PASS
 widget_survives_app_process_death=PASS
 widget_survives_launcher_restart=PASS
 widget_survives_emulator_reboot=PASS
+full_app_acceptance_after_reboot=PASS
+manual_refresh_with_bound_widget=PASS
+package_replace_preserves_app_and_widget=PASS
 fresh_install_first_launch=PASS
 calendar_permission_denied_granted_revoked_regranted=PASS
 coarse_location_permission_denied_granted_revoked_regranted=PASS
