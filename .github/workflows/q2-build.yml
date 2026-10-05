@@ -1021,7 +1021,9 @@ jobs:
           target: google_apis
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
-          script: ./gradlew --no-daemon connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.ramybaheeg.yetanotherwidget.Q5ControlsTest
+          script: |
+            ./gradlew --no-daemon connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.ramybaheeg.yetanotherwidget.Q5ControlsTest
+            ./gradlew --no-daemon connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.ramybaheeg.yetanotherwidget.Q5GlanceProviderTest
       - name: Upload controls instrumentation reports
         if: always()
         uses: actions/upload-artifact@v7
