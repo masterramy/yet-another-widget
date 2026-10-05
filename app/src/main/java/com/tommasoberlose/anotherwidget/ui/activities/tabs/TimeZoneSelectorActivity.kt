@@ -37,7 +37,7 @@ class TimeZoneSelectorActivity : AppCompatActivity() {
 
         adapter = SlimAdapter.create()
         adapter
-            .register<String>(R.layout.custom_location_item) { item, injector ->
+            .register(String::class.java, R.layout.custom_location_item) { item, injector ->
                 val label = if (item == DEFAULT_TIME_ZONE) {
                     getString(R.string.no_time_zone_label)
                 } else {
