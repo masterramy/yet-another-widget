@@ -1,0 +1,163 @@
+package com.ramybaheeg.yetanotherwidget
+
+import androidx.test.core.app.ActivityScenario
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.Espresso.pressBack
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.scrollTo
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.isChecked
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.isNotChecked
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.ramybaheeg.yetanotherwidget.ui.activities.MainActivity
+import org.hamcrest.Matchers.anyOf
+import org.junit.Test
+import org.junit.runner.RunWith
+
+@RunWith(AndroidJUnit4::class)
+class Q5ControlsTest {
+
+    private fun openRow(id: Int) {
+        onView(withId(id)).perform(scrollTo(), click())
+    }
+
+    private fun assertChild(rowId: Int, title: String) {
+        openRow(rowId)
+        onView(withText(title)).check(matches(isDisplayed()))
+        onView(withId(R.id.action_back)).perform(click())
+        onView(withId(R.id.action_typography)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun allMainChildrenNavigateAndBack() {
+        ActivityScenario.launch(MainActivity::class.java).use {
+            assertChild(R.id.action_typography, "Typography")
+            assertChild(R.id.action_general_settings, "Layout")
+            assertChild(R.id.action_show_clock, "Clock")
+            assertChild(R.id.action_show_events, "Calendar")
+            assertChild(R.id.action_show_weather, "Weather")
+            assertChild(R.id.action_show_glance, "At a glance")
+            assertChild(R.id.action_tab_default_app, "Gestures")
+        }
+    }
+
+    @Test
+    fun typographyMenusExposeSupportedBoundaries() {
+        ActivityScenario.launch(MainActivity::class.java).use {
+            openRow(R.id.action_typography)
+
+            openRow(R.id.action_main_text_size)
+            onView(withText("40sp")).check(matches(isDisplayed()))
+            onView(withText("10sp")).check(matches(isDisplayed()))
+            pressBack()
+
+            openRow(R.id.action_second_text_size)
+            onView(withText("40sp")).check(matches(isDisplayed()))
+            onView(withText("10sp")).check(matches(isDisplayed()))
+            pressBack()
+
+            openRow(R.id.action_text_shadow)
+            onView(withText("Text shadow")).check(matches(isDisplayed()))
+            onView(withText("None")).check(matches(isDisplayed()))
+            onView(withText("High")).check(matches(isDisplayed()))
+            pressBack()
+
+            openRow(R.id.action_custom_font)
+            onView(withText("Widget font")).check(matches(isDisplayed()))
+            onView(withText("Device font")).check(matches(isDisplayed()))
+            pressBack()
+
+            openRow(R.id.action_date_format)
+            onView(withText("Date format")).check(matches(isDisplayed()))
+            onView(withText("Custom date format")).check(matches(isDisplayed()))
+        }
+    }
+
+    @Test
+    fun layoutControlsExposeSupportedRangesAndToggleRestores() {
+        ActivityScenario.launch(MainActivity::class.java).use {
+            openRow(R.id.action_general_settings)
+
+            openRow(R.id.action_widget_align)
+            onView(withText("Left")).check(matches(isDisplayed()))
+            onView(withText("Center")).check(matches(isDisplayed()))
+            onView(withText("Right")).check(matches(isDisplayed()))
+            pressBack()
+
+            openRow(R.id.action_second_row_top_margin_size)
+            onView(withText("Rows spacing")).check(matches(isDisplayed()))
+            onView(withText("None")).check(matches(isDisplayed()))
+            onView(withText("Large")).check(matches(isDisplayed()))
+            pressBack()
+
+            openRow(R.id.action_clock_bottom_margin_size)
+            onView(withText("Clock bottom margin")).check(matches(isDisplayed()))
+            onView(withText("None")).check(matches(isDisplayed()))
+            onView(withText("Large")).check(matches(isDisplayed()))
+            pressBack()
+
+            openRow(R.id.action_background_color)
+            onView(anyOf(withText("Background color"), withText("Background"))).check(matches(isDisplayed()))
+            pressBack()
+
+            val divider = onView(withId(R.id.show_dividers_toggle))
+            val initiallyChecked = try {
+                divider.check(matches(isChecked()))
+                true
+            } catch (_: Throwable) {
+                divider.check(matches(isNotChecked()))
+                false
+            }
+            openRow(R.id.action_show_dividers)
+            divider.check(matches(if (initiallyChecked) isNotChecked() else isChecked()))
+            openRow(R.id.action_show_dividers)
+            divider.check(matches(if (initiallyChecked) isChecked() else isNotChecked()))
+        }
+    }
+
+    @Test
+    fun clockCalendarWeatherAndGesturesCoreControlsOpen() {
+        ActivityScenario.launch(MainActivity::class.java).use {
+            openRow(R.id.action_show_clock)
+            onView(withText("Clock")).check(matches(isDisplayed()))
+            openRow(R.id.action_clock_text_size)
+            onView(withText("Text size")).check(matches(isDisplayed()))
+            pressBack()
+            openRow(R.id.action_alt_timezone_clock)
+            onView(withText("Time Zones")).check(matches(isDisplayed()))
+            pressBack()
+            onView(withId(R.id.action_back)).perform(click())
+
+            openRow(R.id.action_show_events)
+            onView(withText("Calendar")).check(matches(isDisplayed()))
+            openRow(R.id.action_change_attendee_filter)
+            onView(withText("Attendee status")).check(matches(isDisplayed()))
+            pressBack()
+            openRow(R.id.action_second_row_info)
+            onView(withText("Event info")).check(matches(isDisplayed()))
+            pressBack()
+            openRow(R.id.action_show_until)
+            onView(withText("Show events at least")).check(matches(isDisplayed()))
+            pressBack()
+            onView(withId(R.id.action_back)).perform(click())
+
+            openRow(R.id.action_show_weather)
+            onView(withText("Weather")).check(matches(isDisplayed()))
+            openRow(R.id.action_change_unit)
+            onView(withText("Temperature unit")).check(matches(isDisplayed()))
+            pressBack()
+            openRow(R.id.action_weather_refresh_period)
+            onView(withText("Refresh frequency")).check(matches(isDisplayed()))
+            pressBack()
+            onView(withId(R.id.action_back)).perform(click())
+
+            openRow(R.id.action_tab_default_app)
+            onView(withText("Gestures")).check(matches(isDisplayed()))
+            openRow(R.id.action_open_event_details)
+            onView(anyOf(withText("Default event app"), withText("Default calendar app"))).check(matches(isDisplayed()))
+        }
+    }
+}
