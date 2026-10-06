@@ -1,6 +1,6 @@
-Exact-head production certification trigger — final Superpowers verification after TDD calendar repair and locale harness declaration fix.
+Exact-head production certification trigger — corrected TDD oracle + final Superpowers verification.
 Shipping/customer-byte candidate remains bf02579c430b5dcf343f77e295ae08af161c5a13.
-Run204 RED proved the calendar PendingIntent cancellation defect; bf02579c applied the minimal production repair.
-Run201 locale evidence then exposed a QA-only Bash set -u defect (stem expanded in the same local declaration); 81563f19 fixes declaration order only.
-Includes the latest controls focus synchronization and Android-16 Glance/provider harness repairs.
-Require every final job GREEN; inspect retained runtime/store-media evidence before closure.
+Run204 exposed the reviewed PendingIntent mismatch; first regression oracle incorrectly equated AlarmManager cancellation with PendingIntent-token destruction.
+Q5SchedulingTest now inspects pending AlarmManager state, explicitly proves the historical actionless cancellation leaves ACTION_TIME_UPDATE scheduled, then requires UpdatesReceiver.removeUpdates to clear it.
+Includes locale set -u declaration fix, controls focus synchronization, Android-16 Glance/provider stabilization, typography and 200% accessibility harness repairs.
+Require every final job GREEN and inspect retained runtime/store-media evidence before closure.
