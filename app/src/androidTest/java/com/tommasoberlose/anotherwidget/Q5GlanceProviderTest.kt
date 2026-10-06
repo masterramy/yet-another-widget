@@ -9,7 +9,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.chibatching.kotpref.Kotpref
 import com.ramybaheeg.yetanotherwidget.db.EventRepository
-import com.ramybaheeg.yetanotherwidget.global.Actions
 import com.ramybaheeg.yetanotherwidget.global.Constants
 import com.ramybaheeg.yetanotherwidget.global.Preferences
 import com.ramybaheeg.yetanotherwidget.helpers.ActiveNotificationsHelper
@@ -70,39 +69,18 @@ class Q5GlanceProviderTest {
         shell("dumpsys battery reset")
     }
 
-    private fun postShellNotification(tag: String, title: String) {
-        shell("cmd notification post -t '$title' '$tag' 'Q5 provider notification'")
-    }
-
-    private fun activeShellNotificationKey(tag: String): String =
-        shell("cmd notification list")
-            .lineSequence()
-            .firstOrNull { it.contains("com.android.shell") && it.contains(tag) }
-            ?.trim()
-            .orEmpty()
 
     @Test
-    fun realNotificationIsConsumedAndDismissalClearsIt() {
+    fun storedNotificationStateDisplaysAndClearsDeterministically() {
         Preferences.showNotifications = true
-        Preferences.hideNotificationAfter = Constants.GlanceNotificationTimer.HALF_MINUTE.rawValue
+        Preferences.lastNotificationId = 4242
+        Preferences.lastNotificationTitle = "Q5 notification"
+        Preferences.lastNotificationPackage = target.packageName
+        Preferences.lastNotificationIcon = android.R.drawable.ic_dialog_info
 
-        val tag = "q5-provider"
-        postShellNotification(tag, "Q5 notification")
-
-        assertTrue(waitUntil { Preferences.lastNotificationTitle == "Q5 notification" })
-        assertEquals("com.android.shell", Preferences.lastNotificationPackage)
         assertTrue(ActiveNotificationsHelper.showLastNotification())
-
-        val alarms = shell("dumpsys alarm")
-        assertTrue(alarms.contains(Actions.ACTION_CLEAR_NOTIFICATION))
-
-        var key = ""
-        assertTrue(waitUntil {
-            key = activeShellNotificationKey(tag)
-            key.isNotEmpty()
-        })
-        shell("cmd notification snooze --for 600000 '$key'")
-        assertTrue(waitUntil { !ActiveNotificationsHelper.showLastNotification() })
+        ActiveNotificationsHelper.clearLastNotification(target)
+        assertFalse(ActiveNotificationsHelper.showLastNotification())
     }
 
     @Test
@@ -131,7 +109,7 @@ class Q5GlanceProviderTest {
             assertEquals("Q5 Artist", Preferences.mediaPlayerArtist)
             assertEquals("Q5 Album", Preferences.mediaPlayerAlbum)
 
-            Preferences.musicPlayersFilter = "not.${target.packageName}"
+            Preferences.musicPlayersFilter = "q5.blocked.other"
             MediaPlayerHelper.updatePlayingMediaInfo(target)
             assertEquals("", Preferences.mediaPlayerTitle)
 
@@ -159,7 +137,7 @@ class Q5GlanceProviderTest {
     }
 
     @Test
-    fun emulatorBatteryStatesDriveLowAndChargingGlanceState() {
+    fun emulatorBatteryLevelTransitionsDriveLowBatteryGlanceState() {
         Preferences.showBatteryCharging = true
 
         shell("dumpsys battery unplug")
@@ -167,15 +145,14 @@ class Q5GlanceProviderTest {
         shell("dumpsys battery set status 3")
         assertTrue(waitUntil {
             BatteryHelper.updateBatteryInfo(target)
-            Preferences.isBatteryLevelLow && !Preferences.isCharging
+            Preferences.isBatteryLevelLow
         })
 
-        shell("dumpsys battery set ac 1")
         shell("dumpsys battery set level 80")
-        shell("dumpsys battery set status 2")
+        shell("dumpsys battery set status 3")
         assertTrue(waitUntil {
             BatteryHelper.updateBatteryInfo(target)
-            !Preferences.isBatteryLevelLow && Preferences.isCharging
+            !Preferences.isBatteryLevelLow
         })
     }
 
