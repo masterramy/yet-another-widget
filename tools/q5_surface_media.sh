@@ -507,7 +507,17 @@ assert_text "$EVIDENCE_DIR/q5-manual-refresh-settings.xml" "Refresh widget"
 tap_id "$EVIDENCE_DIR/q5-manual-refresh-settings.xml" "action_refresh_widget"
 sleep 1
 adb exec-out screencap -p > "$EVIDENCE_DIR/q5-manual-refresh-feedback.png"
-sleep 4
+
+# Repeated refresh-action resilience: remain on the same proven Settings surface
+# and exercise the real production refresh control several more times.
+for refresh_cycle in $(seq 1 5); do
+  dump_ui "q5-manual-refresh-repeat-${refresh_cycle}"
+  assert_text "$EVIDENCE_DIR/q5-manual-refresh-repeat-${refresh_cycle}.xml" "Refresh widget"
+  tap_id "$EVIDENCE_DIR/q5-manual-refresh-repeat-${refresh_cycle}.xml" "action_refresh_widget"
+  sleep 1
+done
+
+sleep 3
 adb shell input keyevent KEYCODE_HOME
 sleep 3
 assert_widget_bound "q5-manual-refresh-after"
@@ -1007,6 +1017,7 @@ widget_survives_launcher_restart=PASS
 widget_survives_emulator_reboot=PASS
 full_app_acceptance_after_reboot=PASS
 manual_refresh_with_bound_widget=PASS
+repeated_refresh_actions_with_bound_widget=PASS
 package_replace_preserves_app_and_widget=PASS
 controlled_exact_candidate_store_media=PASS
 fresh_install_first_launch=PASS
