@@ -1,6 +1,5 @@
-Exact-head production certification trigger — corrected TDD oracle + final Superpowers verification.
+Exact-head production certification trigger — resumed Superpowers verification after Run211.
 Shipping/customer-byte candidate remains bf02579c430b5dcf343f77e295ae08af161c5a13.
-Run204 exposed the reviewed PendingIntent mismatch; first regression oracle incorrectly equated AlarmManager cancellation with PendingIntent-token destruction.
-Q5SchedulingTest now inspects pending AlarmManager state, explicitly proves the historical actionless cancellation leaves ACTION_TIME_UPDATE scheduled, then requires UpdatesReceiver.removeUpdates to clear it.
-Includes locale set -u declaration fix, controls focus synchronization, Android-16 Glance/provider stabilization, typography and 200% accessibility harness repairs.
-Require every final job GREEN and inspect retained runtime/store-media evidence before closure.
+QA head before trigger: 87f6304e8a5ef1fe6045816af448d6b2012747cd.
+Run211 residuals addressed test-first: active-alarm-only scheduling oracle, isolated Glance dialog scenarios, and corrected typography picker traversal direction.
+Require every final job GREEN; any new RED must be diagnosed from exact retained evidence before further mutation.
