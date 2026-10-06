@@ -454,10 +454,17 @@ sleep 2
 assert_widget_bound "q5-manual-refresh-before"
 adb shell am start -W -n "$PACKAGE/$ACTIVITY" >/dev/null
 sleep 2
-dump_ui "q5-manual-refresh-main-return"
-tap_id "$EVIDENCE_DIR/q5-manual-refresh-main-return.xml" "action_settings"
-sleep 3
-dump_ui "q5-manual-refresh-settings"
+dump_ui "q5-manual-refresh-resume"
+if grep -Fq "/action_refresh_widget" "$EVIDENCE_DIR/q5-manual-refresh-resume.xml"; then
+  cp "$EVIDENCE_DIR/q5-manual-refresh-resume.xml" "$EVIDENCE_DIR/q5-manual-refresh-settings.xml"
+elif grep -Fq "/action_settings" "$EVIDENCE_DIR/q5-manual-refresh-resume.xml"; then
+  tap_id "$EVIDENCE_DIR/q5-manual-refresh-resume.xml" "action_settings"
+  sleep 3
+  dump_ui "q5-manual-refresh-settings"
+else
+  echo "Manual-refresh tranche resumed on neither Main nor Settings surface" >&2
+  exit 45
+fi
 assert_text "$EVIDENCE_DIR/q5-manual-refresh-settings.xml" "Refresh widget"
 tap_id "$EVIDENCE_DIR/q5-manual-refresh-settings.xml" "action_refresh_widget"
 sleep 1
