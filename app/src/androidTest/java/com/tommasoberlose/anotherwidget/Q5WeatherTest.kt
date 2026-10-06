@@ -74,4 +74,27 @@ class Q5WeatherTest {
         assertTrue(Preferences.weatherUpdatedAt > 0L)
         assertTrue(WeatherHelper.hasDisplayableWeather())
     }
+
+    @Test
+    fun providerFailureThenWeatherGovRecoveryRestoresDisplayableWeather() = runBlocking {
+        Preferences.weatherProvider = Constants.WeatherProvider.WEATHER_API.rawValue
+        Preferences.weatherProviderApiWeatherApi = ""
+        WeatherNetworkApi(context).updateWeather()
+        assertEquals(
+            context.getString(R.string.weather_provider_error_missing_key),
+            Preferences.weatherProviderError
+        )
+        assertEquals("", Preferences.weatherIcon)
+
+        Preferences.weatherProvider = Constants.WeatherProvider.WEATHER_GOV.rawValue
+        Preferences.weatherTempUnit = "F"
+        WeatherNetworkApi(context).updateWeather()
+
+        assertEquals("", Preferences.weatherProviderError)
+        assertEquals("", Preferences.weatherProviderLocationError)
+        assertTrue(Preferences.weatherIcon.isNotEmpty())
+        assertTrue(Preferences.weatherUpdatedAt > 0L)
+        assertTrue(WeatherHelper.hasDisplayableWeather())
+    }
+
 }
