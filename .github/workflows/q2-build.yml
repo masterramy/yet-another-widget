@@ -1036,6 +1036,7 @@ jobs:
           script: |
             ./gradlew --no-daemon connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.ramybaheeg.yetanotherwidget.Q5ControlsTest
             ./gradlew --no-daemon connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.ramybaheeg.yetanotherwidget.Q5GlanceProviderTest
+            ./gradlew --no-daemon connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.ramybaheeg.yetanotherwidget.Q5WidgetBehaviorTest
       - name: Upload controls instrumentation reports
         if: always()
         uses: actions/upload-artifact@v7
