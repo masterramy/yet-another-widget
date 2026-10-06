@@ -35,10 +35,22 @@ class Q5SchedulingTest {
 
     private fun scheduledTimeUpdateCount(): Int {
         val dump = shell("dumpsys alarm")
-        val pendingRegion = dump
-            .substringAfter("Pending alarm batches:", missingDelimiterValue = "")
-            .substringBefore("Past-due non-wakeup alarms:", missingDelimiterValue = dump)
-        return pendingRegion
+        val marker = "Pending alarm batches:"
+        val start = dump.indexOf(marker)
+        if (start < 0) return 0
+
+        val tail = dump.substring(start)
+        val end = listOf(
+            "Pending user blocked background alarms:",
+            "Idle mode state:",
+            "Next wake from idle:",
+            "Past-due non-wakeup alarms:"
+        )
+            .map { tail.indexOf(it) }
+            .filter { it > 0 }
+            .minOrNull() ?: tail.length
+
+        return tail.substring(0, end)
             .lineSequence()
             .count { it.contains("tag=*alarm*:${Actions.ACTION_TIME_UPDATE}") }
     }
