@@ -1183,6 +1183,7 @@ jobs:
           script: |
             ./gradlew --no-daemon connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.ramybaheeg.yetanotherwidget.Q5MigrationTest
             ./gradlew --no-daemon connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.ramybaheeg.yetanotherwidget.Q5CalendarRepositoryTest
+            ./gradlew --no-daemon connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.ramybaheeg.yetanotherwidget.Q5SchedulingTest
       - name: Upload migration reports
         if: always()
         uses: actions/upload-artifact@v7
