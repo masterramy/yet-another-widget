@@ -26,7 +26,8 @@ wait_boot() {
 }
 
 dump_ui() {
-  local stem="$1" remote="/data/local/tmp/${stem}.xml"
+  local stem="$1"
+  local remote="/data/local/tmp/${stem}.xml"
   for attempt in $(seq 1 8); do
     adb shell rm -f "$remote" >/dev/null 2>&1 || true
     if adb shell uiautomator dump "$remote" >"$EVIDENCE_DIR/${stem}-dump-${attempt}.txt" 2>&1 &&
