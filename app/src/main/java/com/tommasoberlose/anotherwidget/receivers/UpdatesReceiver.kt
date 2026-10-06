@@ -181,7 +181,9 @@ class UpdatesReceiver : BroadcastReceiver() {
                         PendingIntent.getBroadcast(
                             context,
                             it.eventID.toInt(),
-                            Intent(context, UpdatesReceiver::class.java),
+                            Intent(context, UpdatesReceiver::class.java).apply {
+                                action = Actions.ACTION_TIME_UPDATE
+                            },
                             PendingIntent.FLAG_IMMUTABLE
                         )
                     )
