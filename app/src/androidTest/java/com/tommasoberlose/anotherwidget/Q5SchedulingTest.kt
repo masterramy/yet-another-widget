@@ -33,10 +33,15 @@ class Q5SchedulingTest {
             .use { it.readText() }
     }
 
-    private fun scheduledTimeUpdateCount(): Int =
-        shell("dumpsys alarm")
+    private fun scheduledTimeUpdateCount(): Int {
+        val dump = shell("dumpsys alarm")
+        val pendingRegion = dump
+            .substringAfter("Pending alarm batches:", missingDelimiterValue = "")
+            .substringBefore("Past-due non-wakeup alarms:", missingDelimiterValue = dump)
+        return pendingRegion
             .lineSequence()
             .count { it.contains("tag=*alarm*:${Actions.ACTION_TIME_UPDATE}") }
+    }
 
     private fun eventUpdatePendingIntent(action: String?): PendingIntent =
         PendingIntent.getBroadcast(
