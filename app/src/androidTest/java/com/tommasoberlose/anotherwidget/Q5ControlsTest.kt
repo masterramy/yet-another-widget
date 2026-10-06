@@ -180,7 +180,7 @@ class Q5ControlsTest {
             openRow(R.id.action_show_weather)
             onView(withText("Weather")).check(matches(isDisplayed()))
             openRow(R.id.action_change_unit)
-            onView(withText("Temperature unit")).check(matches(isDisplayed()))
+            onView(withText(R.string.settings_unit_title)).check(matches(isDisplayed()))
             pressBack()
             openRow(R.id.action_weather_refresh_period)
             onView(withText("Refresh frequency")).check(matches(isDisplayed()))
@@ -253,7 +253,6 @@ class Q5ControlsTest {
             onView(withId(R.id.action_filter_notifications_app)).perform(click())
             onView(withText("Applications")).check(matches(isDisplayed()))
             exitSearchActivity()
-            pressBack()
 
             openGlanceProvider("Latest notifications")
             onView(withId(R.id.action_change_notification_timer)).perform(click())
@@ -265,7 +264,6 @@ class Q5ControlsTest {
             onView(withId(R.id.action_filter_music_players)).perform(click())
             onView(withText("Music Players")).check(matches(isDisplayed()))
             exitSearchActivity()
-            pressBack()
 
             openGlanceProvider("Current playing song")
             onView(withId(R.id.action_change_media_info_format)).perform(click())
