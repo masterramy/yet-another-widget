@@ -1,5 +1,5 @@
-Exact-head production certification trigger — current-edge Superpowers completion gate.
+Exact-head production certification trigger — latest-head Superpowers completion gate.
 Shipping/customer-byte candidate remains bf02579c430b5dcf343f77e295ae08af161c5a13.
-QA head before trigger: 947162b1e5c2cad3e010a0b2524334bd86c49a66.
-Includes corrected empty-active-alarm oracle, isolated Glance dialog scenarios, condition-correct typography traversal, synchronized real-host store-media state, repeated refresh resilience, and repeated production widget-generation soak.
-Require every final job GREEN; inspect retained runtime/store-media evidence and update canonical Drive authority before declaring technical completion.
+QA head before trigger: 980e299154b5fa6d017713575823b3ead78a4dba.
+Includes all Run211 residual repairs plus synchronized real-host store media, repeated bound-widget refresh, repeated production widget-generation soak, primary/secondary color-picker coverage, and deterministic empty-calendar state.
+Require every final job GREEN. After GREEN: visually adjudicate current store media, reconcile manifest rows, classify only irreducible OEM/privileged/time-simulation permutations as external/confidence-depth, and durable-checkpoint the exact release edge.
