@@ -258,6 +258,7 @@ class Q5ControlsTest {
             onView(withId(R.id.action_change_notification_timer)).perform(click())
             onView(withText("Hide the notification after")).check(matches(isDisplayed()))
             pressBack()
+            onView(withId(R.id.action_filter_notifications_app)).check(matches(isDisplayed()))
             pressBack()
 
             openGlanceProvider("Current playing song")
