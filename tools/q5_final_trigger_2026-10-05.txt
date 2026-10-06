@@ -1,5 +1,5 @@
-Exact-head production certification trigger — Superpowers pilot rerun.
+Exact-head production certification trigger — Superpowers pilot combined rerun.
 Shipping/customer-byte candidate: bf2ac34bac54939b01f74bd7818d04e4f3620e79
-QA head before trigger: 58eb0fcaea2f0c454094aaafdb2c11b3ea9f9f82
-Purpose: verify Run184 controls-navigation/reveal, runtime resume-state, and locale activity-resolution harness repairs without changing shipping bytes.
-Methodology: Alfredverse authority remains governing; Superpowers systematic debugging/TDD/verification are subordinate engineering method.
+QA head before trigger: c7f00fffdd796d7989112ed5217b2c17c947c130
+Purpose: verify controls second-pass state repair, supported per-app locale matrix, manual-refresh resume-state repair, and widget/clock/intent characterization in one full final gate.
+Methodology: Alfredverse authority remains governing; Superpowers planning, RED evidence, systematic debugging, review, and verification are subordinate.
