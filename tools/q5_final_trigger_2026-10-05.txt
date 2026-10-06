@@ -1,5 +1,5 @@
-Exact-head production certification trigger — Superpowers pilot combined rerun.
-Shipping/customer-byte candidate: bf2ac34bac54939b01f74bd7818d04e4f3620e79
-QA head before trigger: c7f00fffdd796d7989112ed5217b2c17c947c130
-Purpose: verify controls second-pass state repair, supported per-app locale matrix, manual-refresh resume-state repair, and widget/clock/intent characterization in one full final gate.
-Methodology: Alfredverse authority remains governing; Superpowers planning, RED evidence, systematic debugging, review, and verification are subordinate.
+Exact-head production certification trigger — Superpowers pilot rerun after Run195 root-cause repairs.
+Shipping/customer-byte candidate remains bf2ac34bac54939b01f74bd7818d04e4f3620e79.
+QA head before trigger: a48b4f43a3db856581759c7f0e40357efeb5a4a7.
+Run195 RED repairs: shell-origin notification evidence + target-owned media session + condition-based battery convergence; bounded typography picker reveal; accessibility touch-target adjudication across fully visible scroll states.
+Store-media and widget-behavior characterization from newer shared authority are retained; no completed work replayed.
