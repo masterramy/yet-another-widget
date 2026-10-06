@@ -27,16 +27,19 @@ wait_boot() {
 
 wait_package_ready() {
   local ok=0
+  local resolved=""
   for _ in $(seq 1 60); do
+    resolved="$(adb shell cmd package resolve-activity --brief -a android.intent.action.MAIN -c android.intent.category.LAUNCHER "$PACKAGE" 2>/dev/null | tr -d '\\r' || true)"
     if adb shell pm path "$PACKAGE" 2>/dev/null | grep -q '^package:' &&
-       adb shell dumpsys package "$PACKAGE" 2>/dev/null | grep -Fq "$PACKAGE/.ui.activities.MainActivity"; then
+       grep -Fq "$PACKAGE/.ui.activities.MainActivity" <<<"$resolved"; then
       ok=1
       break
     fi
     sleep 2
   done
+  printf '%s\\n' "$resolved" > "$EVIDENCE_DIR/package-resolve-latest.txt"
   if [ "$ok" -ne 1 ]; then
-    echo "PackageManager did not republish YAW after locale framework restart" >&2
+    echo "Launcher activity did not become resolvable after locale framework restart" >&2
     return 1
   fi
 }
@@ -90,7 +93,24 @@ PY
 launch_capture() {
   local stem="$1" expected="$2"
   adb shell am force-stop "$PACKAGE" >/dev/null 2>&1 || true
-  adb shell am start -W -n "$PACKAGE/$ACTIVITY" >"$EVIDENCE_DIR/${stem}-start.txt"
+  local started=0
+  for attempt in $(seq 1 30); do
+    set +e
+    adb shell am start -W -n "$PACKAGE/$ACTIVITY" >"$EVIDENCE_DIR/${stem}-start-${attempt}.txt" 2>&1
+    local start_rc=$?
+    set -e
+    if [ "$start_rc" -eq 0 ] &&
+       grep -Eq 'Status: ok|LaunchState=' "$EVIDENCE_DIR/${stem}-start-${attempt}.txt"; then
+      cp "$EVIDENCE_DIR/${stem}-start-${attempt}.txt" "$EVIDENCE_DIR/${stem}-start.txt"
+      started=1
+      break
+    fi
+    sleep 2
+  done
+  if [ "$started" -ne 1 ]; then
+    echo "MainActivity did not become launchable after bounded framework-readiness wait" >&2
+    return 1
+  fi
   sleep 5
   dump_ui "$stem"
   assert_text "$EVIDENCE_DIR/${stem}.xml" "$YAW_APP_LABEL"
