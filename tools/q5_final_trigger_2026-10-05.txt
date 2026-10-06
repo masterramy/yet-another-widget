@@ -1,5 +1,5 @@
-Exact-head production certification trigger — resumed Superpowers verification after Run211.
+Exact-head production certification trigger — current-edge Superpowers completion gate.
 Shipping/customer-byte candidate remains bf02579c430b5dcf343f77e295ae08af161c5a13.
-QA head before trigger: 87f6304e8a5ef1fe6045816af448d6b2012747cd.
-Run211 residuals addressed test-first: active-alarm-only scheduling oracle, isolated Glance dialog scenarios, and corrected typography picker traversal direction.
-Require every final job GREEN; any new RED must be diagnosed from exact retained evidence before further mutation.
+QA head before trigger: 947162b1e5c2cad3e010a0b2524334bd86c49a66.
+Includes corrected empty-active-alarm oracle, isolated Glance dialog scenarios, condition-correct typography traversal, synchronized real-host store-media state, repeated refresh resilience, and repeated production widget-generation soak.
+Require every final job GREEN; inspect retained runtime/store-media evidence and update canonical Drive authority before declaring technical completion.
