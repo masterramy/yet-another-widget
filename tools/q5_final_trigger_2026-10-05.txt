@@ -1,4 +1,5 @@
-Exact-head production certification trigger — repaired candidate rerun.
+Exact-head production certification trigger — Superpowers pilot rerun.
 Shipping/customer-byte candidate: bf2ac34bac54939b01f74bd7818d04e4f3620e79
-QA head before trigger: ff9a9eadb5caa04bf58dad6444aaf499912675e8
-Purpose: run the complete gated Q5 matrix after systematic explicit SlimAdapter registration repair, API32 coordinate repair, text-picker visibility repair, real AppWidget configuration completion, locale PackageManager readiness repair, and expanded glance/provider/control coverage.
+QA head before trigger: 58eb0fcaea2f0c454094aaafdb2c11b3ea9f9f82
+Purpose: verify Run184 controls-navigation/reveal, runtime resume-state, and locale activity-resolution harness repairs without changing shipping bytes.
+Methodology: Alfredverse authority remains governing; Superpowers systematic debugging/TDD/verification are subordinate engineering method.
