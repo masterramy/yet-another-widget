@@ -492,6 +492,64 @@ assert_text "$EVIDENCE_DIR/q5-package-replace-main.xml" "$YAW_APP_LABEL"
 assert_main_system_state "q5-package-replace"
 adb exec-out screencap -p > "$EVIDENCE_DIR/q5-package-replace-main.png"
 
+echo "== Q5 exact-candidate controlled store-media tranche =="
+TEST_APK="app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk"
+test -s "$TEST_APK"
+yaw_read_test_identity "$TEST_APK"
+TEST_RUNNER="$YAW_TEST_PACKAGE/$YAW_TEST_RUNNER_CLASS"
+adb install -r "$TEST_APK" | tee "$EVIDENCE_DIR/q5-store-androidtest-install.txt"
+grep -Fq "Success" "$EVIDENCE_DIR/q5-store-androidtest-install.txt"
+adb shell am instrument -w -r \
+  -e class "com.ramybaheeg.yetanotherwidget.Q5StoreMediaSetupTest" \
+  "$TEST_RUNNER" | tee "$EVIDENCE_DIR/q5-store-media-setup.txt"
+grep -Eq "^OK \([0-9]+ test" "$EVIDENCE_DIR/q5-store-media-setup.txt"
+sleep 5
+
+# Hero: real Pixel Launcher + real hosted widget, with controlled demo calendar/weather data.
+adb shell input keyevent KEYCODE_HOME
+sleep 5
+assert_widget_bound "q5-store-hero"
+adb exec-out screencap -p > "$EVIDENCE_DIR/q5-store-01-hero-home.png"
+
+# Primary configuration shell.
+adb shell am start -W -n "$PACKAGE/$ACTIVITY" >/dev/null
+sleep 4
+dump_ui "q5-store-main"
+assert_text "$EVIDENCE_DIR/q5-store-main.xml" "$YAW_APP_LABEL"
+adb exec-out screencap -p > "$EVIDENCE_DIR/q5-store-02-main.png"
+
+# Calendar configuration.
+tap_id "$EVIDENCE_DIR/q5-store-main.xml" "action_show_events"
+sleep 3
+dump_ui "q5-store-calendar"
+assert_text "$EVIDENCE_DIR/q5-store-calendar.xml" "Calendar"
+adb exec-out screencap -p > "$EVIDENCE_DIR/q5-store-03-calendar.png"
+tap_id "$EVIDENCE_DIR/q5-store-calendar.xml" "action_back"
+sleep 3
+dump_ui "q5-store-main-after-calendar"
+
+# Weather configuration.
+tap_id "$EVIDENCE_DIR/q5-store-main-after-calendar.xml" "action_show_weather"
+sleep 3
+dump_ui "q5-store-weather"
+assert_text "$EVIDENCE_DIR/q5-store-weather.xml" "Weather"
+adb exec-out screencap -p > "$EVIDENCE_DIR/q5-store-04-weather.png"
+tap_id "$EVIDENCE_DIR/q5-store-weather.xml" "action_back"
+sleep 3
+dump_ui "q5-store-main-after-weather"
+
+# Typography/customization surface.
+tap_id "$EVIDENCE_DIR/q5-store-main-after-weather.xml" "action_typography"
+sleep 3
+dump_ui "q5-store-typography"
+assert_text "$EVIDENCE_DIR/q5-store-typography.xml" "Typography"
+adb exec-out screencap -p > "$EVIDENCE_DIR/q5-store-05-typography.png"
+
+# Reuse the already-proven exact-candidate About capture as the provenance/store-support shot.
+if [ -s "$EVIDENCE_DIR/q5-settings-about.png" ]; then
+  cp "$EVIDENCE_DIR/q5-settings-about.png" "$EVIDENCE_DIR/q5-store-06-about.png"
+fi
+
 # Fresh install + true first launch from cleared package state. This is last
 # because uninstalling correctly removes the previously-bound launcher widget.
 adb shell am force-stop "$PACKAGE" >/dev/null 2>&1 || true
@@ -912,6 +970,7 @@ widget_survives_emulator_reboot=PASS
 full_app_acceptance_after_reboot=PASS
 manual_refresh_with_bound_widget=PASS
 package_replace_preserves_app_and_widget=PASS
+controlled_exact_candidate_store_media=PASS
 fresh_install_first_launch=PASS
 calendar_permission_denied_granted_revoked_regranted=PASS
 coarse_location_permission_denied_granted_revoked_regranted=PASS
