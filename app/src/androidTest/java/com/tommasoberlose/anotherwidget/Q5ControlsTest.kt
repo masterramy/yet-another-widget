@@ -92,6 +92,16 @@ class Q5ControlsTest {
             revealText("10sp", R.id.menu, swipeUp(), maxAttempts = 20)
             pressBack()
 
+            openRow(R.id.action_font_color)
+            onView(withText("Text color")).check(matches(isDisplayed()))
+            onView(withText("Alpha")).check(matches(isDisplayed()))
+            pressBack()
+
+            openRow(R.id.action_secondary_font_color)
+            onView(withText("Text color")).check(matches(isDisplayed()))
+            onView(withText("Alpha")).check(matches(isDisplayed()))
+            pressBack()
+
             openRow(R.id.action_text_shadow)
             onView(withText("Text shadow")).check(matches(isDisplayed()))
             onView(withText("None")).check(matches(isDisplayed()))
