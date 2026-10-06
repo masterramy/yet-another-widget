@@ -13,8 +13,10 @@ import com.ramybaheeg.yetanotherwidget.global.Constants
 import com.ramybaheeg.yetanotherwidget.global.Preferences
 import com.ramybaheeg.yetanotherwidget.helpers.IntentHelper
 import com.ramybaheeg.yetanotherwidget.receivers.UpdatesReceiver
+import com.ramybaheeg.yetanotherwidget.ui.widgets.AlignedWidget
 import com.ramybaheeg.yetanotherwidget.ui.widgets.ClockWidget
 import com.ramybaheeg.yetanotherwidget.ui.widgets.MainWidget
+import com.ramybaheeg.yetanotherwidget.ui.widgets.StandardWidget
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
@@ -133,4 +135,33 @@ class Q5WidgetBehaviorTest {
         assertEquals(Actions.ACTION_REFRESH, refresh.action)
         assertEquals(UpdatesReceiver::class.java.name, refresh.component?.className)
     }
+
+    @Test
+    fun repeatedProductionWidgetGenerationStaysStableAcrossCoreLayouts() {
+        val alignments = listOf(
+            Constants.WidgetAlign.CENTER.rawValue,
+            Constants.WidgetAlign.LEFT.rawValue,
+            Constants.WidgetAlign.RIGHT.rawValue
+        )
+
+        repeat(18) { cycle ->
+            Preferences.widgetAlign = alignments[cycle % alignments.size]
+            Preferences.showClock = cycle % 2 == 0
+
+            val preview = MainWidget.getWidgetView(target, null)?.root
+            assertNotNull(preview)
+
+            val remoteViews = when (Preferences.widgetAlign) {
+                Constants.WidgetAlign.LEFT.rawValue ->
+                    AlignedWidget(target).generateWidget(8100 + cycle, 900, null)
+                Constants.WidgetAlign.RIGHT.rawValue ->
+                    AlignedWidget(target, rightAligned = true).generateWidget(8100 + cycle, 900, null)
+                else ->
+                    StandardWidget(target).generateWidget(8100 + cycle, 900, null)
+            }
+            assertNotNull(remoteViews)
+            assertNotNull(applyRemoteViews(requireNotNull(remoteViews)))
+        }
+    }
+
 }
