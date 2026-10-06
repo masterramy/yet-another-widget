@@ -859,9 +859,9 @@ dump_ui "q5-typography"
 
 tap_id "$EVIDENCE_DIR/q5-typography.xml" "action_main_text_size"
 sleep 2
-reveal_text_with_swipe "q5-main-text-size-max" "40sp" up
+reveal_text_with_swipe "q5-main-text-size-max" "40sp" down 24
 adb exec-out screencap -p > "$EVIDENCE_DIR/q5-main-text-size-max.png"
-reveal_text_with_swipe "q5-main-text-size-min" "10sp" down 24
+reveal_text_with_swipe "q5-main-text-size-min" "10sp" up 24
 adb exec-out screencap -p > "$EVIDENCE_DIR/q5-main-text-size-min.png"
 adb shell input keyevent KEYCODE_BACK
 sleep 1
@@ -869,9 +869,9 @@ sleep 1
 dump_ui "q5-typography-second-entry"
 tap_id "$EVIDENCE_DIR/q5-typography-second-entry.xml" "action_second_text_size"
 sleep 2
-reveal_text_with_swipe "q5-second-text-size-max" "40sp" up
+reveal_text_with_swipe "q5-second-text-size-max" "40sp" down 24
 adb exec-out screencap -p > "$EVIDENCE_DIR/q5-second-text-size-max.png"
-reveal_text_with_swipe "q5-second-text-size-min" "10sp" down 24
+reveal_text_with_swipe "q5-second-text-size-min" "10sp" up 24
 adb shell input keyevent KEYCODE_BACK
 sleep 1
 
