@@ -50,6 +50,44 @@ raise SystemExit(1)
 PY
 }
 
+ui_has_text() {
+  local xml="$1"
+  local expected="$2"
+  python3 - "$xml" "$expected" <<'PY'
+import sys, xml.etree.ElementTree as ET
+path, expected = sys.argv[1], sys.argv[2]
+root = ET.parse(path).getroot()
+for node in root.iter("node"):
+    if expected in node.attrib.get("text", "") or expected in node.attrib.get("content-desc", ""):
+        raise SystemExit(0)
+raise SystemExit(1)
+PY
+}
+
+reveal_text_with_swipe() {
+  local stem="$1"
+  local expected="$2"
+  local direction="$3"
+  local max_attempts="${4:-16}"
+  local attempt xml
+  for attempt in $(seq 0 "$max_attempts"); do
+    dump_ui "${stem}-${attempt}"
+    xml="$EVIDENCE_DIR/${stem}-${attempt}.xml"
+    if ui_has_text "$xml" "$expected"; then
+      cp "$xml" "$EVIDENCE_DIR/${stem}.xml"
+      return 0
+    fi
+    if [ "$direction" = "up" ]; then
+      adb shell input swipe 540 1750 540 650 350
+    else
+      adb shell input swipe 540 650 540 1750 350
+    fi
+    sleep 1
+  done
+  echo "Could not reveal UI text after bounded swipes: $expected" >&2
+  return 1
+}
+
 assert_absent() {
   local xml="$1"
   local forbidden="$2"
@@ -821,19 +859,19 @@ dump_ui "q5-typography"
 
 tap_id "$EVIDENCE_DIR/q5-typography.xml" "action_main_text_size"
 sleep 2
-dump_ui "q5-main-text-size-menu"
-assert_text "$EVIDENCE_DIR/q5-main-text-size-menu.xml" "40sp"
-assert_text "$EVIDENCE_DIR/q5-main-text-size-menu.xml" "10sp"
-adb exec-out screencap -p > "$EVIDENCE_DIR/q5-main-text-size-menu.png"
+reveal_text_with_swipe "q5-main-text-size-max" "40sp" up
+adb exec-out screencap -p > "$EVIDENCE_DIR/q5-main-text-size-max.png"
+reveal_text_with_swipe "q5-main-text-size-min" "10sp" down 24
+adb exec-out screencap -p > "$EVIDENCE_DIR/q5-main-text-size-min.png"
 adb shell input keyevent KEYCODE_BACK
 sleep 1
 
 dump_ui "q5-typography-second-entry"
 tap_id "$EVIDENCE_DIR/q5-typography-second-entry.xml" "action_second_text_size"
 sleep 2
-dump_ui "q5-second-text-size-menu"
-assert_text "$EVIDENCE_DIR/q5-second-text-size-menu.xml" "40sp"
-assert_text "$EVIDENCE_DIR/q5-second-text-size-menu.xml" "10sp"
+reveal_text_with_swipe "q5-second-text-size-max" "40sp" up
+adb exec-out screencap -p > "$EVIDENCE_DIR/q5-second-text-size-max.png"
+reveal_text_with_swipe "q5-second-text-size-min" "10sp" down 24
 adb shell input keyevent KEYCODE_BACK
 sleep 1
 
