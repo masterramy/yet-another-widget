@@ -1,14 +1,9 @@
 package com.ramybaheeg.yetanotherwidget
 
 import android.Manifest
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.graphics.drawable.Icon
 import android.media.MediaMetadata
 import android.media.session.MediaSession
 import android.media.session.PlaybackState
-import android.os.Build
 import android.os.ParcelFileDescriptor
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
@@ -34,7 +29,6 @@ import org.junit.runner.RunWith
 class Q5GlanceProviderTest {
     private val instrumentation get() = InstrumentationRegistry.getInstrumentation()
     private val target get() = instrumentation.targetContext
-    private val testContext get() = instrumentation.context
     private val listenerComponent
         get() = "${target.packageName}/com.ramybaheeg.yetanotherwidget.receivers.NotificationListener"
 
@@ -69,66 +63,52 @@ class Q5GlanceProviderTest {
         Preferences.mediaPlayerPackage = ""
         shell("cmd notification allow_listener $listenerComponent")
         assertTrue(waitUntil { ActiveNotificationsHelper.checkNotificationAccess(target) })
-
-        if (Build.VERSION.SDK_INT >= 33) {
-            instrumentation.uiAutomation.grantRuntimePermission(
-                testContext.packageName,
-                Manifest.permission.POST_NOTIFICATIONS
-            )
-        }
     }
 
     @After
     fun cleanUp() {
-        try {
-            testContext.getSystemService(NotificationManager::class.java).cancelAll()
-        } catch (_: Throwable) {}
         shell("dumpsys battery reset")
     }
 
-    private fun postNotification(id: Int, title: String) {
-        val manager = testContext.getSystemService(NotificationManager::class.java)
-        val channelId = "q5-provider"
-        if (Build.VERSION.SDK_INT >= 26) {
-            manager.createNotificationChannel(
-                NotificationChannel(channelId, "Q5 provider", NotificationManager.IMPORTANCE_DEFAULT)
-            )
-        }
-        val builder = if (Build.VERSION.SDK_INT >= 26) {
-            Notification.Builder(testContext, channelId)
-        } else {
-            @Suppress("DEPRECATION")
-            Notification.Builder(testContext)
-        }
-        builder
-            .setSmallIcon(Icon.createWithResource("android", android.R.drawable.ic_dialog_info))
-            .setContentTitle(title)
-            .setContentText("Q5 provider notification")
-        manager.notify(id, builder.build())
+    private fun postShellNotification(tag: String, title: String) {
+        shell("cmd notification post -t '$title' '$tag' 'Q5 provider notification'")
     }
+
+    private fun activeShellNotificationKey(tag: String): String =
+        shell("cmd notification list")
+            .lineSequence()
+            .firstOrNull { it.contains("com.android.shell") && it.contains(tag) }
+            ?.trim()
+            .orEmpty()
 
     @Test
     fun realNotificationIsConsumedAndDismissalClearsIt() {
         Preferences.showNotifications = true
         Preferences.hideNotificationAfter = Constants.GlanceNotificationTimer.HALF_MINUTE.rawValue
 
-        postNotification(4242, "Q5 notification")
+        val tag = "q5-provider"
+        postShellNotification(tag, "Q5 notification")
 
         assertTrue(waitUntil { Preferences.lastNotificationTitle == "Q5 notification" })
-        assertEquals(testContext.packageName, Preferences.lastNotificationPackage)
+        assertEquals("com.android.shell", Preferences.lastNotificationPackage)
         assertTrue(ActiveNotificationsHelper.showLastNotification())
 
         val alarms = shell("dumpsys alarm")
         assertTrue(alarms.contains(Actions.ACTION_CLEAR_NOTIFICATION))
 
-        testContext.getSystemService(NotificationManager::class.java).cancel(4242)
+        var key = ""
+        assertTrue(waitUntil {
+            key = activeShellNotificationKey(tag)
+            key.isNotEmpty()
+        })
+        shell("cmd notification snooze --for 600000 '$key'")
         assertTrue(waitUntil { !ActiveNotificationsHelper.showLastNotification() })
     }
 
     @Test
     fun mediaSessionIsConsumedAndFilterCanSuppressIt() {
         Preferences.showMusic = true
-        val session = MediaSession(testContext, "Q5 media")
+        val session = MediaSession(target, "Q5 media")
         try {
             session.setMetadata(
                 MediaMetadata.Builder()
@@ -151,7 +131,7 @@ class Q5GlanceProviderTest {
             assertEquals("Q5 Artist", Preferences.mediaPlayerArtist)
             assertEquals("Q5 Album", Preferences.mediaPlayerAlbum)
 
-            Preferences.musicPlayersFilter = "not.${testContext.packageName}"
+            Preferences.musicPlayersFilter = "not.${target.packageName}"
             MediaPlayerHelper.updatePlayingMediaInfo(target)
             assertEquals("", Preferences.mediaPlayerTitle)
 
@@ -185,15 +165,18 @@ class Q5GlanceProviderTest {
         shell("dumpsys battery unplug")
         shell("dumpsys battery set level 10")
         shell("dumpsys battery set status 3")
-        BatteryHelper.updateBatteryInfo(target)
-        assertTrue(Preferences.isBatteryLevelLow)
-        assertFalse(Preferences.isCharging)
+        assertTrue(waitUntil {
+            BatteryHelper.updateBatteryInfo(target)
+            Preferences.isBatteryLevelLow && !Preferences.isCharging
+        })
 
+        shell("dumpsys battery set ac 1")
         shell("dumpsys battery set level 80")
         shell("dumpsys battery set status 2")
-        BatteryHelper.updateBatteryInfo(target)
-        assertFalse(Preferences.isBatteryLevelLow)
-        assertTrue(Preferences.isCharging)
+        assertTrue(waitUntil {
+            BatteryHelper.updateBatteryInfo(target)
+            !Preferences.isBatteryLevelLow && Preferences.isCharging
+        })
     }
 
     @Test
