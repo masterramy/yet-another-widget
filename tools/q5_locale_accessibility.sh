@@ -159,33 +159,55 @@ launch_capture "font-100" "$(expected_string "" typography_settings_title)"
 adb shell settings put system font_scale 2.0
 sleep 3
 launch_capture "font-200" "$(expected_string "" typography_settings_title)"
+
+# At 200% text, bottom rows can be only partially visible in a single hierarchy
+# snapshot. Collect bounded scroll states and evaluate each control at its
+# largest fully exposed bounds instead of treating viewport clipping as a 15px
+# touch target.
+for step in $(seq 1 8); do
+  adb shell input swipe 540 1750 540 650 350
+  sleep 1
+  dump_ui "font-200-scroll-${step}"
+done
 adb shell wm density >"$EVIDENCE_DIR/wm-density.txt"
 
 # Fail closed on main navigation semantics and minimum 44dp-equivalent touch rows.
-python3 - "$EVIDENCE_DIR/font-200.xml" "$EVIDENCE_DIR/wm-density.txt" <<'PY'
-import re,sys,xml.etree.ElementTree as ET
-root=ET.parse(sys.argv[1]).getroot()
-density_text=open(sys.argv[2],errors="replace").read()
+python3 - "$EVIDENCE_DIR/wm-density.txt" "$EVIDENCE_DIR" <<'PY'
+import glob,re,sys,xml.etree.ElementTree as ET
+density_text=open(sys.argv[1],errors="replace").read()
+evidence_dir=sys.argv[2]
 m=re.search(r"(Override|Physical) density:\s*(\d+)", density_text)
 density=int(m.group(2)) if m else 420
 min_px=44*density/160
 required={"action_typography","action_general_settings","action_show_clock","action_show_events","action_show_weather","action_show_glance","action_tab_default_app","action_settings"}
-seen={}
-for n in root.iter("node"):
-    rid=n.attrib.get("resource-id","")
-    suffix=rid.rsplit("/",1)[-1]
-    if suffix not in required: continue
-    b=re.match(r"\[(\d+),(\d+)\]\[(\d+),(\d+)\]",n.attrib.get("bounds",""))
-    if not b: raise SystemExit(f"no bounds for {suffix}")
-    x1,y1,x2,y2=map(int,b.groups())
-    if x2-x1 < min_px or y2-y1 < min_px:
-        raise SystemExit(f"touch target below 44dp for {suffix}: {x2-x1}x{y2-y1}px at density {density}")
-    if n.attrib.get("clickable")!="true" or n.attrib.get("focusable")!="true":
-        raise SystemExit(f"missing clickable/focusable semantics for {suffix}")
-    seen[suffix]=(x2-x1,y2-y1)
-missing=required-set(seen)
-if missing: raise SystemExit(f"missing semantic controls: {sorted(missing)}")
-open("q5-locale-evidence/accessibility-main-controls.txt","w").write("\n".join(f"{k}={v}" for k,v in sorted(seen.items()))+"\n")
+best={}
+for path in sorted(glob.glob(f"{evidence_dir}/font-200*.xml")):
+    root=ET.parse(path).getroot()
+    for n in root.iter("node"):
+        rid=n.attrib.get("resource-id","")
+        suffix=rid.rsplit("/",1)[-1]
+        if suffix not in required:
+            continue
+        b=re.match(r"\[(\d+),(\d+)\]\[(\d+),(\d+)\]",n.attrib.get("bounds",""))
+        if not b:
+            continue
+        x1,y1,x2,y2=map(int,b.groups())
+        candidate=(x2-x1,y2-y1,n.attrib.get("clickable"),n.attrib.get("focusable"),path)
+        previous=best.get(suffix)
+        if previous is None or candidate[1] > previous[1]:
+            best[suffix]=candidate
+missing=required-set(best)
+if missing:
+    raise SystemExit(f"missing semantic controls across scroll states: {sorted(missing)}")
+out=[]
+for suffix in sorted(required):
+    width,height,clickable,focusable,path=best[suffix]
+    if width < min_px or height < min_px:
+        raise SystemExit(f"touch target below 44dp for {suffix}: {width}x{height}px at density {density} in {path}")
+    if clickable!="true" or focusable!="true":
+        raise SystemExit(f"missing clickable/focusable semantics for {suffix} in {path}")
+    out.append(f"{suffix}=({width},{height}) source={path}")
+open(f"{evidence_dir}/accessibility-main-controls.txt","w").write("\n".join(out)+"\n")
 PY
 
 adb logcat -d >"$EVIDENCE_DIR/final-logcat.txt" 2>&1 || true
