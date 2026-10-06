@@ -25,25 +25,6 @@ wait_boot() {
   sleep 3
 }
 
-wait_package_ready() {
-  local ok=0
-  local resolved=""
-  for _ in $(seq 1 60); do
-    resolved="$(adb shell cmd package resolve-activity --brief -a android.intent.action.MAIN -c android.intent.category.LAUNCHER "$PACKAGE" 2>/dev/null | tr -d '\\r' || true)"
-    if adb shell pm path "$PACKAGE" 2>/dev/null | grep -q '^package:' &&
-       grep -Fq "$PACKAGE/.ui.activities.MainActivity" <<<"$resolved"; then
-      ok=1
-      break
-    fi
-    sleep 2
-  done
-  printf '%s\\n' "$resolved" > "$EVIDENCE_DIR/package-resolve-latest.txt"
-  if [ "$ok" -ne 1 ]; then
-    echo "Launcher activity did not become resolvable after locale framework restart" >&2
-    return 1
-  fi
-}
-
 dump_ui() {
   local stem="$1" remote="/data/local/tmp/${stem}.xml"
   for attempt in $(seq 1 8); do
@@ -108,7 +89,7 @@ launch_capture() {
     sleep 2
   done
   if [ "$started" -ne 1 ]; then
-    echo "MainActivity did not become launchable after bounded framework-readiness wait" >&2
+    echo "MainActivity did not become launchable after bounded app-locale transition wait" >&2
     return 1
   fi
   sleep 5
@@ -123,12 +104,24 @@ launch_capture() {
 
 set_locale_and_capture() {
   local tag="$1" qualifier="$2" stem="$3"
-  adb shell "setprop persist.sys.locale '$tag'; stop; sleep 4; start"
-  wait_boot
-  wait_package_ready
-  actual="$(adb shell getprop persist.sys.locale | tr -d '\r')"
+  adb shell cmd locale set-app-locales "$PACKAGE" --user 0 --locales "$tag" >"$EVIDENCE_DIR/${stem}-set-locale.txt" 2>&1
+
+  local actual=""
+  local applied=0
+  for _ in $(seq 1 30); do
+    actual="$(adb shell cmd locale get-app-locales "$PACKAGE" --user 0 2>/dev/null | tr -d '\r' || true)"
+    if grep -Fq "$tag" <<<"$actual"; then
+      applied=1
+      break
+    fi
+    sleep 1
+  done
   printf 'requested=%s\nactual=%s\n' "$tag" "$actual" >"$EVIDENCE_DIR/${stem}-locale.txt"
-  test "$actual" = "$tag"
+  if [ "$applied" -ne 1 ]; then
+    echo "Per-app locale did not converge to requested tag: $tag" >&2
+    return 1
+  fi
+
   expected="$(expected_string "$qualifier" typography_settings_title)"
   launch_capture "$stem" "$expected"
 }
@@ -201,8 +194,9 @@ if grep -E -q "FATAL EXCEPTION:.*|Process: ${PACKAGE//./\\.}|ANR in ${PACKAGE//.
   exit 40
 fi
 
-# Restore normal display state.
+# Restore normal display/app-locale state.
 adb shell settings put system font_scale 1.0
+adb shell cmd locale set-app-locales "$PACKAGE" --user 0 --locales "" >/dev/null 2>&1 || true
 cat >"$EVIDENCE_DIR/summary.txt" <<EOF
 source_sha=${GITHUB_SHA:-unknown}
 default_english=PASS
