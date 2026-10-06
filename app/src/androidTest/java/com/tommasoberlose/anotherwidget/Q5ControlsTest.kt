@@ -3,6 +3,7 @@ package com.ramybaheeg.yetanotherwidget
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBack
+import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.scrollTo
 import androidx.test.espresso.action.ViewActions.swipeDown
@@ -35,6 +36,34 @@ class Q5ControlsTest {
         onView(withId(R.id.action_typography)).check(matches(isDisplayed()))
     }
 
+    private fun revealText(
+        text: String,
+        scrollContainerId: Int,
+        direction: ViewAction,
+        maxAttempts: Int = 12
+    ) {
+        var lastFailure: Throwable? = null
+        repeat(maxAttempts) {
+            try {
+                onView(withText(text)).check(matches(isDisplayed()))
+                return
+            } catch (failure: Throwable) {
+                lastFailure = failure
+            }
+            onView(withId(scrollContainerId)).perform(direction)
+        }
+        throw AssertionError("Could not reveal visible text: $text", lastFailure)
+    }
+
+    private fun openGlanceProvider(title: String) {
+        revealText(title, R.id.scrollView, swipeUp())
+        onView(withText(title)).perform(click())
+    }
+
+    private fun exitSearchActivity() {
+        onView(withId(R.id.action_back)).perform(click())
+    }
+
     @Test
     fun allMainChildrenNavigateAndBack() {
         ActivityScenario.launch(MainActivity::class.java).use {
@@ -54,17 +83,13 @@ class Q5ControlsTest {
             openRow(R.id.action_typography)
 
             openRow(R.id.action_main_text_size)
-            onView(withId(R.id.menu)).perform(swipeDown(), swipeDown())
-            onView(withText("40sp")).check(matches(isDisplayed()))
-            onView(withId(R.id.menu)).perform(swipeUp(), swipeUp(), swipeUp(), swipeUp())
-            onView(withText("10sp")).check(matches(isDisplayed()))
+            revealText("40sp", R.id.menu, swipeDown())
+            revealText("10sp", R.id.menu, swipeUp(), maxAttempts = 20)
             pressBack()
 
             openRow(R.id.action_second_text_size)
-            onView(withId(R.id.menu)).perform(swipeDown(), swipeDown())
-            onView(withText("40sp")).check(matches(isDisplayed()))
-            onView(withId(R.id.menu)).perform(swipeUp(), swipeUp(), swipeUp(), swipeUp())
-            onView(withText("10sp")).check(matches(isDisplayed()))
+            revealText("40sp", R.id.menu, swipeDown())
+            revealText("10sp", R.id.menu, swipeUp(), maxAttempts = 20)
             pressBack()
 
             openRow(R.id.action_text_shadow)
@@ -136,7 +161,7 @@ class Q5ControlsTest {
             pressBack()
             openRow(R.id.action_alt_timezone_clock)
             onView(withText("Time Zones")).check(matches(isDisplayed()))
-            pressBack()
+            exitSearchActivity()
             onView(withId(R.id.action_back)).perform(click())
 
             openRow(R.id.action_show_events)
@@ -177,11 +202,11 @@ class Q5ControlsTest {
 
             openRow(R.id.action_weather_provider)
             onView(withText("Weather provider")).check(matches(isDisplayed()))
-            pressBack()
+            exitSearchActivity()
 
             openRow(R.id.action_custom_location)
             onView(withText("Location")).check(matches(isDisplayed()))
-            pressBack()
+            exitSearchActivity()
 
             openRow(R.id.action_weather_icon_pack)
             onView(withText("Icon pack")).check(matches(isDisplayed()))
@@ -208,11 +233,11 @@ class Q5ControlsTest {
 
             openRow(R.id.action_calendar_app)
             onView(withText("Choose application")).check(matches(isDisplayed()))
-            pressBack()
+            exitSearchActivity()
 
             openRow(R.id.action_clock_app)
             onView(withText("Choose application")).check(matches(isDisplayed()))
-            pressBack()
+            exitSearchActivity()
 
             openRow(R.id.action_weather_app)
             onView(withText("Choose application")).check(matches(isDisplayed()))
@@ -224,23 +249,25 @@ class Q5ControlsTest {
     fun glanceNotificationAndMediaConfigurationSurfacesOpen() {
         ActivityScenario.launch(MainActivity::class.java).use {
             openRow(R.id.action_show_glance)
-            onView(withText("Latest notifications")).perform(scrollTo(), click())
+            openGlanceProvider("Latest notifications")
             onView(withId(R.id.action_filter_notifications_app)).perform(click())
             onView(withText("Applications")).check(matches(isDisplayed()))
+            exitSearchActivity()
             pressBack()
 
-            onView(withText("Latest notifications")).perform(scrollTo(), click())
+            openGlanceProvider("Latest notifications")
             onView(withId(R.id.action_change_notification_timer)).perform(click())
             onView(withText("Hide the notification after")).check(matches(isDisplayed()))
             pressBack()
             pressBack()
 
-            onView(withText("Current playing song")).perform(scrollTo(), click())
+            openGlanceProvider("Current playing song")
             onView(withId(R.id.action_filter_music_players)).perform(click())
             onView(withText("Music Players")).check(matches(isDisplayed()))
+            exitSearchActivity()
             pressBack()
 
-            onView(withText("Current playing song")).perform(scrollTo(), click())
+            openGlanceProvider("Current playing song")
             onView(withId(R.id.action_change_media_info_format)).perform(click())
             onView(withId(R.id.media_info_format_input)).check(matches(isDisplayed()))
         }
@@ -252,16 +279,16 @@ class Q5ControlsTest {
         ActivityScenario.launch(MainActivity::class.java).use {
             openRow(R.id.action_show_glance)
 
-            onView(withText("Custom notes")).perform(scrollTo(), click())
+            openGlanceProvider("Custom notes")
             onView(withId(R.id.notes)).perform(replaceText("Q5 note"), closeSoftKeyboard())
             onView(withId(R.id.action_positive)).perform(click())
 
-            onView(withText("Custom notes")).perform(scrollTo(), click())
+            openGlanceProvider("Custom notes")
             onView(withId(R.id.notes)).check(matches(withText("Q5 note")))
             onView(withId(R.id.notes)).perform(replaceText("Q5 edited"), closeSoftKeyboard())
             onView(withId(R.id.action_positive)).perform(click())
 
-            onView(withText("Custom notes")).perform(scrollTo(), click())
+            openGlanceProvider("Custom notes")
             onView(withId(R.id.notes)).check(matches(withText("Q5 edited")))
             onView(withId(R.id.notes)).perform(replaceText(""), closeSoftKeyboard())
             onView(withId(R.id.action_positive)).perform(click())
