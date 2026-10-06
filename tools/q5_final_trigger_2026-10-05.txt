@@ -1,6 +1,6 @@
-Exact-head production certification trigger — Superpowers TDD GREEN/full regression after proven calendar alarm cancellation defect.
-Shipping/customer-byte candidate: bf02579c430b5dcf343f77e295ae08af161c5a13.
-RED proof: Run204 / 37405763792 Q5SchedulingTest observed removeUpdates leaving the ACTION_TIME_UPDATE PendingIntent alive.
-Production repair: removeUpdates now cancels with the same ACTION_TIME_UPDATE Intent identity scheduled by setUpdates.
-Also includes QA-only Android-16 glance stabilization, condition-based typography reveal, 200% touch-target full-visibility adjudication, and notification-sheet focus synchronization.
-Require all final jobs GREEN before promoting candidate or manifest rows.
+Exact-head production certification trigger — final Superpowers verification after TDD calendar repair and locale harness declaration fix.
+Shipping/customer-byte candidate remains bf02579c430b5dcf343f77e295ae08af161c5a13.
+Run204 RED proved the calendar PendingIntent cancellation defect; bf02579c applied the minimal production repair.
+Run201 locale evidence then exposed a QA-only Bash set -u defect (stem expanded in the same local declaration); 81563f19 fixes declaration order only.
+Includes the latest controls focus synchronization and Android-16 Glance/provider harness repairs.
+Require every final job GREEN; inspect retained runtime/store-media evidence before closure.
