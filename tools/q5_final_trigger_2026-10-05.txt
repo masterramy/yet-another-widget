@@ -1,5 +1,5 @@
-Exact-head production certification trigger — Superpowers pilot rerun after Run195 root-cause repairs.
+Exact-head production certification trigger — Superpowers TDD RED proof for calendar alarm cancellation.
 Shipping/customer-byte candidate remains bf2ac34bac54939b01f74bd7818d04e4f3620e79.
-QA head before trigger: a48b4f43a3db856581759c7f0e40357efeb5a4a7.
-Run195 RED repairs: shell-origin notification evidence + target-owned media session + condition-based battery convergence; bounded typography picker reveal; accessibility touch-target adjudication across fully visible scroll states.
-Store-media and widget-behavior characterization from newer shared authority are retained; no completed work replayed.
+QA head before trigger: 4c901b3a26e98342f9f5d3754160bac4f46476f0.
+New regression test Q5SchedulingTest must prove whether UpdatesReceiver.removeUpdates cancels the same ACTION_TIME_UPDATE PendingIntent identity scheduled by setUpdates.
+No production repair has been applied; a RED scheduling test is expected if the reviewed identity mismatch is real.
