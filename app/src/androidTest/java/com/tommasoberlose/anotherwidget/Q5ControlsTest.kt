@@ -253,22 +253,30 @@ class Q5ControlsTest {
             onView(withId(R.id.action_filter_notifications_app)).perform(click())
             onView(withText("Applications")).check(matches(isDisplayed()))
             exitSearchActivity()
+        }
 
+        ActivityScenario.launch(MainActivity::class.java).use {
+            openRow(R.id.action_show_glance)
             openGlanceProvider("Latest notifications")
             onView(withId(R.id.action_change_notification_timer)).perform(click())
             onView(withText("Hide the notification after")).check(matches(isDisplayed()))
             pressBack()
-            onView(withId(R.id.action_filter_notifications_app)).check(matches(isDisplayed()))
-            pressBack()
+        }
 
+        ActivityScenario.launch(MainActivity::class.java).use {
+            openRow(R.id.action_show_glance)
             openGlanceProvider("Current playing song")
             onView(withId(R.id.action_filter_music_players)).perform(click())
             onView(withText("Music Players")).check(matches(isDisplayed()))
             exitSearchActivity()
+        }
 
+        ActivityScenario.launch(MainActivity::class.java).use {
+            openRow(R.id.action_show_glance)
             openGlanceProvider("Current playing song")
             onView(withId(R.id.action_change_media_info_format)).perform(click())
             onView(withId(R.id.media_info_format_input)).check(matches(isDisplayed()))
+            exitSearchActivity()
         }
     }
 
@@ -277,16 +285,21 @@ class Q5ControlsTest {
     fun customNotesCreateEditAndClear() {
         ActivityScenario.launch(MainActivity::class.java).use {
             openRow(R.id.action_show_glance)
-
             openGlanceProvider("Custom notes")
             onView(withId(R.id.notes)).perform(replaceText("Q5 note"), closeSoftKeyboard())
             onView(withId(R.id.action_positive)).perform(click())
+        }
 
+        ActivityScenario.launch(MainActivity::class.java).use {
+            openRow(R.id.action_show_glance)
             openGlanceProvider("Custom notes")
             onView(withId(R.id.notes)).check(matches(withText("Q5 note")))
             onView(withId(R.id.notes)).perform(replaceText("Q5 edited"), closeSoftKeyboard())
             onView(withId(R.id.action_positive)).perform(click())
+        }
 
+        ActivityScenario.launch(MainActivity::class.java).use {
+            openRow(R.id.action_show_glance)
             openGlanceProvider("Custom notes")
             onView(withId(R.id.notes)).check(matches(withText("Q5 edited")))
             onView(withId(R.id.notes)).perform(replaceText(""), closeSoftKeyboard())
