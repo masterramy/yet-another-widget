@@ -8,6 +8,7 @@ import com.ramybaheeg.yetanotherwidget.db.EventRepository
 import com.ramybaheeg.yetanotherwidget.global.Preferences
 import com.ramybaheeg.yetanotherwidget.models.Event
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -90,4 +91,12 @@ class Q5CalendarRepositoryTest {
         repo.goToNextEvent(); assertEquals(a.eventID, repo.getNextEvent()?.eventID)
         repo.goToPreviousEvent(); assertEquals(c.eventID, repo.getNextEvent()?.eventID)
     }
+
+    @Test fun emptyRepositoryHasNoVisibleEventState() {
+        repo.clearEvents()
+        repo.resetNextEventData()
+        assertEquals(0, repo.getEventsCount())
+        assertNull(repo.getNextEvent())
+    }
+
 }
