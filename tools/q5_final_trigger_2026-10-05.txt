@@ -1,5 +1,5 @@
-Exact-head production certification trigger — latest-head Superpowers completion gate.
+Exact-head production certification trigger — FINAL intended Superpowers completion gate.
 Shipping/customer-byte candidate remains bf02579c430b5dcf343f77e295ae08af161c5a13.
-QA head before trigger: 980e299154b5fa6d017713575823b3ead78a4dba.
-Includes all Run211 residual repairs plus synchronized real-host store media, repeated bound-widget refresh, repeated production widget-generation soak, primary/secondary color-picker coverage, and deterministic empty-calendar state.
-Require every final job GREEN. After GREEN: visually adjudicate current store media, reconcile manifest rows, classify only irreducible OEM/privileged/time-simulation permutations as external/confidence-depth, and durable-checkpoint the exact release edge.
+QA head before trigger: 02a4605c63a579fee350c62fc1d52c1195c6df59.
+Autonomous scope is frozen: Run211 residual repairs, corrected Android alarm oracle, synchronized real-host store media, repeated refresh, repeated widget-generation soak, color pickers, empty-calendar state, and provider failure→Weather.gov recovery are all included.
+No further QA scope additions after this trigger. Any RED must be classified and repaired from exact evidence; after GREEN only artifact/media/manifest/Q8/handoff closure remains.
