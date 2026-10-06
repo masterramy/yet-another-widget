@@ -1,6 +1,8 @@
 package com.ramybaheeg.yetanotherwidget
 
 import android.Manifest
+import android.appwidget.AppWidgetManager
+import android.content.ComponentName
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.chibatching.kotpref.Kotpref
@@ -91,7 +93,13 @@ class Q5StoreMediaSetupTest {
         Preferences.showEventsAsGlanceProvider = false
         Preferences.customNotes = ""
 
-        MainWidget.updateWidget(context)
+        val widgetManager = AppWidgetManager.getInstance(context)
+        val widgetComponent = ComponentName(context, MainWidget::class.java)
+        val widgetIds = widgetManager.getAppWidgetIds(widgetComponent)
+        assertTrue("store-media setup requires a real hosted YAW widget", widgetIds.isNotEmpty())
+        widgetIds.forEach { widgetId ->
+            MainWidget.updateAppWidget(context, widgetManager, widgetId)
+        }
 
         assertTrue(Preferences.showEvents)
         assertTrue(Preferences.showWeather)
