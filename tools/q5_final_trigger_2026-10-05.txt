@@ -1,5 +1,6 @@
-Exact-head production certification trigger — Superpowers TDD RED proof for calendar alarm cancellation.
-Shipping/customer-byte candidate remains bf2ac34bac54939b01f74bd7818d04e4f3620e79.
-QA head before trigger: 4c901b3a26e98342f9f5d3754160bac4f46476f0.
-New regression test Q5SchedulingTest must prove whether UpdatesReceiver.removeUpdates cancels the same ACTION_TIME_UPDATE PendingIntent identity scheduled by setUpdates.
-No production repair has been applied; a RED scheduling test is expected if the reviewed identity mismatch is real.
+Exact-head production certification trigger — Superpowers TDD GREEN/full regression after proven calendar alarm cancellation defect.
+Shipping/customer-byte candidate: bf02579c430b5dcf343f77e295ae08af161c5a13.
+RED proof: Run204 / 37405763792 Q5SchedulingTest observed removeUpdates leaving the ACTION_TIME_UPDATE PendingIntent alive.
+Production repair: removeUpdates now cancels with the same ACTION_TIME_UPDATE Intent identity scheduled by setUpdates.
+Also includes QA-only Android-16 glance stabilization, condition-based typography reveal, 200% touch-target full-visibility adjudication, and notification-sheet focus synchronization.
+Require all final jobs GREEN before promoting candidate or manifest rows.
