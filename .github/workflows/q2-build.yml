@@ -868,7 +868,7 @@ jobs:
 
 
   q5-runtime-core:
-    if: github.event_name == 'pull_request' || contains(github.event.head_commit.message, '[q5-final]')
+    if: github.event_name == 'pull_request' || contains(github.event.head_commit.message, '[q5-final]') || contains(github.event.head_commit.message, '[q5-runtime]')
     needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 40
