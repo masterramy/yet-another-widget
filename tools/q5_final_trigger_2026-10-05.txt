@@ -1,4 +1,4 @@
-Focused verification for Arabic RTL widget date rendering.
-Latest test SHA: 91e12d05e60a872629f17ea75e397db4ac9b634c.
-Customer shipping code remains bf02579c430b5dcf343f77e295ae08af161c5a13.
-Run245 reproduced a persistent blank RTL preview. This focused test measures the production date view in an Arabic RTL configuration.
+Focused exact-shipping YAW preview regression verification.
+New repaired shipping candidate 20a83d053804d175e4b422d9ba288968194c8d03 moves in-app MainFragment widget-view inflation onto Android UI dispatcher; source change is one dispatcher assignment with explanatory comment.
+RED baseline: Run245 Android 16 Arabic RTL in-app preview had no date/event descendants after nine samples over 24 seconds. Direct main-thread RTL widget measurement test passed in Run250, differentiating isolated view generation from background in-app integration. This is a concrete product customer-visible defect.
+Run both focused locale rendered evidence and controls suite at exact head. Do not certify until Arabic preview date appears and other languages remain green. Production Play publication still blocked.
