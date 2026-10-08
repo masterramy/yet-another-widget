@@ -1,5 +1,5 @@
-Exact-head production certification trigger — FINAL intended Superpowers completion gate.
-Shipping/customer-byte candidate remains bf02579c430b5dcf343f77e295ae08af161c5a13.
-QA head before trigger: 02a4605c63a579fee350c62fc1d52c1195c6df59.
-Autonomous scope is frozen: Run211 residual repairs, corrected Android alarm oracle, synchronized real-host store media, repeated refresh, repeated widget-generation soak, color pickers, empty-calendar state, and provider failure→Weather.gov recovery are all included.
-No further QA scope additions after this trigger. Any RED must be classified and repaired from exact evidence; after GREEN only artifact/media/manifest/Q8/handoff closure remains.
+Exact-head YAW Q5 final certification — Oct 7 continuation.
+Shipping/customer-byte candidate bf02579c430b5dcf343f77e295ae08af161c5a13 remains unchanged.
+QA head before trigger da0eecf9be86e9a57f73ae4dfe850b61b5bd27f0.
+Run225 failing gates: controls dynamic Alpha label expectation, scheduling active alarm detection requiring raw emulator dump, transient corrupt Android emulator archive in runtime-core SDK install.
+This trigger runs the full exact-head Q5 matrix; no publication or release authorization is implied. Preserve artifacts; diagnose any RED before product changes.
