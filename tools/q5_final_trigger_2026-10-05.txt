@@ -1,5 +1,5 @@
-Focused Q5 regression confirmation, Oct 8.
-Shipping/customer bytes remain bf02579c430b5dcf343f77e295ae08af161c5a13.
-Controls: wait for complete title/artist/album media metadata; verify real BatteryManager property and treat unsupported Android 16 simulated low-capacity injection as explicit physical acceptance, never PROVEN_RUNTIME.
-Runtime: scroll within BottomSheetPicker actual RecyclerView bounds and wait for real Pixel Launcher icon render before reboot/launcher screenshots.
-Run source code remains unchanged in production. This focused execution is not full Q5 certification; a final exact-head seven-job [q5-final] must follow after RTL visual issue is adjudicated.
+Focused Q5 regression verification after current live-edge reconciliation.
+Shipping candidate bf02579c430b5dcf343f77e295ae08af161c5a13 — unchanged.
+Controls: open each Calendar/Clock/Weather/Gestures picker from an independent ActivityScenario to prevent transient BottomSheet Back state from invalidating the subsequent test.
+Locale: sample rendered preview at first frame and at bounded 3-second intervals up to 24 seconds for every shipped locale and RTL Arabic fallback. Fail closed on persistent blank content and save failure logcat.
+Scope: [q5-controls] [q5-locale] only. Do not treat this as seven-job final certification.
