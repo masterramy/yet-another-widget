@@ -1,5 +1,5 @@
-Focused RTL preview regression proof — QA only.
-Shipping candidate bf02579c430b5dcf343f77e295ae08af161c5a13 unchanged.
-Run230 semantic locale CI was GREEN, but full-resolution locale-rtl-ar.png and its real UI hierarchy have no populated date/event preview content. English/Spanish/Chinese show the date.
-New locale assertion requires nonblank date or event content in every language. The intent is to reproduce the actual RTL visual defect, not broaden product scope.
-Focused suite [q5-locale] only; this is not full publication certification.
+Focused Q5 regression confirmation, Oct 8.
+Shipping/customer bytes remain bf02579c430b5dcf343f77e295ae08af161c5a13.
+Controls: wait for complete title/artist/album media metadata; verify real BatteryManager property and treat unsupported Android 16 simulated low-capacity injection as explicit physical acceptance, never PROVEN_RUNTIME.
+Runtime: scroll within BottomSheetPicker actual RecyclerView bounds and wait for real Pixel Launcher icon render before reboot/launcher screenshots.
+Run source code remains unchanged in production. This focused execution is not full Q5 certification; a final exact-head seven-job [q5-final] must follow after RTL visual issue is adjudicated.
