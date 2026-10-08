@@ -168,35 +168,48 @@ class Q5ControlsTest {
             onView(withText("Clock")).check(matches(isDisplayed()))
             openRow(R.id.action_clock_text_size)
             onView(withText("Text size")).check(matches(isDisplayed()))
-            pressBack()
+        }
+
+        ActivityScenario.launch(MainActivity::class.java).use {
+            openRow(R.id.action_show_clock)
             openRow(R.id.action_alt_timezone_clock)
             onView(withText("Time Zones")).check(matches(isDisplayed()))
-            exitSearchActivity()
-            onView(withId(R.id.action_back)).perform(click())
+        }
 
+        ActivityScenario.launch(MainActivity::class.java).use {
             openRow(R.id.action_show_events)
             onView(withText("Calendar")).check(matches(isDisplayed()))
             openRow(R.id.action_change_attendee_filter)
             onView(withText("Attendee status")).check(matches(isDisplayed()))
-            pressBack()
+        }
+
+        ActivityScenario.launch(MainActivity::class.java).use {
+            openRow(R.id.action_show_events)
+            onView(withText("Calendar")).check(matches(isDisplayed()))
             openRow(R.id.action_second_row_info)
             onView(withText("Event info")).check(matches(isDisplayed()))
-            pressBack()
+        }
+
+        ActivityScenario.launch(MainActivity::class.java).use {
+            openRow(R.id.action_show_events)
             openRow(R.id.action_show_until)
             onView(withText("Show events at least")).check(matches(isDisplayed()))
-            pressBack()
-            onView(withId(R.id.action_back)).perform(click())
+        }
 
+        ActivityScenario.launch(MainActivity::class.java).use {
             openRow(R.id.action_show_weather)
             onView(withText("Weather")).check(matches(isDisplayed()))
             openRow(R.id.action_change_unit)
             onView(withText(R.string.settings_unit_title)).check(matches(isDisplayed()))
-            pressBack()
+        }
+
+        ActivityScenario.launch(MainActivity::class.java).use {
+            openRow(R.id.action_show_weather)
             openRow(R.id.action_weather_refresh_period)
             onView(withText("Refresh frequency")).check(matches(isDisplayed()))
-            pressBack()
-            onView(withId(R.id.action_back)).perform(click())
+        }
 
+        ActivityScenario.launch(MainActivity::class.java).use {
             openRow(R.id.action_tab_default_app)
             onView(withText("Gestures")).check(matches(isDisplayed()))
             openRow(R.id.action_open_event_details)
