@@ -94,12 +94,12 @@ class Q5ControlsTest {
 
             openRow(R.id.action_font_color)
             onView(withText("Text color")).check(matches(isDisplayed()))
-            onView(withText("Alpha")).check(matches(isDisplayed()))
+            onView(withId(R.id.alpha_selector_container)).check(matches(isDisplayed()))
             pressBack()
 
             openRow(R.id.action_secondary_font_color)
             onView(withText("Text color")).check(matches(isDisplayed()))
-            onView(withText("Alpha")).check(matches(isDisplayed()))
+            onView(withId(R.id.alpha_selector_container)).check(matches(isDisplayed()))
             pressBack()
 
             openRow(R.id.action_text_shadow)
