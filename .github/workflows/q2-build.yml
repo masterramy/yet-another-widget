@@ -893,7 +893,18 @@ jobs:
         shell: bash
         run: |
           yes | sdkmanager --licenses >/dev/null || true
-          sdkmanager 'platforms;android-36' 'build-tools;36.0.0' 'platform-tools' 'emulator' 'system-images;android-36;google_apis;x86_64'
+          installed=0
+          for attempt in 1 2 3; do
+            if sdkmanager 'platforms;android-36' 'build-tools;36.0.0' 'platform-tools' 'emulator' 'system-images;android-36;google_apis;x86_64' &&
+               test -x "$ANDROID_HOME/emulator/emulator"; then
+              installed=1
+              break
+            fi
+            echo "Android SDK/emulator install failed on attempt $attempt; retrying clean transient archive."
+            rm -rf "$ANDROID_HOME/.temp" "$ANDROID_HOME/emulator/.installer" || true
+            sleep 8
+          done
+          test "$installed" = 1
           test -x "$ANDROID_HOME/build-tools/36.0.0/apksigner"
           echo "$ANDROID_HOME/build-tools/36.0.0" >> "$GITHUB_PATH"
       - name: Download exact-head debug APK from passing build job
