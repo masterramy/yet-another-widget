@@ -1,5 +1,4 @@
-YAW focused runtime-core harness verification — October 8 2026.
-Shipping/customer-byte candidate bf02579c430b5dcf343f77e295ae08af161c5a13 unchanged.
-Run242 failed after q5-main-text-size-max-0.xml was saved, due to dump_ui dynamically overwriting its caller's local loop variable attempt, causing a nonexistent -1.xml read. QA commit 450b34d313de83cc74312f4fcf6a03d3994920b8 adds local attempt to dump_ui. This fixes the observed cause without weakening picker assertions.
-Run245 independently covers controls and RTL after head 65108755; it remains valid evidence for unchanged test paths.
-Focused [q5-runtime] only; full [q5-final] and exact final visual audit remain required.
+Focused verification for Arabic RTL widget date rendering.
+Latest test SHA: 91e12d05e60a872629f17ea75e397db4ac9b634c.
+Customer shipping code remains bf02579c430b5dcf343f77e295ae08af161c5a13.
+Run245 reproduced a persistent blank RTL preview. This focused test measures the production date view in an Arabic RTL configuration.
