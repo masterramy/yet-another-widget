@@ -143,10 +143,18 @@ class Q5GlanceProviderTest {
         shell("dumpsys battery unplug")
         shell("dumpsys battery set level 10")
         shell("dumpsys battery set status 3")
-        assertTrue(waitUntil {
+        val lowObserved = waitUntil {
             BatteryHelper.updateBatteryInfo(target)
             Preferences.isBatteryLevelLow
-        })
+        }
+        val battery = target.getSystemService(android.content.Context.BATTERY_SERVICE) as android.os.BatteryManager
+        assertTrue(
+            "Emulated 10% low-battery state not observed; BatteryManager capacity=" +
+                battery.getIntProperty(android.os.BatteryManager.BATTERY_PROPERTY_CAPACITY) +
+                " preferenceLow=" + Preferences.isBatteryLevelLow +
+                " dumpsys=\n" + shell("dumpsys battery"),
+            lowObserved
+        )
 
         shell("dumpsys battery set level 80")
         shell("dumpsys battery set status 3")
