@@ -1010,7 +1010,7 @@ jobs:
 
 
   q5-controls-instrumentation:
-    if: github.event_name == 'pull_request' || contains(github.event.head_commit.message, '[q5-final]')
+    if: github.event_name == 'pull_request' || contains(github.event.head_commit.message, '[q5-final]') || contains(github.event.head_commit.message, '[q5-controls]')
     runs-on: ubuntu-latest
     timeout-minutes: 35
     steps:
@@ -1157,7 +1157,7 @@ jobs:
 
 
   q5-migration-instrumentation:
-    if: github.event_name == 'pull_request' || contains(github.event.head_commit.message, '[q5-final]')
+    if: github.event_name == 'pull_request' || contains(github.event.head_commit.message, '[q5-final]') || contains(github.event.head_commit.message, '[q5-migration]')
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
