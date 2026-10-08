@@ -958,7 +958,7 @@ jobs:
 
 
   q5-locale-accessibility:
-    if: github.event_name == 'pull_request' || contains(github.event.head_commit.message, '[q5-final]')
+    if: github.event_name == 'pull_request' || contains(github.event.head_commit.message, '[q5-final]') || contains(github.event.head_commit.message, '[q5-locale]')
     needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 35
