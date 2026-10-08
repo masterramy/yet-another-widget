@@ -65,11 +65,8 @@ PY
 }
 
 reveal_text_with_swipe() {
-  local stem="$1"
-  local expected="$2"
-  local direction="$3"
-  local max_attempts="${4:-16}"
-  local attempt xml
+  local stem="$1" expected="$2" direction="$3" max_attempts="${4:-16}"
+  local attempt xml coords
   for attempt in $(seq 0 "$max_attempts"); do
     dump_ui "${stem}-${attempt}"
     xml="$EVIDENCE_DIR/${stem}-${attempt}.xml"
@@ -77,14 +74,27 @@ reveal_text_with_swipe() {
       cp "$xml" "$EVIDENCE_DIR/${stem}.xml"
       return 0
     fi
-    if [ "$direction" = "up" ]; then
-      adb shell input swipe 540 1750 540 650 350
-    else
-      adb shell input swipe 540 650 540 1750 350
-    fi
+    coords="$(python3 - "$xml" "$direction" <<'PY'
+import re,sys,xml.etree.ElementTree as ET
+root=ET.parse(sys.argv[1]).getroot(); direction=sys.argv[2]
+for n in root.iter("node"):
+    if n.attrib.get("resource-id","").endswith("/menu") and n.attrib.get("scrollable")=="true":
+        m=re.match(r"\[(\d+),(\d+)\]\[(\d+),(\d+)\]",n.attrib.get("bounds",""))
+        if m:
+            x1,y1,x2,y2=map(int,m.groups())
+            if y2-y1<180:raise SystemExit("BottomSheetPicker scroll area is too short")
+            x=(x1+x2)//2
+            top=y1+65;bottom=y2-65
+            start,end=(bottom,top) if direction=="up" else (top,bottom)
+            print(x,start,x,end)
+            raise SystemExit(0)
+raise SystemExit("Picker menu is no longer visible; refusing to scroll underlying Activity")
+PY
+)"
+    adb shell input swipe $coords 350
     sleep 1
   done
-  echo "Could not reveal UI text after bounded swipes: $expected" >&2
+  echo "Could not reveal picker text after bounded in-menu swipes: $expected" >&2
   return 1
 }
 
