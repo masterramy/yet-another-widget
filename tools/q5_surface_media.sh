@@ -401,6 +401,7 @@ assert_widget_bound() {
 
 wait_real_launcher_home() {
   local stem="$1" ok=0
+  local attempt
   for attempt in $(seq 1 20); do
     adb shell input keyevent KEYCODE_HOME >/dev/null 2>&1 || true
     sleep 2
@@ -424,6 +425,7 @@ wait_real_launcher_home() {
 wait_widget_bound() {
   local stem="$1"
   local ok=0
+  local attempt
   for attempt in $(seq 1 20); do
     adb shell dumpsys appwidget > "$EVIDENCE_DIR/${stem}-appwidget-${attempt}.txt" 2>&1
     if grep -Fq "pkg:com.google.android.apps.nexuslauncher" "$EVIDENCE_DIR/${stem}-appwidget-${attempt}.txt" &&
