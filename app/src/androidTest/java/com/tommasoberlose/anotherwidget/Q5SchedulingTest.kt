@@ -117,9 +117,11 @@ class Q5SchedulingTest {
     @Test
     fun removeUpdatesCancelsTheSameScheduledCalendarAlarmIdentity() {
         UpdatesReceiver.setUpdates(context)
+        val pendingAfterSet = scheduledTimeUpdateCount()
         assertTrue(
-            "setUpdates must schedule an ACTION_TIME_UPDATE alarm for the event",
-            scheduledTimeUpdateCount() > 0
+            "setUpdates must schedule an ACTION_TIME_UPDATE alarm for the event; activeCount=$pendingAfterSet; dumpsys alarm=\n" +
+                shell("dumpsys alarm").take(18000),
+            pendingAfterSet > 0
         )
 
         // Regression control: this is the historical actionless cancellation
