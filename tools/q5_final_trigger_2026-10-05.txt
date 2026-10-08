@@ -1,4 +1,5 @@
-Focused exact-shipping YAW preview regression verification.
-New repaired shipping candidate 20a83d053804d175e4b422d9ba288968194c8d03 moves in-app MainFragment widget-view inflation onto Android UI dispatcher; source change is one dispatcher assignment with explanatory comment.
-RED baseline: Run245 Android 16 Arabic RTL in-app preview had no date/event descendants after nine samples over 24 seconds. Direct main-thread RTL widget measurement test passed in Run250, differentiating isolated view generation from background in-app integration. This is a concrete product customer-visible defect.
-Run both focused locale rendered evidence and controls suite at exact head. Do not certify until Arabic preview date appears and other languages remain green. Production Play publication still blocked.
+Focused RTL centered widget date layout test.
+Shipping candidate 503ee62932b5a5aaa5b8ac7be7159a5bd63cec49 fixes date TextView 0dp/weight inside wrap-content row to wrap_content, matching working left-aligned widget date layout.
+Previous MainFragment dispatcher experiment 20a83d was reverted at 3c87f5d because Run252 UI thread change did not fix persistent RTL blank preview after nine samples/24seconds.
+Exact old screenshot + UI XML RED baseline: Run245 /37737709737 and Run252 /37740261477. New focused [q5-locale] [q5-controls] must prove Arabic date visible and all other locales/UI controls unchanged.
+Do not certify source or publish until focused and full Q5 GREEN and artifact review.
