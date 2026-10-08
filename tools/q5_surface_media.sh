@@ -15,6 +15,7 @@ dump_ui() {
   local remote="/data/local/tmp/${stem}.xml"
   local local_xml="$EVIDENCE_DIR/${stem}.xml"
   local ok=0
+  local attempt
   for attempt in $(seq 1 8); do
     adb shell rm -f "$remote" >/dev/null 2>&1 || true
     set +e
