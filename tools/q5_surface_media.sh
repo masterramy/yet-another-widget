@@ -388,6 +388,28 @@ assert_widget_bound() {
   grep -Fq "views=android.widget.RemoteViews" "$EVIDENCE_DIR/${stem}-appwidget.txt"
 }
 
+wait_real_launcher_home() {
+  local stem="$1" ok=0
+  for attempt in $(seq 1 20); do
+    adb shell input keyevent KEYCODE_HOME >/dev/null 2>&1 || true
+    sleep 2
+    dump_ui "${stem}-launcher-attempt-${attempt}"
+    local xml="$EVIDENCE_DIR/${stem}-launcher-attempt-${attempt}.xml"
+    if ui_has_text "$xml" "Gmail" && ui_has_text "$xml" "Photos" && ui_has_text "$xml" "YouTube"; then
+      adb shell dumpsys window > "$EVIDENCE_DIR/${stem}-launcher-window.txt" 2>&1 || true
+      if grep -Fq "com.google.android.apps.nexuslauncher" "$EVIDENCE_DIR/${stem}-launcher-window.txt"; then
+        cp "$xml" "$EVIDENCE_DIR/${stem}-launcher.xml"
+        printf "attempt=%s\n" "$attempt" > "$EVIDENCE_DIR/${stem}-launcher-ready.txt"
+        ok=1
+        break
+      fi
+    fi
+  done
+  if [ "$ok" -ne 1 ]; then
+    echo "Pixel Launcher home icons did not become visibly available after bounded wait" >&2
+    return 1
+  fi
+}
 wait_widget_bound() {
   local stem="$1"
   local ok=0
@@ -448,6 +470,7 @@ test -n "$launcher_pid_after"
 test "$launcher_pid_after" != "$launcher_pid_before"
 printf 'before=%s\nafter=%s\n' "$launcher_pid_before" "$launcher_pid_after" > "$EVIDENCE_DIR/q5-launcher-restart-pids.txt"
 assert_widget_bound "q5-widget-after-launcher-restart"
+wait_real_launcher_home "q5-widget-after-launcher-restart"
 adb exec-out screencap -p > "$EVIDENCE_DIR/q5-widget-after-launcher-restart.png"
 
 # Full emulator reboot: wait for Android boot completion, return to Launcher,
@@ -472,6 +495,7 @@ adb shell input keyevent KEYCODE_HOME
 sleep 10
 adb shell getprop sys.boot_completed > "$EVIDENCE_DIR/q5-reboot-boot-completed.txt"
 wait_widget_bound "q5-widget-after-reboot"
+wait_real_launcher_home "q5-widget-after-reboot"
 adb exec-out screencap -p > "$EVIDENCE_DIR/q5-widget-after-reboot.png"
 
 # Full app acceptance after the same reboot: launch the exact candidate and
