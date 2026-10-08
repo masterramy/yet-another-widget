@@ -1,5 +1,5 @@
-Exact-head YAW Q5 final certification — Oct 7 continuation.
-Shipping/customer-byte candidate bf02579c430b5dcf343f77e295ae08af161c5a13 remains unchanged.
-QA head before trigger da0eecf9be86e9a57f73ae4dfe850b61b5bd27f0.
-Run225 failing gates: controls dynamic Alpha label expectation, scheduling active alarm detection requiring raw emulator dump, transient corrupt Android emulator archive in runtime-core SDK install.
-This trigger runs the full exact-head Q5 matrix; no publication or release authorization is implied. Preserve artifacts; diagnose any RED before product changes.
+Focused Q5 Superpowers regression verification (CI-only).
+Shipping candidate: bf02579c430b5dcf343f77e295ae08af161c5a13 unchanged.
+Controls: verify diagnostic battery test with Android 16 emulator and already-proven UI coverage.
+Scheduling: verify Android 16 active-alarm heading/record parser against the formerly RED ACTION_TIME_UPDATE cancellation scenario.
+Focused results are not full production certification. Run230 remains the prior full-gate evidence; another exact-head full seven-job gate is required after focused tests are GREEN.
