@@ -207,7 +207,8 @@ class MainFragment : Fragment() {
 
             WidgetHelper.runWithCustomTypeface(requireContext()) { typeface ->
                 uiJob?.cancel()
-                uiJob = lifecycleScope.launch(Dispatchers.IO) {
+                // Widget view inflation must run on the UI dispatcher, especially under RTL layout.
+                uiJob = lifecycleScope.launch(Dispatchers.Main) {
                     val generatedView = MainWidget.getWidgetView(requireContext(), typeface)?.root
 
                     if (generatedView != null) {
