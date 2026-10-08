@@ -111,8 +111,26 @@ launch_capture() {
   dump_ui "$stem"
   assert_text "$EVIDENCE_DIR/${stem}.xml" "$YAW_APP_LABEL"
   assert_text "$EVIDENCE_DIR/${stem}.xml" "$expected"
-  assert_preview_content "$EVIDENCE_DIR/${stem}.xml"
+  adb exec-out screencap -p >"$EVIDENCE_DIR/${stem}-initial.png"
+  local preview_ready=0
+  for sample in $(seq 0 8); do
+    if [ "$sample" -gt 0 ]; then
+      sleep 3
+      dump_ui "${stem}-preview-retry-${sample}"
+      cp "$EVIDENCE_DIR/${stem}-preview-retry-${sample}.xml" "$EVIDENCE_DIR/${stem}.xml"
+    fi
+    if assert_preview_content "$EVIDENCE_DIR/${stem}.xml"; then
+      printf 'sample=%s elapsed_after_first_snapshot_seconds=%s\n' "$sample" "$((sample * 3))" >"$EVIDENCE_DIR/${stem}-preview-ready.txt"
+      preview_ready=1
+      break
+    fi
+  done
   adb exec-out screencap -p >"$EVIDENCE_DIR/${stem}.png"
+  if [ "$preview_ready" -ne 1 ]; then
+    adb logcat -d > "$EVIDENCE_DIR/${stem}-preview-failure-logcat.txt" 2>&1 || true
+    echo "Preview remained blank after bounded 24-second retry: $stem" >&2
+    return 1
+  fi
   adb shell dumpsys activity activities >"$EVIDENCE_DIR/${stem}-activities.txt" 2>&1 || true
   adb shell dumpsys window >"$EVIDENCE_DIR/${stem}-window.txt" 2>&1 || true
   grep -E -q "ResumedActivity:.*${PACKAGE//./\\.}.*MainActivity|topResumedActivity=.*${PACKAGE//./\\.}.*MainActivity" "$EVIDENCE_DIR/${stem}-activities.txt"
