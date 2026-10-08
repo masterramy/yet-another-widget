@@ -1,5 +1,5 @@
-Focused Q5 regression verification after current live-edge reconciliation.
-Shipping candidate bf02579c430b5dcf343f77e295ae08af161c5a13 — unchanged.
-Controls: open each Calendar/Clock/Weather/Gestures picker from an independent ActivityScenario to prevent transient BottomSheet Back state from invalidating the subsequent test.
-Locale: sample rendered preview at first frame and at bounded 3-second intervals up to 24 seconds for every shipped locale and RTL Arabic fallback. Fail closed on persistent blank content and save failure logcat.
-Scope: [q5-controls] [q5-locale] only. Do not treat this as seven-job final certification.
+YAW focused runtime-core harness verification — October 8 2026.
+Shipping/customer-byte candidate bf02579c430b5dcf343f77e295ae08af161c5a13 unchanged.
+Run242 failed after q5-main-text-size-max-0.xml was saved, due to dump_ui dynamically overwriting its caller's local loop variable attempt, causing a nonexistent -1.xml read. QA commit 450b34d313de83cc74312f4fcf6a03d3994920b8 adds local attempt to dump_ui. This fixes the observed cause without weakening picker assertions.
+Run245 independently covers controls and RTL after head 65108755; it remains valid evidence for unchanged test paths.
+Focused [q5-runtime] only; full [q5-final] and exact final visual audit remain required.
