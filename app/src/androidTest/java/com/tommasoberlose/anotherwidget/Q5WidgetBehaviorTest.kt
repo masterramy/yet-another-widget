@@ -1,6 +1,10 @@
 package com.ramybaheeg.yetanotherwidget
 
+import android.content.res.Configuration
 import android.view.Gravity
+import android.view.ViewGroup
+import android.widget.TextView
+import java.util.Locale
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.LinearLayout
@@ -162,6 +166,43 @@ class Q5WidgetBehaviorTest {
             assertNotNull(remoteViews)
             assertNotNull(applyRemoteViews(requireNotNull(remoteViews)))
         }
+    }
+
+    @Test
+    fun rtlDatePreviewLayoutPreservesVisibleContent() {
+        Preferences.widgetAlign = Constants.WidgetAlign.CENTER.rawValue
+        Preferences.showClock = false
+        val config = Configuration(target.resources.configuration).apply {
+            setLocale(Locale("ar", "EG"))
+            setLayoutDirection(Locale("ar", "EG"))
+        }
+        val rtlContext = target.createConfigurationContext(config)
+        var dateText = ""
+        var dateWidth = -1
+        var dateVisibility = -1
+        instrumentation.runOnMainSync {
+            val widget = requireNotNull(MainWidget.getWidgetView(rtlContext, null)?.root)
+            val host = LinearLayout(rtlContext).apply {
+                orientation = LinearLayout.VERTICAL
+                gravity = Gravity.CENTER_HORIZONTAL
+                addView(widget, LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                ))
+            }
+            host.measure(
+                View.MeasureSpec.makeMeasureSpec(1080, View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.makeMeasureSpec(320, View.MeasureSpec.AT_MOST)
+            )
+            host.layout(0, 0, host.measuredWidth, host.measuredHeight)
+            val date = requireNotNull(widget.findViewById<TextView>(R.id.date))
+            dateText = date.text.toString()
+            dateWidth = date.width
+            dateVisibility = date.visibility
+        }
+        assertTrue("RTL date text is empty", dateText.isNotBlank())
+        assertEquals("RTL date view is hidden", View.VISIBLE, dateVisibility)
+        assertTrue("RTL date view collapsed to zero width: ${dateWidth}px", dateWidth > 0)
     }
 
 }
