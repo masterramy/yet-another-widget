@@ -51,6 +51,20 @@ print("missing expected text:", expected, file=sys.stderr); raise SystemExit(1)
 PY
 }
 
+assert_preview_content() {
+  python3 - "$1" <<'PY'
+import sys,xml.etree.ElementTree as ET
+root=ET.parse(sys.argv[1]).getroot()
+visible=[]
+for n in root.iter("node"):
+    rid=n.attrib.get("resource-id","")
+    if rid.endswith("/date") or rid.endswith("/next_event"):
+        if n.attrib.get("text","").strip() and n.attrib.get("bounds","") not in ("","[0,0][0,0]"):
+            visible.append((rid,n.attrib["text"]))
+if not visible:
+    raise SystemExit("Widget preview has no nonblank date/event content in real rendered hierarchy: "+sys.argv[1])
+PY
+}
 expected_string() {
   local qualifier="$1" name="$2"
   python3 - "$qualifier" "$name" <<'PY'
@@ -97,6 +111,7 @@ launch_capture() {
   dump_ui "$stem"
   assert_text "$EVIDENCE_DIR/${stem}.xml" "$YAW_APP_LABEL"
   assert_text "$EVIDENCE_DIR/${stem}.xml" "$expected"
+  assert_preview_content "$EVIDENCE_DIR/${stem}.xml"
   adb exec-out screencap -p >"$EVIDENCE_DIR/${stem}.png"
   adb shell dumpsys activity activities >"$EVIDENCE_DIR/${stem}-activities.txt" 2>&1 || true
   adb shell dumpsys window >"$EVIDENCE_DIR/${stem}-window.txt" 2>&1 || true
