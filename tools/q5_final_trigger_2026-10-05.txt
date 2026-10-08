@@ -1,5 +1,5 @@
-Focused Q5 Superpowers regression verification (CI-only).
-Shipping candidate: bf02579c430b5dcf343f77e295ae08af161c5a13 unchanged.
-Controls: verify diagnostic battery test with Android 16 emulator and already-proven UI coverage.
-Scheduling: verify Android 16 active-alarm heading/record parser against the formerly RED ACTION_TIME_UPDATE cancellation scenario.
-Focused results are not full production certification. Run230 remains the prior full-gate evidence; another exact-head full seven-job gate is required after focused tests are GREEN.
+Focused RTL preview regression proof — QA only.
+Shipping candidate bf02579c430b5dcf343f77e295ae08af161c5a13 unchanged.
+Run230 semantic locale CI was GREEN, but full-resolution locale-rtl-ar.png and its real UI hierarchy have no populated date/event preview content. English/Spanish/Chinese show the date.
+New locale assertion requires nonblank date or event content in every language. The intent is to reproduce the actual RTL visual defect, not broaden product scope.
+Focused suite [q5-locale] only; this is not full publication certification.
