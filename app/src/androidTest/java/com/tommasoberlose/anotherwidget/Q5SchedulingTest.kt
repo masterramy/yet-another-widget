@@ -35,23 +35,40 @@ class Q5SchedulingTest {
 
     private fun scheduledTimeUpdateCount(): Int {
         val dump = shell("dumpsys alarm")
+        val pendingCount = Regex("""(?m)^\s*(\d+) pending alarms:\s*$""").find(dump)
+        if (pendingCount != null) {
+            val activeAlarmCount = pendingCount.groupValues[1].toInt()
+            if (activeAlarmCount == 0) return 0
+            val header = Regex("""^\s*(?:RTC_WAKEUP|RTC|ELAPSED_WAKEUP|ELAPSED) #\d+: Alarm\{""")
+            var seenAlarms = 0
+            var awaitingTag = false
+            var matchingAlarms = 0
+            for (line in dump.substring(pendingCount.range.last + 1).lineSequence()) {
+                if (header.containsMatchIn(line)) {
+                    seenAlarms++
+                    if (seenAlarms > activeAlarmCount) break
+                    awaitingTag = true
+                } else if (awaitingTag && line.trimStart().startsWith("tag=")) {
+                    if (line.trim() == "tag=*alarm*:${Actions.ACTION_TIME_UPDATE}") matchingAlarms++
+                    awaitingTag = false
+                    if (seenAlarms == activeAlarmCount) break
+                }
+            }
+            assertEquals("must parse every active Android 16 alarm entry", activeAlarmCount, seenAlarms)
+            return matchingAlarms
+        }
+        // Legacy Android dumps group active alarms into pending batches.
         val marker = "Pending alarm batches:"
         val start = dump.indexOf(marker)
         if (start < 0) return 0
-
         val tail = dump.substring(start)
         val end = listOf(
             "Pending user blocked background alarms:",
             "Idle mode state:",
             "Next wake from idle:",
             "Past-due non-wakeup alarms:"
-        )
-            .map { tail.indexOf(it) }
-            .filter { it > 0 }
-            .minOrNull() ?: tail.length
-
-        return tail.substring(0, end)
-            .lineSequence()
+        ).map { tail.indexOf(it) }.filter { it > 0 }.minOrNull() ?: tail.length
+        return tail.substring(0, end).lineSequence()
             .count { it.contains("tag=*alarm*:${Actions.ACTION_TIME_UPDATE}") }
     }
 
