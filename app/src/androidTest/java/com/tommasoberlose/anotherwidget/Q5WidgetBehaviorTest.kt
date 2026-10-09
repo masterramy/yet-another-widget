@@ -195,9 +195,19 @@ class Q5WidgetBehaviorTest {
                         visible = date?.text?.isNotBlank() == true &&
                             date.isShown && onScreen && rect.width() > 0 &&
                             (root?.alpha ?: 0f) > 0f
+                        val chain = mutableListOf<String>()
+                        var ancestor: View? = date
+                        while (ancestor != null && chain.size < 10) {
+                            val point = IntArray(2)
+                            ancestor.getLocationOnScreen(point)
+                            chain.add("${ancestor.javaClass.simpleName}#${ancestor.id}:" +
+                                "x=${point[0]},left=${ancestor.left},w=${ancestor.width}," +
+                                "dir=${ancestor.layoutDirection},alpha=${ancestor.alpha}")
+                            ancestor = ancestor.parent as? View
+                        }
                         diagnostic = "date='${date?.text}' row=${row?.width} " +
-                            "dateLeft=${date?.left} right=${date?.right} " +
-                            "shown=${date?.isShown} alpha=${root?.alpha} rect=$rect"
+                            "shown=${date?.isShown} rootAlpha=${root?.alpha} rect=$rect; " +
+                            chain.joinToString(" | ")
                     }
                     if (visible) return@use
                     Thread.sleep(600)
