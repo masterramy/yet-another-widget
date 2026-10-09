@@ -1,4 +1,3 @@
-Protocol v1.7 rev30 YAW Android RTL Activity-level diagnostic.
-Run260 locale RED (persistent blank visual) despite build/controls GREEN. Reverted date-row layoutDirection at 0ac9d4fc70c84ea1ccde3cdfb0de5d963aa74f5f; production source now exact baseline bf02579c430b5dcf343f77e295ae08af161c5a13.
-Added ActivityScenario instrumentation to Q5WidgetBehaviorTest at 342a120e204c71bf04d1184980b1953516aef148. Checks actual MainActivity RTL date view, global visible rect, alpha, parent size, and date text. Earlier isolated generateWidgetView test green but cannot reproduce the in-app failure.
-Run focused [q5-controls] to capture a real RED and root cause without source guesses. Next compare Activity-level failures with locale UI hierarchy; fix only after diagnosis and retain full [q5-final] gate.
+YAW RTL ancestor positioning diagnostic under Workspace Protocol rev30.
+Run264 exact Activity test RED: date text Arabic valid, row local width416, shown=true, alpha1.0, but date globalRect entirely offscreen x=-580..-164. Production remains exact shipping baseline bf02579c (no code fixes active). This is an ancestor positioning failure, not date text, font size, alpha, or worker scheduling.
+QA test commit 658910f adds getLocationOnScreen/left/width/RTL-direction/alpha for date and 9 ancestor views. Workflow 608dcdc supports one-class probe mode. Run [q5-rtl-probe] ONLY. Inspect exact ancestor chain from failed test to identify the first negative-offset node before proposing any shipping change. The three failed prior source tweaks remain reverted.
