@@ -27,7 +27,7 @@
     <string name="action_capitalize_the_date">Capitalize the date</string>
     <string name="settings_date_format_title">Date format</string>
     <string name="header_widget_background">Widget background</string>
-    <string name="settings_secondary_row_top_margin_title">Rows spacing</string>
+    <string name="settings_secondary_row_top_margin_title">Row spacing</string>
     <string name="font_family_settings_title">Font family</string>
     <string name="settings_widget_align_title">Widget alignment</string>
     <string name="settings_widget_align_left_subtitle">Left</string>
@@ -91,7 +91,7 @@
     <string name="settings_show_multiple_events_title">Multiple events switcher</string>
     <string name="soon">soon</string>
     <string name="now">now</string>
-    <string name="settings_widget_update_frequency_title">Time until event update frequency</string>
+    <string name="settings_widget_update_frequency_title">Event countdown update frequency</string>
     <string name="settings_widget_update_frequency_subtitle">High frequency causes more battery consumption.</string>
     <string name="settings_widget_update_frequency_low">Low</string>
     <string name="settings_widget_update_frequency_default">Default</string>
@@ -99,11 +99,11 @@
     <string name="filters_header">Filters</string>
     <string name="event_detail_header">Event detail</string>
     <string name="settings_attendee_status_title">Attendee status</string>
-    <string name="settings_attendee_status_subtitle">Filter accepted or declined events</string>
-    <string name="settings_busy_events_title">Relevant events</string>
-    <string name="settings_busy_events_subtitle">Show only events that keep busy</string>
+    <string name="settings_attendee_status_subtitle">Filter events by attendance status</string>
+    <string name="settings_busy_events_title">Busy events only</string>
+    <string name="settings_busy_events_subtitle">Show only events marked as busy</string>
     <string name="attendee_status_accepted">Accepted events</string>
-    <string name="attendee_status_invited">Events invitations</string>
+    <string name="attendee_status_invited">Invited events</string>
     <string name="attendee_status_declined">Declined events</string>
 
     <string name="calendar_sync_notification_channel_id" translatable="false">calendar-sync</string>
@@ -180,7 +180,7 @@
     <string name="settings_ampm_indicator_title">Show AM/PM indicator</string>
     <string name="clock_text_header">Clock text style</string>
     <string name="time_zones_header">Time Zones</string>
-    <string name="settings_alt_timezone_title">Multiple clock</string>
+    <string name="settings_alt_timezone_title">Additional time zone</string>
     <string name="no_time_zone_label">None</string>
     <string name="time_zone_search_error_message">Error searching the time zone.</string>
 
@@ -282,7 +282,7 @@
     <string name="settings_provenance_disclosure">Yet Another Widget is an independent restoration based on the MIT-licensed Another Widget source by Tommaso Berlose. It is not affiliated with or endorsed by the original developer.</string>
     <string name="settings_publisher_identity">Publisher: Ramy Baheeg</string>
     <string name="settings_title_show_wallpaper">Show wallpaper</string>
-    <string name="support_refresh_widget_subtitle">Force the restart of the widget service</string>
+    <string name="support_refresh_widget_subtitle">Refresh widget content now</string>
     <string name="settings_feedback_subtitle">Feel free to help our project!</string>
     <string name="settings_feedback_title">Feedback and feature requests</string>
     <string name="xiaomi_manufacturer" translatable="false">xiaomi</string>

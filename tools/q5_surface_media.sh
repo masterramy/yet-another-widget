@@ -974,7 +974,7 @@ dump_ui "q5-layout-row-entry"
 tap_id "$EVIDENCE_DIR/q5-layout-row-entry.xml" "action_second_row_top_margin_size"
 sleep 2
 dump_ui "q5-row-spacing-menu"
-assert_text "$EVIDENCE_DIR/q5-row-spacing-menu.xml" "Rows spacing"
+assert_text "$EVIDENCE_DIR/q5-row-spacing-menu.xml" "Row spacing"
 assert_text "$EVIDENCE_DIR/q5-row-spacing-menu.xml" "None"
 assert_text "$EVIDENCE_DIR/q5-row-spacing-menu.xml" "Large"
 adb shell input keyevent KEYCODE_BACK

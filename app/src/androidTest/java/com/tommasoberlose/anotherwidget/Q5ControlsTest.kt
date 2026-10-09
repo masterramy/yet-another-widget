@@ -131,7 +131,7 @@ class Q5ControlsTest {
             pressBack()
 
             openRow(R.id.action_second_row_top_margin_size)
-            onView(withText("Rows spacing")).check(matches(isDisplayed()))
+            onView(withText("Row spacing")).check(matches(isDisplayed()))
             onView(withText("None")).check(matches(isDisplayed()))
             onView(withText("Large")).check(matches(isDisplayed()))
             pressBack()
