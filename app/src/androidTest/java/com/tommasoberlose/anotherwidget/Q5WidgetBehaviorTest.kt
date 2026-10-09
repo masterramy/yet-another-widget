@@ -180,6 +180,7 @@ class Q5WidgetBehaviorTest {
         var dateText = ""
         var dateWidth = -1
         var dateVisibility = -1
+        var rtlDateGeometry = "not measured"
         instrumentation.runOnMainSync {
             val widget = requireNotNull(MainWidget.getWidgetView(rtlContext, null)?.root)
             val host = LinearLayout(rtlContext).apply {
@@ -199,6 +200,10 @@ class Q5WidgetBehaviorTest {
             dateText = date.text.toString()
             dateWidth = date.width
             dateVisibility = date.visibility
+            val row = requireNotNull(widget.findViewById<View>(R.id.date_layout))
+            rtlDateGeometry = "date=${date.left}..${date.right} rowWidth=${row.width}"
+            assertTrue("RTL date lies outside row: $rtlDateGeometry",
+                date.left >= 0 && date.right <= row.width)
         }
         assertTrue("RTL date text is empty", dateText.isNotBlank())
         assertEquals("RTL date view is hidden", View.VISIBLE, dateVisibility)
