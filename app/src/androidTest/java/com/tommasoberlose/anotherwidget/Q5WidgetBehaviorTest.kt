@@ -173,6 +173,45 @@ class Q5WidgetBehaviorTest {
     }
 
     @Test
+    fun rtlActualActivityPreviewRetainsVisibleDate() {
+        val locales = target.getSystemService(LocaleManager::class.java)
+        val old = locales.applicationLocales
+        val oldAlign = Preferences.widgetAlign
+        val oldPreview = Preferences.showPreview
+        try {
+            Preferences.widgetAlign = Constants.WidgetAlign.CENTER.rawValue
+            Preferences.showPreview = true
+            locales.applicationLocales = LocaleList.forLanguageTags("ar-EG")
+            ActivityScenario.launch(MainActivity::class.java).use { scenario ->
+                var visible = false
+                var diagnostic = "activity date view absent"
+                repeat(16) {
+                    scenario.onActivity { activity ->
+                        val date = activity.findViewById<android.widget.TextView>(R.id.date)
+                        val row = activity.findViewById<View>(R.id.date_layout)
+                        val rect = android.graphics.Rect()
+                        val onScreen = date?.getGlobalVisibleRect(rect) ?: false
+                        val root = activity.findViewById<View>(R.id.widget)
+                        visible = date?.text?.isNotBlank() == true &&
+                            date.isShown && onScreen && rect.width() > 0 &&
+                            (root?.alpha ?: 0f) > 0f
+                        diagnostic = "date='${date?.text}' row=${row?.width} " +
+                            "dateLeft=${date?.left} right=${date?.right} " +
+                            "shown=${date?.isShown} alpha=${root?.alpha} rect=$rect"
+                    }
+                    if (visible) return@use
+                    Thread.sleep(600)
+                }
+                assertTrue("Arabic Activity preview invalid: $diagnostic", visible)
+            }
+        } finally {
+            locales.applicationLocales = old
+            Preferences.widgetAlign = oldAlign
+            Preferences.showPreview = oldPreview
+        }
+    }
+
+    @Test
     fun rtlDatePreviewLayoutPreservesVisibleContent() {
         Preferences.widgetAlign = Constants.WidgetAlign.CENTER.rawValue
         Preferences.showClock = false
