@@ -750,6 +750,9 @@ jobs:
           grep -Fq 'yaw_read_test_identity "$TEST_APK"' tools/q1_pin_probe.sh
           echo "Runtime QA harness derives public package/activity/label/test runner identity from built APKs."
 
+      - name: H9 widget tap PendingIntent safety contract
+        shell: bash
+        run: python3 tools/q5_tap_route_guard.py
       - name: Localized event-horizon and NWS attribution contract
         shell: bash
         run: python3 tools/q5_localized_copy_guard.py

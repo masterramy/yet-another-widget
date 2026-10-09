@@ -242,16 +242,11 @@ class StandardWidget(val context: Context) {
                     )
                     views.setOnClickPendingIntent(R.id.sub_line_rect, mapIntent)
                 } else {
-                    val pIntentDetail = PendingIntent.getActivity(
-                        context,
-                        widgetID,
-                        IntentHelper.getEventIntent(
-                            context,
-                            nextEvent,
-                            forceEventDetails = true
-                        ),
-                        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-                    )
+                    val pIntentDetail = IntentHelper.getWidgetTapPendingIntent(
+                                    context, widgetID, IntentHelper.getEventIntent(
+                                        context, nextEvent, forceEventDetails = true
+                                    )
+                                )
                     views.setOnClickPendingIntent(R.id.sub_line_rect, pIntentDetail)
                 }
 
@@ -284,11 +279,8 @@ class StandardWidget(val context: Context) {
                         }
                         Constants.GlanceProviderId.NEXT_CLOCK_ALARM -> {
                             if (Preferences.showNextAlarm && nextAlarm != "") {
-                                val alarmIntent = PendingIntent.getActivity(
-                                    context,
-                                    widgetID,
-                                    IntentHelper.getClockIntent(context),
-                                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                                val alarmIntent = IntentHelper.getWidgetTapPendingIntent(
+                                    context, widgetID, IntentHelper.getClockIntent(context)
                                 )
                                 views.setOnClickPendingIntent(R.id.sub_line_rect, alarmIntent)
                                 showSomething = true
@@ -350,15 +342,10 @@ class StandardWidget(val context: Context) {
                         Constants.GlanceProviderId.EVENTS -> {
                             if (Preferences.showEventsAsGlanceProvider&& Preferences.showEvents && context.checkGrantedPermission(
                                     Manifest.permission.READ_CALENDAR) && nextEvent != null) {
-                                val pIntentDetail = PendingIntent.getActivity(
-                                    context,
-                                    widgetID,
-                                    IntentHelper.getEventIntent(
-                                        context,
-                                        nextEvent,
-                                        forceEventDetails = true
-                                    ),
-                                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                                val pIntentDetail = IntentHelper.getWidgetTapPendingIntent(
+                                    context, widgetID, IntentHelper.getEventIntent(
+                                        context, nextEvent, forceEventDetails = true
+                                    )
                                 )
                                 views.setOnClickPendingIntent(
                                     R.id.sub_line_rect,
