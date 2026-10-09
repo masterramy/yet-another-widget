@@ -73,7 +73,7 @@
     <string name="settings_show_until_subtitle_3">24 heures avant</string>
     <string name="settings_show_until_subtitle_4">3 jours avant</string>
     <string name="settings_show_until_subtitle_5">7 jours avant</string>
-    <string name="settings_show_until_title">Afficher les événements jusqu'à</string>
+    <string name="settings_show_until_title">Afficher les événements jusqu\'à</string>
     <string name="day_char">j</string>
     <string name="settings_calendar_app_title">App calendrier par défaut</string>
     <string name="error_no_calendar">Aucun calendrier trouvé.</string>
