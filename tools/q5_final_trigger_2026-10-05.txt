@@ -1,4 +1,3 @@
-YAW RTL ancestor positioning probe, rev30.
-Run264 proved date valid Arabic, shown, width416, preview alpha1, but globalRect x=-580..-164, so ancestor horizontal offset is the only established visual blocker.
-Run267 did not execute test: reactivecircus emulator runner dispatches script lines separately, and multi-line if yielded sh syntax error. QA workflow commit 4d80c493 makes conditional one physical script line; production source unchanged bf02579c.
-Retry [q5-rtl-probe] focused single instrumentation test with full View ancestor coordinates; if RED expected, record first negative-shift parent and only then apply minimal source fix. Full Q5 remains unapproved.
+YAW focused RTL root positioning repair verification, protocol rev30.
+Known RED Run269: actual Activity child LinearLayout had screen x=-248 / local left=-580 relative to RelativeLayout root screen x=332 local left290 width416, despite date row left0 and valid Arabic text. Root-induced RTL centering fault proven.
+Shipping commit 1bf27e2f133ec8feddb6db6513e5edd86a835c0b adds android:layoutDirection="ltr" only to outer the_widget.xml RelativeLayout root; inner date/calendar layoutDirection="locale" remains unchanged. This is one grounded production attribute, following test-first RED. Run [q5-rtl-probe] single Activity RTL test, then if green run full q5-locale, q5-controls and all seven Q5 jobs at exact head. No Play/signing/go-live authorization.
