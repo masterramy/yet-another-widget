@@ -1,6 +1,10 @@
 package com.ramybaheeg.yetanotherwidget
 
 import android.content.res.Configuration
+import android.app.LocaleManager
+import android.os.LocaleList
+import androidx.test.core.app.ActivityScenario
+import com.ramybaheeg.yetanotherwidget.ui.activities.MainActivity
 import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.TextView
