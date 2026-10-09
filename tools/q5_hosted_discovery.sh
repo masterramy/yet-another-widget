@@ -7,8 +7,11 @@ source tools/q1_runtime_identity.sh
 yaw_read_app_identity "$APP_APK"
 PACKAGE="$YAW_PACKAGE"
 mkdir -p q1-evidence
-adb install -r "$APP_APK" | tee q1-evidence/hosted-install.txt
-bash tools/q1_pin_probe.sh
+# RequestPinAppWidget alone can return a *bound but unconfigured* placeholder.
+# Use the same actual Launcher picker/drag/configure sequence that passed Q5
+# runtime-core (Run282), then independently inspect its visible host view.
+bash tools/q1_emulator_smoke_recover.sh
+adb shell dumpsys appwidget > q1-evidence/hosted-post-configure-appwidget.txt
 adb shell input keyevent KEYCODE_HOME
 sleep 4
 
@@ -65,7 +68,7 @@ for stage,path in zip(("before","after"),sys.argv[1:]):
                  for n in nodes if any(t in (n.get("resource-id","")+" "+n.get("content-desc","")).lower()
                                       for t in ("resize","remove","widget"))][:35]
     }
-out["proven"]="Real Launcher long-press executed; UI trees, screenshot, and host binding captured"
+out["proven"]="A configured real Launcher host existed; attempted long-press and retained before/after evidence; selection affordance not automatically certified"
 out["H8_resize"]="NOT PROVEN: size change and re-render not yet exercised"
 out["H9_taps"]="NOT TESTED"
 out["H11_remove_readd"]="NOT TESTED"
