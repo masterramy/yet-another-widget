@@ -1,3 +1,4 @@
-YAW RTL ancestor positioning diagnostic under Workspace Protocol rev30.
-Run264 exact Activity test RED: date text Arabic valid, row local width416, shown=true, alpha1.0, but date globalRect entirely offscreen x=-580..-164. Production remains exact shipping baseline bf02579c (no code fixes active). This is an ancestor positioning failure, not date text, font size, alpha, or worker scheduling.
-QA test commit 658910f adds getLocationOnScreen/left/width/RTL-direction/alpha for date and 9 ancestor views. Workflow 608dcdc supports one-class probe mode. Run [q5-rtl-probe] ONLY. Inspect exact ancestor chain from failed test to identify the first negative-offset node before proposing any shipping change. The three failed prior source tweaks remain reverted.
+YAW RTL ancestor positioning probe, rev30.
+Run264 proved date valid Arabic, shown, width416, preview alpha1, but globalRect x=-580..-164, so ancestor horizontal offset is the only established visual blocker.
+Run267 did not execute test: reactivecircus emulator runner dispatches script lines separately, and multi-line if yielded sh syntax error. QA workflow commit 4d80c493 makes conditional one physical script line; production source unchanged bf02579c.
+Retry [q5-rtl-probe] focused single instrumentation test with full View ancestor coordinates; if RED expected, record first negative-shift parent and only then apply minimal source fix. Full Q5 remains unapproved.
