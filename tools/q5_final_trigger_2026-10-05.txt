@@ -1,5 +1,4 @@
-YAW focused RTL view geometry diagnostic, Protocol v1.7 rev30.
-Latest QA test: fb0b2522698550f9e0356f54c53c6465c6dada.
-Shipping reverted to original pre-RTL-fix bytes bf02579c430b5dcf343f77e295ae08af161c5a13; the previous dispatcher and centered-date-width hypotheses both failed rendered locale tests.
-Run255 persistent Arabic RTL screenshot has reversed date text bounds in actual preview. New instrumentation asserts real Arabic date child lies inside its layout row, as well as visible/nonempty text.
-Run [q5-controls] focused regression first; then inspect exact RED/green evidence before any further shipping mutation.
+YAW RTL geometry hypothesis verification under Alfredverse Protocol v1.7 rev30.
+Reproduced rendered failure: Run255 Arabic RTL preview blank after bounded 24 seconds; retained logcat shows reversed child screen bounds. Previous dispatcher and date-width fixes were reverted when their screenshot tests stayed red.
+Test-first RTL date-child geometry assertion commit fb0b252; baseline Run258 /37869640842 checks original shipping layout. One source change 96b8bfe sets the centered date row layoutDirection ltr, without altering date text, settings, calendar, weather or aligned widgets.
+Require both q5-locale real Arabic rendered capture and q5-controls regression; no publication approval until exact seven-job q5-final GREEN.
