@@ -193,7 +193,7 @@ class Q5ControlsTest {
         ActivityScenario.launch(MainActivity::class.java).use {
             openRow(R.id.action_show_events)
             openRow(R.id.action_show_until)
-            onView(withText("Show events at least")).check(matches(isDisplayed()))
+            onView(withText("Show events until")).check(matches(isDisplayed()))
         }
 
         ActivityScenario.launch(MainActivity::class.java).use {
