@@ -1,4 +1,4 @@
-YAW RTL geometry hypothesis verification under Alfredverse Protocol v1.7 rev30.
-Reproduced rendered failure: Run255 Arabic RTL preview blank after bounded 24 seconds; retained logcat shows reversed child screen bounds. Previous dispatcher and date-width fixes were reverted when their screenshot tests stayed red.
-Test-first RTL date-child geometry assertion commit fb0b252; baseline Run258 /37869640842 checks original shipping layout. One source change 96b8bfe sets the centered date row layoutDirection ltr, without altering date text, settings, calendar, weather or aligned widgets.
-Require both q5-locale real Arabic rendered capture and q5-controls regression; no publication approval until exact seven-job q5-final GREEN.
+Protocol v1.7 rev30 YAW Android RTL Activity-level diagnostic.
+Run260 locale RED (persistent blank visual) despite build/controls GREEN. Reverted date-row layoutDirection at 0ac9d4fc70c84ea1ccde3cdfb0de5d963aa74f5f; production source now exact baseline bf02579c430b5dcf343f77e295ae08af161c5a13.
+Added ActivityScenario instrumentation to Q5WidgetBehaviorTest at 342a120e204c71bf04d1184980b1953516aef148. Checks actual MainActivity RTL date view, global visible rect, alpha, parent size, and date text. Earlier isolated generateWidgetView test green but cannot reproduce the in-app failure.
+Run focused [q5-controls] to capture a real RED and root cause without source guesses. Next compare Activity-level failures with locale UI hierarchy; fix only after diagnosis and retain full [q5-final] gate.
