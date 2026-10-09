@@ -48,7 +48,7 @@
     <string name="settings_show_until_subtitle_5">7 dní vopred</string>
     <string name="settings_show_until_subtitle_6">30 minút vopred</string>
     <string name="settings_show_until_subtitle_7">1 hodinu vopred</string>
-    <string name="settings_show_until_title">Zobrazovať udalosti aspoň</string>
+    <string name="settings_show_until_title">Zobrazovať udalosti do</string>
     <string name="day_char">d.</string>
     <string name="settings_calendar_app_title">Predvolená aplikácia pre kalendár</string>
     <string name="error_no_calendar">Žiadne kalendáre neboli nájdené.</string>

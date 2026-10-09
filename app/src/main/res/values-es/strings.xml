@@ -58,7 +58,7 @@
     <string name="settings_show_until_subtitle_3">24 horas después</string>
     <string name="settings_show_until_subtitle_4">3 días después</string>
     <string name="settings_show_until_subtitle_5">7 días después</string>
-    <string name="settings_show_until_title">Mostrar eventos al menos</string>
+    <string name="settings_show_until_title">Mostrar eventos hasta</string>
     <string name="day_char">d</string>
     <string name="settings_calendar_app_title">Aplicación predeterminada de calendario</string>
     <string name="error_no_calendar">No se encontró ningún calendario.</string>
@@ -118,7 +118,7 @@
     <string name="settings_weather_provider_api">Proveedor del clima</string>
 
     <string name="settings_weather_provider_weather_api" translatable="false">WeatherAPI.com</string>
-    <string name="settings_weather_provider_weather_gov" translatable="false">Weather.gov (USA)\nby National Weather Services</string>
+    <string name="settings_weather_provider_weather_gov" translatable="false">Weather.gov (USA)\nby National Weather Service</string>
 
     <string name="weather_provider_info_weatherapi_title">Este proveedor del clima necesita\nuna clave de API para funcionar correctamente.</string>
     <string name="weather_provider_info_weather_gov_title">Este proveedor del clima solo funciona\npara ubicaciones dentro de EEUU.</string>

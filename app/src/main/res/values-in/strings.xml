@@ -46,7 +46,7 @@
     <string name="settings_show_until_subtitle_3">24 jam kemudian</string>
     <string name="settings_show_until_subtitle_4">3 hari kemudian</string>
     <string name="settings_show_until_subtitle_5">7 hari kemudian</string>
-    <string name="settings_show_until_title">Tampilkan acara setidaknya</string>
+    <string name="settings_show_until_title">Tampilkan acara hingga</string>
     <string name="day_char">h</string>
     <string name="settings_calendar_app_title">Aplikasi kalender</string>
     <string name="error_no_calendar">Tidak ada kalender yang ditemukan.</string>

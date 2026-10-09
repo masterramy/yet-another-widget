@@ -134,7 +134,7 @@
     <string name="settings_weather_provider_api">天气信息来源</string>
 
     <string name="settings_weather_provider_weather_api" translatable="false">WeatherAPI.com</string>
-    <string name="settings_weather_provider_weather_gov" translatable="false">Weather.gov (USA)\nby National Weather Services</string>
+    <string name="settings_weather_provider_weather_gov" translatable="false">Weather.gov (USA)\nby National Weather Service</string>
 
     <string name="weather_provider_info_weatherapi_title">该天气信息来源需要 API 密钥\n才能正常工作。</string>
     <string name="weather_provider_info_weather_gov_title">该天气信息来源\n仅在美国境内有效。</string>

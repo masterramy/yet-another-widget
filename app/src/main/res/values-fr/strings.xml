@@ -73,7 +73,7 @@
     <string name="settings_show_until_subtitle_3">24 heures avant</string>
     <string name="settings_show_until_subtitle_4">3 jours avant</string>
     <string name="settings_show_until_subtitle_5">7 jours avant</string>
-    <string name="settings_show_until_title">Afficher les événements au moins</string>
+    <string name="settings_show_until_title">Afficher les événements jusqu'à</string>
     <string name="day_char">j</string>
     <string name="settings_calendar_app_title">App calendrier par défaut</string>
     <string name="error_no_calendar">Aucun calendrier trouvé.</string>
@@ -139,7 +139,7 @@
     <string name="settings_weather_provider_api">Fournisseur météo</string>
 
     <string name="settings_weather_provider_weather_api" translatable="false">WeatherAPI.com</string>
-    <string name="settings_weather_provider_weather_gov" translatable="false">Weather.gov (USA)\nby National Weather Services</string>
+    <string name="settings_weather_provider_weather_gov" translatable="false">Weather.gov (USA)\nby National Weather Service</string>
 
     <string name="weather_provider_info_weatherapi_title">Ce fournisseur météo a besoin d\'une\nclé API pour fonctionner correctement.</string>
     <string name="weather_provider_info_weather_gov_title">Ce fournisseur météo ne fonctionne que\npour les emplacements aux États-Unis.</string>

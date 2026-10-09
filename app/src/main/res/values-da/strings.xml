@@ -73,7 +73,7 @@
     <string name="settings_show_until_subtitle_3">24 timer senere</string>
     <string name="settings_show_until_subtitle_4">3 dage senere</string>
     <string name="settings_show_until_subtitle_5">7 dage senere</string>
-    <string name="settings_show_until_title">Vis begivenheder mindst</string>
+    <string name="settings_show_until_title">Vis begivenheder frem til</string>
     <string name="day_char">d</string>
     <string name="settings_calendar_app_title">Kalender</string>
     <string name="error_no_calendar">Ingen kalendere fundet.</string>
@@ -139,7 +139,7 @@
     <string name="settings_weather_provider_api">Vejrudbyder</string>
 
     <string name="settings_weather_provider_weather_api" translatable="false">WeatherAPI.com</string>
-    <string name="settings_weather_provider_weather_gov" translatable="false">Weather.gov (USA)\nby National Weather Services</string>
+    <string name="settings_weather_provider_weather_gov" translatable="false">Weather.gov (USA)\nby National Weather Service</string>
 
     <string name="weather_provider_info_weatherapi_title">Denne vejrudbyder har brug for\nen API-nøgle for at fungere korrekt.</string>
     <string name="weather_provider_info_weather_gov_title">Denne vejrudbyder fungerer kun\nfor placeringer i USA.</string>

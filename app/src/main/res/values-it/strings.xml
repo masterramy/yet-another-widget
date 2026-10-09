@@ -60,7 +60,7 @@
     <string name="settings_show_until_subtitle_3">dopo 24 ore</string>
     <string name="settings_show_until_subtitle_4">dopo 3 giorni</string>
     <string name="settings_show_until_subtitle_5">dopo 7 giorni</string>
-    <string name="settings_show_until_title">Mostra eventi al massimo</string>
+    <string name="settings_show_until_title">Mostra eventi fino a</string>
     <string name="day_char">g</string>
     <string name="settings_calendar_app_title">Applicazione calendario di default</string>
     <string name="error_no_calendar">Nessun calendario trovato</string>

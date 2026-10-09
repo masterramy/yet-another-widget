@@ -52,7 +52,7 @@
     <string name="settings_show_until_subtitle_3">24 Stunden vorher</string>
     <string name="settings_show_until_subtitle_4">3 Tage vorher</string>
     <string name="settings_show_until_subtitle_5">7 Tage vorher</string>
-    <string name="settings_show_until_title">Zeige Termine mindestens</string>
+    <string name="settings_show_until_title">Termine anzeigen bis</string>
     <string name="day_char">T.</string>
     <string name="settings_calendar_app_title">Kalender</string>
     <string name="error_no_calendar">Keine Kalender gefunden.</string>
