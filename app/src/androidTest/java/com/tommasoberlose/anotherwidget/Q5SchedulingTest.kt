@@ -131,6 +131,50 @@ class Q5SchedulingTest {
         }
     }
 
+
+    @Test
+    fun datePresentationCrossesMidnightLeapDayAndDstTransitions() {
+        // E7/E8 bounded proof: exercise production DateHelper formatting at exact
+        // civil-time boundaries. This does NOT prove a hosted launcher receives
+        // and re-renders the system's midnight/time-zone-change broadcast.
+        val savedZone = java.util.TimeZone.getDefault()
+        val savedLocale = java.util.Locale.getDefault()
+        val savedFormat = Preferences.dateFormat
+        val savedUppercase = Preferences.isDateUppercase
+        val savedCapitalize = Preferences.isDateCapitalize
+        try {
+            java.util.TimeZone.setDefault(java.util.TimeZone.getTimeZone("America/Los_Angeles"))
+            java.util.Locale.setDefault(java.util.Locale.US)
+            Preferences.dateFormat = "yyyy-MM-dd HH:mm z"
+            Preferences.isDateUppercase = false
+            Preferences.isDateCapitalize = false
+
+            fun show(utc: String): String {
+                val calendar = java.util.Calendar.getInstance().apply {
+                    timeInMillis = java.time.Instant.parse(utc).toEpochMilli()
+                }
+                return com.ramybaheeg.yetanotherwidget.helpers.DateHelper.getDateText(context, calendar)
+            }
+            // A local New Year midnight and leap-day rollover.
+            assertEquals("2025-12-31 23:59 PST", show("2026-01-01T07:59:00Z"))
+            assertEquals("2026-01-01 00:01 PST", show("2026-01-01T08:01:00Z"))
+            assertEquals("2024-02-28 23:59 PST", show("2024-02-29T07:59:00Z"))
+            assertEquals("2024-02-29 00:01 PST", show("2024-02-29T08:01:00Z"))
+            assertEquals("2024-03-01 00:01 PST", show("2024-03-01T08:01:00Z"))
+            // Spring-forward skips the 02:00 local hour; fall-back repeats 01:30.
+            assertEquals("2026-03-08 01:59 PST", show("2026-03-08T09:59:00Z"))
+            assertEquals("2026-03-08 03:01 PDT", show("2026-03-08T10:01:00Z"))
+            assertEquals("2026-11-01 01:30 PDT", show("2026-11-01T08:30:00Z"))
+            assertEquals("2026-11-01 01:30 PST", show("2026-11-01T09:30:00Z"))
+        } finally {
+            Preferences.dateFormat = savedFormat
+            Preferences.isDateUppercase = savedUppercase
+            Preferences.isDateCapitalize = savedCapitalize
+            java.util.Locale.setDefault(savedLocale)
+            java.util.TimeZone.setDefault(savedZone)
+        }
+    }
+
     @Test
     fun removeUpdatesCancelsTheSameScheduledCalendarAlarmIdentity() {
         UpdatesReceiver.setUpdates(context)
