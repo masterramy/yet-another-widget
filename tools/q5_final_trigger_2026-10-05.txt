@@ -1,5 +1,5 @@
-Focused RTL centered widget date layout test.
-Shipping candidate 503ee62932b5a5aaa5b8ac7be7159a5bd63cec49 fixes date TextView 0dp/weight inside wrap-content row to wrap_content, matching working left-aligned widget date layout.
-Previous MainFragment dispatcher experiment 20a83d was reverted at 3c87f5d because Run252 UI thread change did not fix persistent RTL blank preview after nine samples/24seconds.
-Exact old screenshot + UI XML RED baseline: Run245 /37737709737 and Run252 /37740261477. New focused [q5-locale] [q5-controls] must prove Arabic date visible and all other locales/UI controls unchanged.
-Do not certify source or publish until focused and full Q5 GREEN and artifact review.
+YAW focused RTL view geometry diagnostic, Protocol v1.7 rev30.
+Latest QA test: fb0b2522698550f9e0356f54c53c6465c6dada.
+Shipping reverted to original pre-RTL-fix bytes bf02579c430b5dcf343f77e295ae08af161c5a13; the previous dispatcher and centered-date-width hypotheses both failed rendered locale tests.
+Run255 persistent Arabic RTL screenshot has reversed date text bounds in actual preview. New instrumentation asserts real Arabic date child lies inside its layout row, as well as visible/nonempty text.
+Run [q5-controls] focused regression first; then inspect exact RED/green evidence before any further shipping mutation.
