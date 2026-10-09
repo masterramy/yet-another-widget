@@ -1,5 +1,6 @@
 package com.ramybaheeg.yetanotherwidget.helpers
 
+import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.ContentUris
@@ -34,6 +35,22 @@ object IntentHelper {
         return Intent(context, MainWidget::class.java).apply {
             putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, widgetIds)
             action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
+        }
+    }
+
+    /**
+     * Real widget taps must dispatch a refresh as a broadcast; Calendar/Clock/
+     * event actions that open apps remain activity PendingIntents.
+     * Never call PendingIntent.getActivity with UpdatesReceiver as its target.
+     */
+    fun getWidgetTapPendingIntent(context: Context, requestCode: Int, intent: Intent): PendingIntent {
+        val flags = PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        val isRefresh = intent.action == Actions.ACTION_REFRESH &&
+            intent.component == ComponentName(context, UpdatesReceiver::class.java)
+        return if (isRefresh) {
+            PendingIntent.getBroadcast(context, requestCode, intent, flags)
+        } else {
+            PendingIntent.getActivity(context, requestCode, intent, flags)
         }
     }
 
@@ -122,6 +139,10 @@ object IntentHelper {
     }
 
     fun getEventIntent(context: Context, e: Event, forceEventDetails: Boolean = false): Intent {
+        // The selected gesture must win even when 'Event details' is enabled.
+        if (Preferences.calendarAppPackage == REFRESH_WIDGET_OPTION) {
+            return getWidgetRefreshIntent(context)
+        }
         return when (Preferences.openEventDetails || forceEventDetails) {
             true -> {
                 val uri = ContentUris.withAppendedId(Events.CONTENT_URI, e.eventID)

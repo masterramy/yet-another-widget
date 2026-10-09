@@ -30,11 +30,8 @@ class ClockWidget(val context: Context) {
                 views.setTextColor(R.id.time_am_pm, ColorHelper.getClockFontColor(context.isDarkTheme()))
                 views.setTextViewTextSize(R.id.time, TypedValue.COMPLEX_UNIT_SP, Preferences.clockTextSize.toPixel(context))
                 views.setTextViewTextSize(R.id.time_am_pm, TypedValue.COMPLEX_UNIT_SP, Preferences.clockTextSize.toPixel(context) / 5 * 2)
-                val clockPIntent = PendingIntent.getActivity(
-                    context,
-                    widgetID,
-                    IntentHelper.getClockIntent(context),
-                    PendingIntent.FLAG_IMMUTABLE
+                val clockPIntent = IntentHelper.getWidgetTapPendingIntent(
+                    context, widgetID, IntentHelper.getClockIntent(context)
                 )
                 views.setOnClickPendingIntent(R.id.time, clockPIntent)
                 views.setOnClickPendingIntent(R.id.time_am_pm, clockPIntent)

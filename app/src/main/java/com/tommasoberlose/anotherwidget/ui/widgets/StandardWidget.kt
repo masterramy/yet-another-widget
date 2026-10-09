@@ -127,11 +127,8 @@ class StandardWidget(val context: Context) {
                 BitmapHelper.getBitmapFromView(bindingView.date, draw = false, width = bindingView.date.width, height = bindingView.date.height)
             )
 
-            val calPIntent = PendingIntent.getActivity(
-                context,
-                widgetID,
-                IntentHelper.getCalendarIntent(context),
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            val calPIntent = IntentHelper.getWidgetTapPendingIntent(
+                context, widgetID, IntentHelper.getCalendarIntent(context)
             )
             views.setOnClickPendingIntent(R.id.date_rect, calPIntent)
             views.setViewVisibility(R.id.first_line_rect, View.VISIBLE)
@@ -207,11 +204,8 @@ class StandardWidget(val context: Context) {
                 }
 
                 // Event intent
-                val eventIntent = PendingIntent.getActivity(
-                    context,
-                    widgetID,
-                    IntentHelper.getEventIntent(context, nextEvent),
-                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                val eventIntent = IntentHelper.getWidgetTapPendingIntent(
+                    context, widgetID, IntentHelper.getEventIntent(context, nextEvent)
                 )
                 views.setOnClickPendingIntent(R.id.next_event_rect, eventIntent)
                 views.setViewVisibility(R.id.next_event_rect, View.VISIBLE)

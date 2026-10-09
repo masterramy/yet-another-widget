@@ -54,6 +54,58 @@ class Q5WidgetBehaviorTest {
         Preferences.altTimezoneLabel = ""
     }
 
+    @Test
+    fun refreshWidgetTapDispatchUsesBroadcastForCalendarClockAndEvent() {
+        val oldCalendar = Preferences.calendarAppPackage
+        val oldClock = Preferences.clockAppPackage
+        val oldEventDetails = Preferences.openEventDetails
+        try {
+            Preferences.calendarAppPackage = IntentHelper.REFRESH_WIDGET_OPTION
+            Preferences.clockAppPackage = IntentHelper.REFRESH_WIDGET_OPTION
+            Preferences.openEventDetails = true
+
+            val calendarIntent = IntentHelper.getCalendarIntent(target)
+            assertEquals(Actions.ACTION_REFRESH, calendarIntent.action)
+            val calendarTap = IntentHelper.getWidgetTapPendingIntent(target, 93101, calendarIntent)
+            assertTrue("date REFRESH tap must use getBroadcast, never getActivity", calendarTap.isBroadcast)
+            calendarTap.cancel()
+
+            val clockIntent = IntentHelper.getClockIntent(target)
+            assertEquals(Actions.ACTION_REFRESH, clockIntent.action)
+            val clockTap = IntentHelper.getWidgetTapPendingIntent(target, 93102, clockIntent)
+            assertTrue("clock REFRESH tap must use getBroadcast", clockTap.isBroadcast)
+            clockTap.cancel()
+
+            val event = com.ramybaheeg.yetanotherwidget.models.Event(
+                id = 93103, eventID = 93103, title = "Q5 tap routing",
+                startDate = System.currentTimeMillis() + 60_000L,
+                endDate = System.currentTimeMillis() + 120_000L,
+                calendarID = 1, allDay = false,
+                selfAttendeeStatus = android.provider.CalendarContract.Attendees.ATTENDEE_STATUS_ACCEPTED,
+                availability = android.provider.CalendarContract.EventsEntity.AVAILABILITY_BUSY
+            )
+            val eventIntent = IntentHelper.getEventIntent(target, event)
+            assertEquals("configured Refresh widget should also handle event taps", Actions.ACTION_REFRESH, eventIntent.action)
+            val eventTap = IntentHelper.getWidgetTapPendingIntent(target, 93103, eventIntent)
+            assertTrue("event REFRESH tap must use getBroadcast", eventTap.isBroadcast)
+            eventTap.cancel()
+
+            // Ordinary app-opening taps must not be converted to broadcasts.
+            Preferences.calendarAppPackage = IntentHelper.DEFAULT_OPTION
+            Preferences.clockAppPackage = IntentHelper.DEFAULT_OPTION
+            val normalDate = IntentHelper.getWidgetTapPendingIntent(target, 93104, IntentHelper.getCalendarIntent(target))
+            val normalClock = IntentHelper.getWidgetTapPendingIntent(target, 93105, IntentHelper.getClockIntent(target))
+            assertTrue("default date tap must launch an activity", normalDate.isActivity)
+            assertTrue("default clock tap must launch an activity", normalClock.isActivity)
+            normalDate.cancel()
+            normalClock.cancel()
+        } finally {
+            Preferences.calendarAppPackage = oldCalendar
+            Preferences.clockAppPackage = oldClock
+            Preferences.openEventDetails = oldEventDetails
+        }
+    }
+
     private fun applyRemoteViews(remoteViews: RemoteViews): View {
         var root: View? = null
         instrumentation.runOnMainSync {
