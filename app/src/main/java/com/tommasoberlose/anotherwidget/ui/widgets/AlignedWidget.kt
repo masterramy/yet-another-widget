@@ -281,7 +281,7 @@ class AlignedWidget(val context: Context, val rightAligned: Boolean = false) {
                             }
                         }
                         Constants.GlanceProviderId.NOTIFICATIONS -> {
-                            if (Preferences.showNotifications && ActiveNotificationsHelper.showLastNotification()) {
+                            if (Preferences.showNotifications && ActiveNotificationsHelper.showLastNotification(context)) {
                                 try {
                                     if (Preferences.lastNotificationIcon != 0) {
                                         val remotePackageContext = context.createPackageContext(
@@ -622,7 +622,7 @@ class AlignedWidget(val context: Context, val rightAligned: Boolean = false) {
                             }
                         }
                         Constants.GlanceProviderId.NOTIFICATIONS -> {
-                            if (Preferences.showNotifications && ActiveNotificationsHelper.showLastNotification()) {
+                            if (Preferences.showNotifications && ActiveNotificationsHelper.showLastNotification(context)) {
                                 try {
                                     if (Preferences.lastNotificationIcon != 0) {
                                         val remotePackageContext = context.createPackageContext(

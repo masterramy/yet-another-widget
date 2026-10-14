@@ -12,6 +12,27 @@ import com.ramybaheeg.yetanotherwidget.receivers.NotificationListener
 import com.ramybaheeg.yetanotherwidget.ui.widgets.MainWidget
 
 object ActiveNotificationsHelper {
+    /**
+     * A cached notification is not display-authorized without live Android
+     * notification-listener permission. Purge it when access disappears so
+     * re-granting access cannot resurrect old private content.
+     */
+    fun showLastNotification(context: Context): Boolean {
+        Kotpref.init(context)
+        if (!checkNotificationAccess(context)) {
+            if (showLastNotification()) {
+                Preferences.blockingBulk {
+                    remove(Preferences::lastNotificationId)
+                    remove(Preferences::lastNotificationTitle)
+                    remove(Preferences::lastNotificationPackage)
+                    remove(Preferences::lastNotificationIcon)
+                }
+            }
+            return false
+        }
+        return showLastNotification()
+    }
+
     fun showLastNotification(): Boolean {
         return Preferences.lastNotificationId != -1 && Preferences.lastNotificationIcon != 0 && Preferences.lastNotificationPackage.isNotBlank() && Preferences.lastNotificationTitle.isNotBlank()
     }

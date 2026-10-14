@@ -152,6 +152,14 @@ class Q5GlanceProviderTest {
                 "cached private notification remains eligible for widget display after listener permission revoked",
                 GlanceProviderHelper.showGlanceProviders(target)
             )
+            assertFalse(
+                "revoked listener must erase previously cached private notification",
+                ActiveNotificationsHelper.showLastNotification()
+            )
+            shell("cmd notification allow_listener $listenerComponent")
+            assertTrue(waitUntil { ActiveNotificationsHelper.checkNotificationAccess(target) })
+            assertFalse("re-grant must not resurrect stale private notification",
+                GlanceProviderHelper.showGlanceProviders(target))
         } finally {
             shell("cmd notification allow_listener $listenerComponent")
             ActiveNotificationsHelper.clearLastNotification(target)

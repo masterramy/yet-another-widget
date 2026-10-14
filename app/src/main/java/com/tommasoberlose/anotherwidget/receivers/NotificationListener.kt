@@ -25,6 +25,13 @@ class NotificationListener : NotificationListenerService() {
     companion object {
         private const val NOTIFICATION_TIMEOUT_REQUEST_CODE = 28943
     }
+    override fun onListenerDisconnected() {
+        // Android revocation must invalidate already-rendered private content.
+        ActiveNotificationsHelper.clearLastNotification(this)
+        MediaPlayerHelper.updatePlayingMediaInfo(this)
+        super.onListenerDisconnected()
+    }
+
     override fun onListenerConnected() {
         MediaPlayerHelper.updatePlayingMediaInfo(this)
         MainWidget.updateWidget(this)

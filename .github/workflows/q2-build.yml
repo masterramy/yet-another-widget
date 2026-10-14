@@ -750,6 +750,9 @@ jobs:
           grep -Fq 'yaw_read_test_identity "$TEST_APK"' tools/q1_pin_probe.sh
           echo "Runtime QA harness derives public package/activity/label/test runner identity from built APKs."
 
+      - name: F7 notification listener privacy safety contract
+        shell: bash
+        run: python3 tools/q5_notification_privacy_guard.py
       - name: H9 widget tap PendingIntent safety contract
         shell: bash
         run: python3 tools/q5_tap_route_guard.py

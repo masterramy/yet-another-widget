@@ -91,7 +91,7 @@ object GlanceProviderHelper {
 
         val showGlance = (eventRepository.getEventsCount() == 0 || !Preferences.showEvents || Preferences.showEventsAsGlanceProvider)
             && (
-                (Preferences.showNotifications && ActiveNotificationsHelper.showLastNotification()) ||
+                (Preferences.showNotifications && ActiveNotificationsHelper.showLastNotification(context)) ||
                 (Preferences.showNextAlarm && AlarmHelper.getNextAlarm(context) != "") ||
                 (MediaPlayerHelper.isSomeonePlaying(context)) ||
                 (Preferences.showBatteryCharging && Preferences.isCharging || Preferences.isBatteryLevelLow) ||
