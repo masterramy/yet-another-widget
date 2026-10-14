@@ -74,6 +74,53 @@ class Q5HostedGlanceTest {
         MainWidget.updateWidget(target)
         Thread.sleep(2500)
     }
+    @Test fun stageVisibleNotificationBeforeRevocation() {
+        quiet()
+        val ui = InstrumentationRegistry.getInstrumentation().uiAutomation
+        val listener = target.packageName +
+            "/com.ramybaheeg.yetanotherwidget.receivers.NotificationListener"
+        fun shell(command: String): String {
+            val pfd = ui.executeShellCommand(command)
+            return android.os.ParcelFileDescriptor.AutoCloseInputStream(pfd)
+                .bufferedReader().use { it.readText() }
+        }
+        shell("cmd notification allow_listener $listener")
+        val deadline = System.currentTimeMillis() + 10_000
+        while (!com.ramybaheeg.yetanotherwidget.helpers.ActiveNotificationsHelper
+                .checkNotificationAccess(target) && System.currentTimeMillis()<deadline)
+            Thread.sleep(150)
+        assertTrue(com.ramybaheeg.yetanotherwidget.helpers.ActiveNotificationsHelper.checkNotificationAccess(target))
+        Preferences.showNotifications = true
+        Preferences.lastNotificationId = 72164
+        Preferences.lastNotificationTitle = "F7 Secret Revocation Witness"
+        Preferences.lastNotificationPackage = target.packageName
+        Preferences.lastNotificationIcon = R.drawable.round_notifications_24
+        assertTrue(com.ramybaheeg.yetanotherwidget.helpers.GlanceProviderHelper.showGlanceProviders(target))
+        val widget = StandardWidget(target).generateWidgetView()
+        assertEquals("F7 Secret Revocation Witness",
+            requireNotNull(widget).subLineText.text.toString())
+        MainWidget.updateWidget(target)
+        Thread.sleep(2800)
+    }
+    @Test fun revokeNotificationAndRefreshHostedState() {
+        Kotpref.init(target)
+        val ui = InstrumentationRegistry.getInstrumentation().uiAutomation
+        val listener = target.packageName +
+            "/com.ramybaheeg.yetanotherwidget.receivers.NotificationListener"
+        val pfd = ui.executeShellCommand("cmd notification disallow_listener $listener")
+        android.os.ParcelFileDescriptor.AutoCloseInputStream(pfd)
+            .bufferedReader().use { it.readText() }
+        val deadline = System.currentTimeMillis() + 10_000
+        while (com.ramybaheeg.yetanotherwidget.helpers.ActiveNotificationsHelper
+                .checkNotificationAccess(target) && System.currentTimeMillis()<deadline)
+            Thread.sleep(150)
+        assertFalse(com.ramybaheeg.yetanotherwidget.helpers.ActiveNotificationsHelper.checkNotificationAccess(target))
+        assertFalse(com.ramybaheeg.yetanotherwidget.helpers.GlanceProviderHelper.showGlanceProviders(target))
+        assertFalse(com.ramybaheeg.yetanotherwidget.helpers.ActiveNotificationsHelper.showLastNotification())
+        MainWidget.updateWidget(target)
+        Thread.sleep(2800)
+    }
+
     @Test fun assertFixtureStillActive() {
         Kotpref.init(target)
         assertEquals(witness,Preferences.customNotes)

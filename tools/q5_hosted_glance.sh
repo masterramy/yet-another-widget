@@ -45,6 +45,10 @@ test_run stageRightAligned
 capture h6-hosted-right
 test_run stageHostedClock
 capture h7-hosted-clock
+test_run stageVisibleNotificationBeforeRevocation
+capture h16-notification-before-revoke
+test_run revokeNotificationAndRefreshHostedState
+capture h16-notification-after-revoke
 python3 - q1-evidence/h16-glance-before.xml q1-evidence/h16-glance-after.xml "$YAW_APP_LABEL" <<'PY' > q1-evidence/h16-host-summary.json
 import sys,json,xml.etree.ElementTree as ET
 def find(path):
