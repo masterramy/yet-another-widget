@@ -48,6 +48,12 @@ dump_ui h11-before-remove
 center="$(host_center q1-evidence/h11-before-remove.xml)"
 adb exec-out screencap -p > q1-evidence/h11-before-remove.png
 read -r sx sy <<< "$center"
+# q1_emulator_smoke_recover installs customer APK only; H11 needs its matched
+# androidTest APK for the coherent global pointer MotionEvent drag.
+TEST_APK="$(find app/build/outputs/apk/androidTest/debug -maxdepth 1 -type f -name '*.apk' -print -quit)"
+test -s "$TEST_APK"
+adb install -r "$TEST_APK" | tee q1-evidence/h11-androidtest-install.txt
+grep -Fq "Success" q1-evidence/h11-androidtest-install.txt
 runner="$PACKAGE.test/androidx.test.runner.AndroidJUnitRunner"
 adb shell pm list instrumentation > q1-evidence/h11-instrumentation-list.txt
 grep -Fq "$runner" q1-evidence/h11-instrumentation-list.txt
