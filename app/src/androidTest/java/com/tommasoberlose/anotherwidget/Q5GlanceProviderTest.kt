@@ -128,6 +128,37 @@ class Q5GlanceProviderTest {
     }
 
     @Test
+    fun revokingListenerAccessMustSuppressPreviouslyStoredNotificationGlance() {
+        // F7 privacy-sensitive behavioral claim: a stale cached title must
+        // not remain visible after OS notification-listener permission revocation.
+        Preferences.showNotifications = true
+        Preferences.showMusic = false
+        Preferences.showNextAlarm = false
+        Preferences.showGreetings = false
+        Preferences.showBatteryCharging = false
+        Preferences.showEvents = false
+        Preferences.showEventsAsGlanceProvider = false
+        Preferences.customNotes = ""
+        Preferences.lastNotificationId = 88221
+        Preferences.lastNotificationTitle = "F7 private cached notification"
+        Preferences.lastNotificationPackage = target.packageName
+        Preferences.lastNotificationIcon = android.R.drawable.ic_dialog_info
+        assertTrue("fixture needs displayable cached notification", ActiveNotificationsHelper.showLastNotification())
+        assertTrue("fixture initially visible with permission", GlanceProviderHelper.showGlanceProviders(target))
+        try {
+            shell("cmd notification disallow_listener $listenerComponent")
+            assertTrue(waitUntil { !ActiveNotificationsHelper.checkNotificationAccess(target) })
+            assertFalse(
+                "cached private notification remains eligible for widget display after listener permission revoked",
+                GlanceProviderHelper.showGlanceProviders(target)
+            )
+        } finally {
+            shell("cmd notification allow_listener $listenerComponent")
+            ActiveNotificationsHelper.clearLastNotification(target)
+        }
+    }
+
+    @Test
     fun notificationAccessRevocationClearsMediaState() {
         Preferences.showMusic = true
         Preferences.mediaPlayerTitle = "stale"
