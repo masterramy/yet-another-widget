@@ -39,6 +39,12 @@ capture h16-glance-before
 test_run stageCustomNote
 capture h16-glance-after
 test_run assertFixtureStillActive
+test_run stageLeftAligned
+capture h6-hosted-left
+test_run stageRightAligned
+capture h6-hosted-right
+test_run stageHostedClock
+capture h7-hosted-clock
 python3 - q1-evidence/h16-glance-before.xml q1-evidence/h16-glance-after.xml "$YAW_APP_LABEL" <<'PY' > q1-evidence/h16-host-summary.json
 import sys,json,xml.etree.ElementTree as ET
 def find(path):

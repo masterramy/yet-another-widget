@@ -50,6 +50,30 @@ class Q5HostedGlanceTest {
         MainWidget.updateWidget(target)
         Thread.sleep(2500)
     }
+    @Test fun stageLeftAligned() {
+        quiet()
+        Preferences.customNotes = witness
+        Preferences.widgetAlign = Constants.WidgetAlign.LEFT.rawValue
+        assertTrue(GlanceProviderHelper.showGlanceProviders(target))
+        MainWidget.updateWidget(target)
+        Thread.sleep(2500)
+    }
+    @Test fun stageRightAligned() {
+        quiet()
+        Preferences.customNotes = witness
+        Preferences.widgetAlign = Constants.WidgetAlign.RIGHT.rawValue
+        assertTrue(GlanceProviderHelper.showGlanceProviders(target))
+        MainWidget.updateWidget(target)
+        Thread.sleep(2500)
+    }
+    @Test fun stageHostedClock() {
+        quiet()
+        Preferences.customNotes = ""
+        Preferences.showClock = true
+        Preferences.widgetAlign = Constants.WidgetAlign.CENTER.rawValue
+        MainWidget.updateWidget(target)
+        Thread.sleep(2500)
+    }
     @Test fun assertFixtureStillActive() {
         Kotpref.init(target)
         assertEquals(witness,Preferences.customNotes)
