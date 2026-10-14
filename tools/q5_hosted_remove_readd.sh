@@ -106,7 +106,7 @@ fi
 # independent H11 removal screen, XML, host dump and gesture receipt outside
 # that folder before re-adding, then restore them after the actual picker.
 h11_archive="$(mktemp -d)"
-find q1-evidence -maxdepth 1 -type f -name 'h11-*' -exec cp -p {} "$h11_archive/" \\;
+cp -p q1-evidence/h11-* "$h11_archive/"
 test -s "$h11_archive/h11-after-remove.png"
 # Re-add through the tested actual Pixel Launcher picker/drag/configure path.
 bash tools/q1_emulator_smoke_recover.sh
