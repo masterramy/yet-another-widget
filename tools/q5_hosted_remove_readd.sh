@@ -57,13 +57,13 @@ grep -Fq "Success" q1-evidence/h11-androidtest-install.txt
 runner="$PACKAGE.test/androidx.test.runner.AndroidJUnitRunner"
 adb shell pm list instrumentation > q1-evidence/h11-instrumentation-list.txt
 grep -Fq "$runner" q1-evidence/h11-instrumentation-list.txt
-# Real Pixel Launcher Remove drop target at top; verify disappearance, don't
+# Verified active-drag native screenshot Run292: Pixel Launcher Remove pill centered around (540,285); verify disappearance, don't
 # infer pass from the drag instrumentation alone.
-printf 'source=%s\ndrag_target=540 135\n' "$center" > q1-evidence/h11-remove-input.txt
+printf 'source=%s\ndrag_target=540 285\n' "$center" > q1-evidence/h11-remove-input.txt
 adb shell am instrument -w -r \
   -e class "$PACKAGE.LauncherWidgetDragTest" \
   -e sourceX "$sx" -e sourceY "$sy" \
-  -e edgeY 135 -e targetX 540 -e targetY 135 \
+  -e edgeY 285 -e targetX 540 -e targetY 285 \
   -e q5CaptureBeforeUp true \
   "$runner" | tee q1-evidence/h11-real-remove-drag-instrumentation.txt
 grep -Eq '^OK \([0-9]+ test' q1-evidence/h11-real-remove-drag-instrumentation.txt
@@ -92,8 +92,8 @@ print(x1+min(160,(x2-x1)//4),y1+min(45,(y2-y1)//5))
 PY
 )"
   read -r bx by <<< "$bg"
-  printf 'second_drag_source=%s\nsecond_drag_target=540 140\n' "$bg" > q1-evidence/h11-fallback-drag-input.txt
-  adb shell input swipe "$bx" "$by" 540 140 2200
+  printf 'second_drag_source=%s\nsecond_drag_target=540 285\n' "$bg" > q1-evidence/h11-fallback-drag-input.txt
+  adb shell input swipe "$bx" "$by" 540 285 2200
   sleep 4
   adb shell input keyevent KEYCODE_HOME
   sleep 2
