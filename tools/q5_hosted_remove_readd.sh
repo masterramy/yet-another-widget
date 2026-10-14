@@ -64,6 +64,7 @@ adb shell am instrument -w -r \
   -e class "$PACKAGE.LauncherWidgetDragTest" \
   -e sourceX "$sx" -e sourceY "$sy" \
   -e edgeY 135 -e targetX 540 -e targetY 135 \
+  -e q5CaptureBeforeUp true \
   "$runner" | tee q1-evidence/h11-real-remove-drag-instrumentation.txt
 grep -Eq '^OK \([0-9]+ test' q1-evidence/h11-real-remove-drag-instrumentation.txt
 sleep 4
@@ -72,7 +73,35 @@ sleep 2
 dump_ui h11-after-remove
 adb exec-out screencap -p > q1-evidence/h11-after-remove.png
 adb shell dumpsys appwidget > q1-evidence/h11-after-remove-appwidget.txt
-no_visible_host q1-evidence/h11-after-remove.xml
+# Capture actual Launcher affordance DURING the coherent drag; a failed
+# post-gesture state must retain concrete visual evidence.
+adb exec-out run-as "$PACKAGE" cat files/q5_h11_drag_drop.png > q1-evidence/h11-drag-drop-before-release.png 2>q1-evidence/h11-capture-error.txt || true
+if ! no_visible_host q1-evidence/h11-after-remove.xml; then
+  echo "First real Launcher gesture did not remove widget; trying direct adb swipe on widget top background." >&2
+  # The widget's date bitmap can intercept the host-center long-press;
+  # use a separate visible blank portion inside the real widget bounds.
+  bg="$(python3 - q1-evidence/h11-before-remove.xml "$YAW_APP_LABEL" <<'PY'
+import re,sys,xml.etree.ElementTree as ET
+nodes=[n.attrib for n in ET.parse(sys.argv[1]).getroot().iter("node")
+       if n.attrib.get("class","").endswith("LauncherAppWidgetHostView")
+       and sys.argv[2] in n.attrib.get("content-desc","")]
+if len(nodes)!=1:raise AssertionError("Expected one real Launcher host")
+m=re.fullmatch(r"\[(\d+),(\d+)\]\[(\d+),(\d+)\]",nodes[0]["bounds"])
+x1,y1,x2,y2=map(int,m.groups())
+print(x1+min(160,(x2-x1)//4),y1+min(45,(y2-y1)//5))
+PY
+)"
+  read -r bx by <<< "$bg"
+  printf 'second_drag_source=%s\nsecond_drag_target=540 140\n' "$bg" > q1-evidence/h11-fallback-drag-input.txt
+  adb shell input swipe "$bx" "$by" 540 140 2200
+  sleep 4
+  adb shell input keyevent KEYCODE_HOME
+  sleep 2
+  dump_ui h11-after-remove-second-gesture
+  adb exec-out screencap -p > q1-evidence/h11-after-remove-second-gesture.png
+  adb shell dumpsys appwidget > q1-evidence/h11-after-remove-second-gesture-appwidget.txt
+  no_visible_host q1-evidence/h11-after-remove-second-gesture.xml
+fi
 # Re-add through the tested actual Pixel Launcher picker/drag/configure path.
 bash tools/q1_emulator_smoke_recover.sh
 adb shell input keyevent KEYCODE_HOME

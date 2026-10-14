@@ -64,6 +64,16 @@ class LauncherWidgetDragTest {
         SystemClock.sleep(800)
         movePath(targetX, edgeY, targetX, targetY, steps = 12, delayMs = 35)
         SystemClock.sleep(300)
+        if (args.getString("q5CaptureBeforeUp") == "true") {
+            val bmp = ui.takeScreenshot()
+            assertTrue("drag-in-progress screenshot unavailable", bmp != null)
+            instrumentation.targetContext.openFileOutput(
+                "q5_h11_drag_drop.png", android.content.Context.MODE_PRIVATE
+            ).use { output ->
+                assertTrue("cannot encode active Launcher drag screenshot",
+                    requireNotNull(bmp).compress(android.graphics.Bitmap.CompressFormat.PNG, 100, output))
+            }
+        }
         inject(MotionEvent.ACTION_UP, targetX, targetY)
         SystemClock.sleep(1000)
     }
