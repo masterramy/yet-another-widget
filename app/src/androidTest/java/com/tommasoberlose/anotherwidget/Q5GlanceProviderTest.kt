@@ -168,6 +168,53 @@ class Q5GlanceProviderTest {
     }
 
     @Test
+    fun greetingsRespectEveryCivilTimeBoundaryWithoutChangingDeviceClock() {
+        // F6 deterministic production-boundary proof. The process-default
+        // timezone changes only here; never changes the emulator's clock.
+        val savedZone = java.util.TimeZone.getDefault()
+        val savedLocale = java.util.Locale.getDefault()
+        try {
+            java.util.Locale.setDefault(java.util.Locale.US)
+            val utcHour = java.util.Calendar.getInstance(
+                java.util.TimeZone.getTimeZone("UTC")
+            ).get(java.util.Calendar.HOUR_OF_DAY)
+            val cases = listOf(
+                4 to R.array.night_greetings,
+                5 to R.array.morning_greetings,
+                8 to R.array.morning_greetings,
+                9 to 0,
+                18 to 0,
+                19 to R.array.evening_greetings,
+                21 to R.array.evening_greetings,
+                22 to R.array.night_greetings
+            )
+            for ((hour, arrayId) in cases) {
+                // Offset in [-12,11] hours ensures every target civil hour
+                // can be exercised from a fixed, stable UTC instant.
+                val offset = ((hour - utcHour + 12 + 24) % 24) - 12
+                val zone = java.util.TimeZone.getTimeZone(
+                    String.format(java.util.Locale.US, "GMT%+03d:00", offset)
+                )
+                java.util.TimeZone.setDefault(zone)
+                assertEquals("test timezone must map to hour=$hour",
+                    hour, java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY))
+                assertEquals("greetings eligibility hour=$hour",
+                    arrayId != 0, com.ramybaheeg.yetanotherwidget.helpers.GreetingsHelper.showGreetings())
+                val actual = com.ramybaheeg.yetanotherwidget.helpers.GreetingsHelper.getRandomString(target)
+                if (arrayId == 0) {
+                    assertEquals("no greeting daytime hour=$hour", "", actual)
+                } else {
+                    assertTrue("incorrect production greeting for hour=$hour: $actual",
+                        target.resources.getStringArray(arrayId).contains(actual))
+                }
+            }
+        } finally {
+            java.util.TimeZone.setDefault(savedZone)
+            java.util.Locale.setDefault(savedLocale)
+        }
+    }
+
+    @Test
     fun providerOrderingRoundTripsAndEventProviderCanActivate() {
         val reversed = Constants.GlanceProviderId.values().toList().reversed()
         GlanceProviderHelper.saveGlanceProviderOrder(reversed)
