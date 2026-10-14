@@ -71,4 +71,20 @@ time_set '2026-12-31T23:58:00Z'
 capture e7-before-midnight
 time_set '2027-01-01T00:02:00Z'
 capture e7-after-midnight
-echo "E7 OS clock changed across actual UTC midnight; hosted state retained. Visual widget text refresh REQUIRES native image review." | tee q1-evidence/e7-result.txt
+# Additional E7/E8 leap boundary: ONE OS clock set, followed by natural time passage.
+# No second set-time command or synthetic DATE_CHANGED broadcast after the
+# before frame. This differentiates true midnight tick from TIME_SET repaint.
+time_set '2028-02-29T23:59:45Z'
+capture e7-natural-leap-before
+sleep 16
+actual="$(adb shell date -u +%s | tr -d '\r')"
+threshold="$(python3 - <<'PY'
+from datetime import datetime,timezone
+print(int(datetime(2028,3,1,tzinfo=timezone.utc).timestamp()))
+PY
+)"
+test "$actual" -ge "$threshold"
+test "$actual" -lt "$((threshold+90))"
+capture e7-natural-leap-after
+printf 'natural_tick_crossed_leap_midnight=true\nactual_utc_epoch=%s\nmanual_set_between_frames=false\n' "$actual" > q1-evidence/e7-natural-midnight-summary.txt
+echo "E7 OS TIME_SET New Year rollover and natural Feb29-to-Mar1 midnight tick: screenshots and bound host captured. Native host text inspection remains REQUIRED." | tee q1-evidence/e7-result.txt
